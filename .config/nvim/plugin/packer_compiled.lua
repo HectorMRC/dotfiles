@@ -79,6 +79,11 @@ _G.packer_plugins = {
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
+  ale = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/ale",
+    url = "https://github.com/dense-analysis/ale"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -112,7 +117,7 @@ _G.packer_plugins = {
   harpoon = {
     loaded = true,
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/harpoon",
-    url = "https://github.com/hector/harpoon"
+    url = "https://github.com/theprimeagen/harpoon"
   },
   ["lsp-zero.nvim"] = {
     loaded = true,
@@ -165,6 +170,11 @@ _G.packer_plugins = {
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/rose-pine",
     url = "https://github.com/rose-pine/neovim"
   },
+  ["rust.vim"] = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/rust.vim",
+    url = "https://github.com/rust-lang/rust.vim"
+  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/telescope.nvim",
@@ -179,6 +189,26 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/hector/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
+  },
+  ["vim-go"] = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/vim-go",
+    url = "https://github.com/fatih/vim-go"
+  },
+  ["vim-prettier"] = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/vim-prettier",
+    url = "https://github.com/prettier/vim-prettier"
+  },
+  ["vim-toml"] = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/vim-toml",
+    url = "https://github.com/cespare/vim-toml"
+  },
+  ["vim-yaml"] = {
+    loaded = true,
+    path = "/home/hector/.local/share/nvim/site/pack/packer/start/vim-yaml",
+    url = "https://github.com/stephpy/vim-yaml"
   }
 }
 

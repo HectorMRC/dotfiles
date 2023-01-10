@@ -23,9 +23,15 @@ return require('packer').startup(function(use)
 
   use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
   use('nvim-treesitter/playground')
-  use('hector/harpoon')
+  use('theprimeagen/harpoon')
   use('mbbill/undotree')
   use('tpope/vim-fugitive')
+  use 'cespare/vim-toml'
+  use('stephpy/vim-yaml')
+  use('rust-lang/rust.vim')
+  use('fatih/vim-go')
+  use('prettier/vim-prettier')
+  use('dense-analysis/ale')
 
   use {
 	  'VonHeikemen/lsp-zero.nvim',
