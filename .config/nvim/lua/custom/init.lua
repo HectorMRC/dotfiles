@@ -1,1 +1,2 @@
-require "custom.configs.options"
+require "custom.set"
+require "custom.remap"

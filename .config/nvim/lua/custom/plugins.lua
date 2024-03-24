@@ -17,23 +17,27 @@ local plugins = {
   {
     "rust-lang/rust.vim",
     ft = "rust",
-    init = function()
+    config = function ()
       vim.g.rustfmt_autosave = 1
+      vim.g.rustfmt_emit_files = 1
     end
   },
   {
-    "simrat39/rust-tools.nvim",
-    ft = "rust",
-    dependencies = "neovim/nvim-lspconfig",
-    opts = function()
-      return require "custom.configs.rust-tools"
-    end,
+    "saecki/crates.nvim",
+    ft = {"rust", "toml"},
     config = function(_, opts)
-      require('rust-tools').setup(opts)
+      local crates = require "crates"
+      crates.setup(opts)
+      crates.show()
     end
   },
   {
-    "mfussenegger/nvim-dap",
+    "hrsh7th/nvim-cmp",
+    opts = function()
+      local M = require "plugins.configs.cmp"
+      table.insert(M.sources, {name = "crates"})
+      return M
+    end
   }
 }
 
