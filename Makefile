@@ -1,5 +1,5 @@
 SOURCE?=~/git/hectormrc/dotfiles
-TARGET?=~
+HOME?=~
 
 ##########################################
 # 		     Dynamic targets 			 #
@@ -18,10 +18,15 @@ $(TARGETS):
 	$(MAKE) -C $@
 
 all: $(TARGETS)
-	ln -s ${SOURCE}/.tmux.conf ${TARGET}/.
+	ln -s ${SOURCE}/.bashrc \
+		${SOURCE}/.bash_profile \
+		${SOURCE}/.tmux.conf \
+		${HOME}/.
 
 clean: $(addsuffix -clean,$(SUBDIRS))
-	rm -rf ${TARGET}/.tmux.conf
+	rm -rf ${HOME}/.bashrc \
+		${HOME}/.bash_profile \
+		${HOME}/.tmux.conf
 
 $(addsuffix -clean,$(TARGETS)):
 	@-$(MAKE) -C $(patsubst %-clean,%,$@) clean

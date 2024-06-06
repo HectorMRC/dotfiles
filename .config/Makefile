@@ -1,10 +1,10 @@
 SOURCE?=~/git/hectormrc/dotfiles/.config/
-TARGET?=~/.config/
+CONFIG?=~/.config/
 
 all:
 	ln -s ${SOURCE}/nvim \
 		${SOURCE}/alacrity \
-		${TARGET}
+		${CONFIG}
 
 clean:
-	rm -rf ${TARGET}/nvim ${TARGET}/alacrity
+	rm -rf ${CONFIG}/nvim ${CONFIG}/alacrity
