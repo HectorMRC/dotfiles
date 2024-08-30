@@ -20,8 +20,8 @@ $(TARGETS):
 all: $(TARGETS)
 	ln -s ${SOURCE}/.bashrc \
 		${SOURCE}/.bash_profile \
-	 	${SOURCE}/.tmux.conf \
-	 	${HOME}/.
+		${SOURCE}/.tmux.conf \
+		${HOME}/.
 
 clean: $(addsuffix -clean,$(SUBDIRS))
 	rm -rf ${HOME}/.bashrc \
