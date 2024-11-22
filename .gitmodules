@@ -1,6 +1,9 @@
 [submodule ".config/nvim"]
 	path = .config/nvim
 	url = https://github.com/HectorMRC/nvchad.git
+[submodule "git/aur/brave-bin"]
+	path = git/aur/brave-bin
+	url = https://aur.archlinux.org/brave-bin.git
 [submodule "git/aur/discord_arch_electron"]
 	path = git/aur/discord_arch_electron
 	url = https://aur.archlinux.org/discord_arch_electron.git
