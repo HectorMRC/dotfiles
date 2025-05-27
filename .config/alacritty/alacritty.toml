@@ -1,2 +1,5 @@
+[terminal.shell]
+program = "tmux"
+
 [font]
 normal = { family = "JetBrainsMonoNLNerdFont", style = "Regular" }
