@@ -3,3 +3,6 @@ program = "tmux"
 
 [font]
 normal = { family = "JetBrainsMonoNLNerdFont", style = "Regular" }
+italic = { style = "Italic" }
+bold = { style = "ExtraBold" }
+bold_italic = { style = "ExtraBoldItalic" }
