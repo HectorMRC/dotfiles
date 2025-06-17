@@ -2,9 +2,12 @@ SOURCE?=~/git/hectormrc/dotfiles/.config/
 CONFIG?=~/.config/
 
 all:
-	ln -s ${SOURCE}/nvim \
-		${SOURCE}/alacrity \
+	ln -s ${SOURCE}/alacritty \
+		${SOURCE}/kitty \
+		${SOURCE}/nvim \
 		${CONFIG}
 
 clean:
-	rm -rf ${CONFIG}/nvim ${CONFIG}/alacrity
+	rm -rf ${CONFIG}/alacritty \
+		${CONFIG}/kitty \
+		${CONFIG}/nvim
