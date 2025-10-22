@@ -1,17 +1,9 @@
 return {
     'saecki/crates.nvim',
     dependencies = 'nvim-lua/plenary.nvim',
+    tag = 'stable',
     config = function()
-        require("crates").setup {
-            completion = {
-                cmp = {
-                    enabled = true
-                },
-            },
-            require("cmp").setup.buffer({
-                sources = { { name = "crates" } }
-            })
-        }
+        require("crates").setup()
     end,
     ft = "toml",
 }

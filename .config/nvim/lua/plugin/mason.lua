@@ -2,7 +2,8 @@ return   {
     "williamboman/mason.nvim",
     opts = {
         ensure_installed = {
-            "lua_ls",
+            "lua-language-server",
+            "stylua",
             "rust-analyzer",
         },
     },
