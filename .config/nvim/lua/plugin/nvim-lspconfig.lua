@@ -14,9 +14,16 @@ local function config()
         }
     })
 
-    vim.lsp.enable({ 
+    vim.lsp.config('tombi', {
+        cmd = { 'tombi', 'lsp' },
+        filetypes = { 'toml' },
+        root_makers = { '.git' },
+    })
+
+    vim.lsp.enable({
         "lua_ls",
         "rust_analyzer",
+        "tombi",
     })
 end
 
