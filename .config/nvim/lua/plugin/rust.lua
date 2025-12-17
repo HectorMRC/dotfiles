@@ -8,4 +8,3 @@ return {
     ft = "rust",
     config = config
 }
-
