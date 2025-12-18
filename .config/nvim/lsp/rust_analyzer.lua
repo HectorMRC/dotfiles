@@ -4,7 +4,6 @@
 --- https://github.com/rust-lang/rust-analyzer
 ---
 --- Rust language server.
----
 
 local function reload_workspace(bufnr)
     local clients = vim.lsp.get_clients { bufnr = bufnr, name = "rust_analyzer" }
