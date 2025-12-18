@@ -56,4 +56,3 @@ local opts = {
 }
 
 require("lazy").setup("plugin", opts)
-

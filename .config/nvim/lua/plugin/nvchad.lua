@@ -9,4 +9,4 @@ return {
     config = config,
     import = "nvchad.plugins",
     lazy = false,
-  }
+}

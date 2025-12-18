@@ -7,3 +7,4 @@ vim.schedule(function()
 end)
 
 require "options"
+require "lsp"

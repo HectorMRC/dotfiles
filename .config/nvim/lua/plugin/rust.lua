@@ -6,5 +6,5 @@ end
 return {
     "rust-lang/rust.vim",
     ft = "rust",
-    config = config
+    config = config,
 }
