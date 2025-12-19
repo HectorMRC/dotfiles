@@ -3,6 +3,7 @@ return {
     opts = {
         ensure_installed = {
             "lua-language-server",
+            "nixfmt",
             "rust-analyzer",
             "stylua",
             "tombi",
