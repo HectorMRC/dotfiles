@@ -35,7 +35,6 @@
       };
     in
     {
-      # Make colmena available with: nix develop
       devShells.x86_64-linux.default = pkgs.mkShell {
         buildInputs = [
           colmena.packages.x86_64-linux.colmena
@@ -68,9 +67,39 @@
 
           imports = [
             ./nixos/hardware-configuration/dell-inspiron.nix
+            ./nixos/desktop.nix
+            ./nixos/device.nix
             ./nixos/locale.nix
-            ./nixos/dell-inspiron.nix
+            ./nixos/network.nix
+            ./nixos/niri.nix
+            ./nixos/nix.nix
+            ./nixos/pipewire.nix
+            ./nixos/startup.nix
           ];
+
+          desktop-environment = {
+            enable-niri = true;
+            enable-plasma = true;
+            display-manager = "greet";
+          };
+
+          role-configuration = {
+            inherit host-name user-name;
+          };
+
+          home-manager.users.${user-name} = {
+            imports = [
+              ./nixos/home-manager
+              ./nixos/home-manager/alacritty.nix
+              ./nixos/home-manager/direnv.nix
+              ./nixos/home-manager/firefox.nix
+              ./nixos/home-manager/vcs.nix
+            ];
+
+            role-configuration = {
+              inherit user-name;
+            };
+          };
         };
       };
     };
