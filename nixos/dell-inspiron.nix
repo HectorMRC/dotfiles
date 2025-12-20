@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   # Bootloader.
@@ -8,44 +8,34 @@
   networking.hostName = "dell-inspiron"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   # Enable networking
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Madrid";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "es_ES.UTF-8";
-    LC_IDENTIFICATION = "es_ES.UTF-8";
-    LC_MEASUREMENT = "es_ES.UTF-8";
-    LC_MONETARY = "es_ES.UTF-8";
-    LC_NAME = "es_ES.UTF-8";
-    LC_NUMERIC = "es_ES.UTF-8";
-    LC_PAPER = "es_ES.UTF-8";
-    LC_TELEPHONE = "es_ES.UTF-8";
-    LC_TIME = "es_ES.UTF-8";
-  };
-
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = false;
+  # services.xserver.enable = false;
+
+  # Configure keymap in X11
+  # services.xserver.xkb = {
+  #  layout = "us,es";
+  #  options = "grp:win_space_toggle";
+  # };
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
-  # Configure keymap in X11
-  #services.xserver.xkb = {
-  #  layout = "us";
-  #  variant = "";
-  #};
+  # Enagle SSDM on wayland.
+  # services.displayManager.sddm.wayland.enable = true;
+
+  # Enable Sway Windows manager.
+  # programs.sway = {
+  #   enable = true;
+  #   wrapperFeatures.gtk = true; # Fixes common issues with GTK 3 apps
+  # };
+
+  # Enable Niri windows manager.
+  programs.niri.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -76,10 +66,6 @@
     extraGroups = [
       "networkmanager"
       "wheel"
-    ];
-    packages = with pkgs; [
-      kdePackages.kate
-      #  thunderbird
     ];
   };
 

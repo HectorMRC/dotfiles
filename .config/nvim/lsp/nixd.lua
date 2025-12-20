@@ -10,7 +10,22 @@
 
 ---@type vim.lsp.Config
 return {
-    cmd = { 'nixd' },
-    filetypes = { 'nix' },
-    root_markers = { 'flake.nix', '.git' },
+    cmd = { "nixd" },
+    filetypes = { "nix" },
+    root_markers = { "flake.nix", ".git" },
+    settings = {
+        nixd = {
+            formatting = {
+                command = { "nixfmt" },
+            },
+        },
+    },
+    on_attach = function(_, bufnr)
+        vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+            buffer = bufnr,
+            callback = function()
+                vim.cmd [[silent! !nixfmt %]]
+            end,
+        })
+    end,
 }
