@@ -38,7 +38,7 @@
     # Enable the OpenSSH daemon.
     services.openssh.enable = true;
 
-    # Nix optimizations.
+    # Nix configuration.
     nix = {
       gc = {
         automatic = true;
@@ -47,6 +47,11 @@
       };
 
       optimise.automatic = true;
+
+      settings.experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
     };
 
     # This value determines the NixOS release from which the default
