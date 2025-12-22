@@ -72,7 +72,6 @@
             ./nixos/locale.nix
             ./nixos/network.nix
             ./nixos/niri.nix
-            ./nixos/nix.nix
             ./nixos/pipewire.nix
             ./nixos/startup.nix
           ];
