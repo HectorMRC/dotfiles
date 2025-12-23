@@ -11,18 +11,25 @@ let
     Sddm = "sddm";
   };
 
+  desktop-environments = {
+    Niri = "niri";
+    Plasma = "plasma";
+  };
+
   # An intermediary user/group to execute tuigreet.
-  greet = rec {
+  tuigreet = rec {
     user = "greeter";
     group = user;
   };
 in
 {
   options.desktop-environment = with lib; {
-    enable-niri = mkEnableOption "Niri Wayland compositor";
-    enable-plasma = mkEnableOption "KDE Plasma 6";
     display-manager = mkOption {
       type = types.enum (builtins.attrValues display-managers);
+    };
+
+    sessions = mkOption {
+      type = types.nonEmptyListOf (types.enum (builtins.attrValues desktop-environments));
     };
   };
 
@@ -49,12 +56,12 @@ in
       };
     };
 
-    # Configure Greetd with TUIgreet.
+    # Configure greetd with tuigreet.
     services.greetd = {
       enable = display-manager == display-managers.Greet;
       settings = {
         default_session = {
-          user = "${greet.user}";
+          user = "${tuigreet.user}";
           command = ''
             ${pkgs.tuigreet}/bin/tuigreet \
             --sessions ${config.system.path}/share/wayland-sessions \
@@ -81,15 +88,15 @@ in
 
       tmpfiles.rules = [
         # Cache directory must be created for --remember* features to work.
-        "d /var/cache/tuigreet 0755 ${greet.user} ${greet.group} -"
+        "d /var/cache/tuigreet 0755 ${tuigreet.user} ${tuigreet.group} -"
       ];
     };
 
     # Enable the KDE Plasma Desktop Environment.
-    services.desktopManager.plasma6.enable = enable-plasma;
+    services.desktopManager.plasma6.enable = builtins.elem desktop-environments.Plasma sessions;
 
     # Enable Niri - A scrollable-tiling Wayland compositor.
-    programs.niri.enable = enable-niri;
+    programs.niri.enable = builtins.elem desktop-environments.Niri sessions;
 
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono

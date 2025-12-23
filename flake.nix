@@ -13,6 +13,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,11 +25,15 @@
       nixpkgs,
       colmena,
       home-manager,
+      rust-overlay,
       ...
     }:
     let
       pkgs = import nixpkgs {
         system = "x86_64-linux";
+        overlays = [
+          rust-overlay.overlays.default
+        ];
       };
 
       devices = {
@@ -77,9 +86,11 @@
           ];
 
           desktop-environment = {
-            enable-niri = true;
-            enable-plasma = true;
             display-manager = "greet";
+            sessions = [
+              "niri"
+              "plasma"
+            ];
           };
 
           role-configuration = {
@@ -88,11 +99,11 @@
 
           home-manager.users.${user-name} = {
             imports = [
-              ./nixos/home-manager
-              ./nixos/home-manager/alacritty.nix
-              ./nixos/home-manager/direnv.nix
-              ./nixos/home-manager/firefox.nix
-              ./nixos/home-manager/vcs.nix
+              ./home-manager
+              ./home-manager/alacritty.nix
+              ./home-manager/direnv.nix
+              ./home-manager/firefox.nix
+              ./home-manager/vcs.nix
             ];
 
             role-configuration = {
