@@ -75,7 +75,7 @@
           };
 
           imports = [
-            ./nixos/hardware-configuration/dell-inspiron.nix
+            ./hardware-configuration/dell-inspiron.nix
             ./nixos/desktop.nix
             ./nixos/device.nix
             ./nixos/locale.nix
@@ -103,6 +103,7 @@
               ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
               ./home-manager/firefox.nix
+              ./home-manager/neovim.nix
               ./home-manager/vcs.nix
             ];
 
