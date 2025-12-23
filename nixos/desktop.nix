@@ -5,13 +5,13 @@
   ...
 }:
 let
-  display-managers = {
+  DisplayManagers = {
     Greet = "greet";
     Ly = "ly";
     Sddm = "sddm";
   };
 
-  desktop-environments = {
+  DesktopEnvironments = {
     Niri = "niri";
     Plasma = "plasma";
   };
@@ -25,11 +25,11 @@ in
 {
   options.desktop-environment = with lib; {
     display-manager = mkOption {
-      type = types.enum (builtins.attrValues display-managers);
+      type = types.enum (builtins.attrValues DisplayManagers);
     };
 
     sessions = mkOption {
-      type = types.nonEmptyListOf (types.enum (builtins.attrValues desktop-environments));
+      type = types.nonEmptyListOf (types.enum (builtins.attrValues DesktopEnvironments));
     };
   };
 
@@ -39,13 +39,13 @@ in
 
     # Configure SDDM to use Wayland.
     services.displayManager.sddm = {
-      enable = display-manager == display-managers.Sddm;
+      enable = display-manager == DisplayManagers.Sddm;
       wayland.enable = true;
     };
 
     # Configure Ly.
     services.displayManager.ly = {
-      enable = display-manager == display-managers.Ly;
+      enable = display-manager == DisplayManagers.Ly;
       x11Support = false;
       settings = {
         asterisk = "0x2022";
@@ -58,7 +58,7 @@ in
 
     # Configure greetd with tuigreet.
     services.greetd = {
-      enable = display-manager == display-managers.Greet;
+      enable = display-manager == DisplayManagers.Greet;
       settings = {
         default_session = {
           user = "${tuigreet.user}";
@@ -74,7 +74,7 @@ in
       };
     };
 
-    systemd = lib.mkIf (display-manager == display-managers.Greet) {
+    systemd = lib.mkIf (display-manager == DisplayManagers.Greet) {
       services.greetd.serviceConfig = {
         Type = "idle";
         StandardInput = "tty";
@@ -93,10 +93,10 @@ in
     };
 
     # Enable the KDE Plasma Desktop Environment.
-    services.desktopManager.plasma6.enable = builtins.elem desktop-environments.Plasma sessions;
+    services.desktopManager.plasma6.enable = builtins.elem DesktopEnvironments.Plasma sessions;
 
     # Enable Niri - A scrollable-tiling Wayland compositor.
-    programs.niri.enable = builtins.elem desktop-environments.Niri sessions;
+    programs.niri.enable = builtins.elem DesktopEnvironments.Niri sessions;
 
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono

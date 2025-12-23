@@ -4,9 +4,11 @@
   ...
 }:
 {
-  options.role-configuration = with lib; {
-    user-name = mkOption {
-      type = types.nonEmptyStr;
+  options = with lib; {
+    role-configuration = {
+      user-name = mkOption {
+        type = types.nonEmptyStr;
+      };
     };
   };
 

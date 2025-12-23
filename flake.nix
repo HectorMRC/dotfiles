@@ -91,6 +91,7 @@
           home-manager.users.${user-name} = {
             imports = [
               ./home-manager
+              ./home-manager/desktop.nix
               ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
               ./home-manager/firefox.nix
@@ -109,6 +110,7 @@
 
             desktop-environment = {
               wallpaper = ./Pictures/Wallpapers/rocket.png;
+              profile = [ "personal" ];
             };
           };
         };
