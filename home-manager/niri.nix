@@ -58,6 +58,10 @@ let
         }
       }
 
+      cursor {
+        hide-after-inactive-ms 5000
+      }
+
       spawn-at-startup "${lib.getExe pkgs.wbg}" "${config.desktop-environment.wallpaper}"
       // spawn-at-startup "waybar"
 
@@ -370,6 +374,12 @@ in
       niri
       wbg
     ];
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+    };
 
     xdg.configFile."niri/config.kdl" = {
       source = configFile;

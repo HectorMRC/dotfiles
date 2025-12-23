@@ -64,9 +64,9 @@ in
           user = "${tuigreet.user}";
           command = ''
             ${pkgs.tuigreet}/bin/tuigreet \
-            --sessions ${config.system.path}/share/wayland-sessions \
+            --sessions ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions \
             --remember \
-            --xsessions \ # ${config.system.path}/share/xsessions \
+            --xsessions \ # ${config.services.displayManager.sessionData.desktops}/share/xsessions \
             --remember-user-session \
             --time 
           '';

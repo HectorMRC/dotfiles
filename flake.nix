@@ -71,7 +71,6 @@
             ./nixos/device.nix
             ./nixos/locale.nix
             ./nixos/network.nix
-            ./nixos/niri.nix
             ./nixos/pipewire.nix
             ./nixos/startup.nix
           ];
@@ -80,7 +79,6 @@
             display-manager = "greet";
             sessions = [
               "niri"
-              "plasma"
             ];
           };
 
@@ -106,7 +104,7 @@
             };
 
             desktop-environment = {
-              wallpaper = ./Pictures/Wallpapers/starry-sky.png;
+              wallpaper = ./Pictures/Wallpapers/rocket.png;
             };
           };
         };
