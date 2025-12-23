@@ -84,6 +84,7 @@
 
           role-configuration = {
             inherit host-name user-name;
+            shell = "zsh";
           };
 
           home-manager.users.${user-name} = {
@@ -97,6 +98,7 @@
               ./home-manager/niri.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
+              ./home-manager/zsh.nix
             ];
 
             role-configuration = {

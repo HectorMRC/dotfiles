@@ -4,21 +4,35 @@
   pkgs,
   ...
 }:
+let
+  Shells = {
+    Bash = "bash";
+    Zsh = "zsh";
+  };
+in
 {
 
   options.role-configuration = with lib; {
     user-name = mkOption {
       type = types.nonEmptyStr;
     };
+    shell = mkOption {
+      type = types.enum (builtins.attrValues Shells);
+      default = Shells.Bash;
+    };
   };
 
   config = with config.role-configuration; {
-    # Allow unfree packages
+    # Allow unfree packages.
     nixpkgs.config.allowUnfree = true;
+
+    # Enable the selected shell.
+    programs.${shell}.enable = true;
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
     users.users.${user-name} = {
       isNormalUser = true;
+      shell = pkgs.${shell};
       extraGroups = [
         "networkmanager"
         "wheel"
