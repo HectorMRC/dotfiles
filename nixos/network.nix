@@ -5,9 +5,6 @@
 }:
 {
   options.role-configuration = with lib; {
-    user-name = mkOption {
-      type = types.nonEmptyStr;
-    };
     host-name = mkOption {
       type = types.nonEmptyStr;
     };
@@ -17,5 +14,8 @@
     networking.networkmanager.enable = true;
     networking.hostName = host-name; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+    # For storing passwords securely without a full desktop environment.
+    services.gnome.gnome-keyring.enable = true;
   };
 }

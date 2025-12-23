@@ -13,16 +13,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -30,17 +20,11 @@
       nixpkgs,
       colmena,
       home-manager,
-      niri,
-      rust-overlay,
       ...
     }:
     let
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        overlays = [
-          niri.overlays.niri
-          rust-overlay.overlays.default
-        ];
       };
 
       devices = {
@@ -66,7 +50,6 @@
         defaults = {
           imports = [
             home-manager.nixosModules.home-manager
-            niri.nixosModules.niri
           ];
 
           home-manager = {
@@ -123,7 +106,7 @@
             };
 
             desktop-environment = {
-              wallpaper = ./Pictures/Wallpapers/rocket.png;
+              wallpaper = ./Pictures/Wallpapers/starry-sky.png;
             };
           };
         };
