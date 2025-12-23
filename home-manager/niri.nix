@@ -31,7 +31,7 @@ let
       }
 
       layout {
-        gaps 16
+        gaps 8
         center-focused-column "never"
 
         preset-column-widths {
@@ -54,7 +54,7 @@ let
           inactive-color "#505050"
 
           // Color of the border around windows that request your attention.
-          urgent-color "#ffc800"
+          urgent-color "#FB4934FF";
         }
       }
 
@@ -70,6 +70,10 @@ let
       // Window rules let you adjust behavior for individual windows.
       // Find more information on the wiki:
       // https://yalter.github.io/niri/Configuration:-Window-Rules
+      window-rule {
+          match title="Firefox"
+          open-maximized true
+      }
 
       // Open the Firefox picture-in-picture player as floating by default.
       window-rule {
@@ -98,8 +102,8 @@ let
         Mod+Shift+Slash { show-hotkey-overlay; }
 
         // Suggested binds for running programs: terminal, app launcher, screen locker.
-        Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-        Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
+        Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
+        Alt+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun"; }
         Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
         // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
@@ -259,15 +263,15 @@ let
         Mod+7 { focus-workspace 7; }
         Mod+8 { focus-workspace 8; }
         Mod+9 { focus-workspace 9; }
-        Mod+Ctrl+1 { move-column-to-workspace 1; }
-        Mod+Ctrl+2 { move-column-to-workspace 2; }
-        Mod+Ctrl+3 { move-column-to-workspace 3; }
-        Mod+Ctrl+4 { move-column-to-workspace 4; }
-        Mod+Ctrl+5 { move-column-to-workspace 5; }
-        Mod+Ctrl+6 { move-column-to-workspace 6; }
-        Mod+Ctrl+7 { move-column-to-workspace 7; }
-        Mod+Ctrl+8 { move-column-to-workspace 8; }
-        Mod+Ctrl+9 { move-column-to-workspace 9; }
+        Mod+Shift+1 { move-column-to-workspace 1; }
+        Mod+Shift+2 { move-column-to-workspace 2; }
+        Mod+Shift+3 { move-column-to-workspace 3; }
+        Mod+Shift+4 { move-column-to-workspace 4; }
+        Mod+Shift+5 { move-column-to-workspace 5; }
+        Mod+Shift+6 { move-column-to-workspace 6; }
+        Mod+Shift+7 { move-column-to-workspace 7; }
+        Mod+Shift+8 { move-column-to-workspace 8; }
+        Mod+Shift+9 { move-column-to-workspace 9; }
 
         // Alternatively, there are commands to move just a single window:
         // Mod+Ctrl+1 { move-window-to-workspace 1; }

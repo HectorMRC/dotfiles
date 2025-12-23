@@ -97,6 +97,7 @@
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/niri.nix
+              ./home-manager/rofi.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
               ./home-manager/zsh.nix
