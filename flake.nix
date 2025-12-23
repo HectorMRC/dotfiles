@@ -14,6 +14,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +30,7 @@
       nixpkgs,
       colmena,
       home-manager,
+      niri,
       rust-overlay,
       ...
     }:
@@ -32,6 +38,7 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         overlays = [
+          niri.overlays.niri
           rust-overlay.overlays.default
         ];
       };
@@ -59,6 +66,7 @@
         defaults = {
           imports = [
             home-manager.nixosModules.home-manager
+            niri.nixosModules.niri
           ];
 
           home-manager = {
@@ -103,12 +111,19 @@
               ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
               ./home-manager/firefox.nix
+              ./home-manager/latex.nix
               ./home-manager/neovim.nix
+              ./home-manager/niri.nix
+              ./home-manager/tmux.nix
               ./home-manager/vcs.nix
             ];
 
             role-configuration = {
               inherit user-name;
+            };
+
+            desktop-environment = {
+              wallpaper = ./Pictures/Wallpapers/rocket.png;
             };
           };
         };
