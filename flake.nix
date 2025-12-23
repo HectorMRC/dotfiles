@@ -67,6 +67,7 @@
 
           imports = [
             ./hardware-configuration/dell-inspiron.nix
+            ./nixos/bluetooth.nix
             ./nixos/desktop.nix
             ./nixos/device.nix
             ./nixos/locale.nix
