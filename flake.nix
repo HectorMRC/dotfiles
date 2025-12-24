@@ -110,7 +110,7 @@
 
             desktop-environment = {
               wallpaper = ./Pictures/Wallpapers/rocket.png;
-              profile = [ "personal" ];
+              profiles = [ "personal" ];
             };
           };
         };
