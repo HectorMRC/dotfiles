@@ -15,6 +15,7 @@
 
   home.packages = with pkgs; [
     lua-language-server
+    nixd
     nixfmt-rfc-style
     stylua
     tombi

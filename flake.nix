@@ -40,6 +40,7 @@
           colmena.packages.x86_64-linux.colmena
         ];
         packages = [
+          pkgs.nixd
           pkgs.nixfmt-rfc-style
         ];
       };
@@ -99,6 +100,7 @@
               ./home-manager/neovim.nix
               ./home-manager/niri.nix
               ./home-manager/rofi.nix
+              ./home-manager/ssh.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
               ./home-manager/zsh.nix
@@ -112,6 +114,8 @@
               wallpaper = ./Pictures/Wallpapers/rocket.png;
               profiles = [ "personal" ];
             };
+
+            version-control-systems = [ "jj" ];
           };
         };
       };

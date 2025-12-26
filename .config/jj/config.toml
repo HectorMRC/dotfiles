@@ -6,3 +6,14 @@ email = "thehector1593@gmail.com"
 
 [ui]
 editor = "nvim"
+
+[aliases]
+a = ["abandon"]
+d = ["describe"]
+dff = ["diff", "-r"]
+e = ["edit", "--ignore-immutable"]
+f = ["git", "fetch", "--all-remotes"]
+gp = ["git", "push"]
+mm = ["b", "m", "main"]
+n = ["new"]
+sq = ["squash", "-u"]
