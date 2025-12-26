@@ -2,7 +2,9 @@
 {
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
+  # Enable Real Time Scheduling.
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     alsa.enable = true;

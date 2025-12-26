@@ -8,6 +8,19 @@ let
   Profiles = {
     Personal = "personal";
   };
+
+  # Force Spotify to run on Wayland.
+  spotify-wayland =
+    with pkgs;
+    (symlinkJoin {
+      name = "spotify";
+      paths = [ spotify ];
+      buildInputs = [ makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/spotify \
+        --add-flags "--enable-features=UseOzonePlatform --ozone-platform=wayland"
+      '';
+    });
 in
 {
   options = with lib; {
@@ -23,17 +36,8 @@ in
     lib.mkMerge [
       (lib.mkIf (builtins.elem Profiles.Personal profiles) {
         home.packages = with pkgs; [
-          # Force Spotify to run on Wayland.
-          (symlinkJoin {
-            name = "spotify";
-            paths = [ spotify ];
-            buildInputs = [ makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/spotify \
-                --add-flags "--enable-features=UseOzonePlatform --ozone-platform=wayland"
-            '';
-          })
           signal-desktop
+          spotify-wayland
         ];
       })
     ];
