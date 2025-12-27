@@ -22,7 +22,7 @@
     history.ignoreAllDups = true;
     history.path = "$HOME/.zsh_history";
 
-    initExtra = ''
+    initContent = ''
       autoload -U colors && colors
       PROMPT='╭ %F{green}%n@%m%f %F{blue}%~%f
       ╰─ '

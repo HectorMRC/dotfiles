@@ -5,7 +5,8 @@
 
     programs.ssh = {
       enable = true;
-      addKeysToAgent = "yes";
+      enableDefaultConfig = false; # default configs are deprecated.
+      matchBlocks."*".addKeysToAgent = "yes";
     };
   };
 }
