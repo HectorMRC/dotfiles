@@ -113,7 +113,7 @@
 
             theme.name = "gruvbox";
             desktop-environment = {
-              wallpaper = ./Pictures/Wallpapers/rocket.png;
+              wallpaper = ./assets/wallpapers/gruvbox-cyberpunk-girl.png;
               profiles = [ "personal" ];
             };
 
