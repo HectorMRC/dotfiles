@@ -20,4 +20,9 @@
     stylua
     tombi
   ];
+
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
 }
