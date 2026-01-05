@@ -37,5 +37,14 @@ in
     };
   };
 
-  config.theme.colors = themes.${config.theme.name};
+  config = {
+    theme.colors = themes.${config.theme.name};
+
+    # Set dark-mode system-wide.
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
 }

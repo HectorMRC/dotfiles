@@ -92,7 +92,6 @@
           home-manager.users.${user-name} = {
             imports = [
               ./home-manager
-              ./home-manager/desktop.nix
               ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
               ./home-manager/firefox.nix
@@ -100,6 +99,8 @@
               ./home-manager/neovim.nix
               ./home-manager/niri.nix
               ./home-manager/rofi.nix
+              ./home-manager/signal.nix
+              ./home-manager/spotify.nix
               ./home-manager/ssh.nix
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
@@ -114,7 +115,6 @@
             theme.name = "gruvbox";
             desktop-environment = {
               wallpaper = ./assets/wallpapers/gruvbox-cyberpunk-girl.png;
-              profiles = [ "personal" ];
             };
 
             version-control-systems = [ "jj" ];
