@@ -105,6 +105,7 @@
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
+              ./home-manager/waybar.nix
               ./home-manager/zsh.nix
             ];
 

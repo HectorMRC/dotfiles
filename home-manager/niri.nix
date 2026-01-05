@@ -63,7 +63,7 @@ let
       }
 
       spawn-at-startup "${lib.getExe pkgs.wbg}" "-s" "${config.desktop-environment.wallpaper}"
-      // spawn-at-startup "waybar"
+      spawn-at-startup "waybar"
 
       screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
 
