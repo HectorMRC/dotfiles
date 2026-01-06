@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   programs.waybar = {
     enable = true;
@@ -10,12 +10,8 @@
         reload_style_on_change = true;
         layer = "top";
         position = "left";
-        width = 30;
-        spacing = 8;
-        margin-top = 8;
-        margin-right = 8;
-        margin-bottom = 8;
-        margin-left = 8;
+        width = 20;
+        spacing = 12;
 
         include = [ "~/.config/waybar/modules.json" ];
 
@@ -29,6 +25,8 @@
 
         modules-right = [
           "niri/language"
+          "pulseaudio#microphone"
+          "pulseaudio"
           "network"
           "bluetooth"
           "battery"
@@ -111,11 +109,11 @@
 
         "niri/workspaces" = {
           on-click = "activate";
-          # format = "{icon}";
-          # format-icons = {
-          #   default = "󰄰";
-          #   active = "󰄯";
-          # };
+          format = "{icon}";
+          format-icons = {
+            default = "󰄰";
+            active = "󰄯";
+          };
         };
 
         "niri/language" = {
@@ -125,107 +123,76 @@
           tooltip = true;
           on-click = "niri msg action switch-layout next";
         };
+
+        "pulseaudio#microphone" = {
+          format = "{format_source}";
+          format-source = "<span size='14pt'>󰍬</span>";
+          format-source-muted = "<span size='14pt'>󰍭</span>";
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+          on-click-right = "pavucontrol";
+          tooltip = false;
+        };
+
+        pulseaudio = {
+          interval = 1;
+          format = "{icon}";
+          format-icons = [
+            "<span size='14pt'>󰕿</span>"
+            "<span size='14pt'>󰖀</span>"
+            "<span size='14pt'>󰕾</span>"
+          ];
+          format-muted = "<span size='14pt'>󰝟</span>";
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-click-right = "pavucontrol";
+          reverse-scrolling = true;
+          tooltip = true;
+          tooltip-format = "Volume: {volume}%\n{desc}";
+          ignored-sinks = [
+            "Easy Effects Sink"
+          ];
+        };
       };
     };
 
     style = ''
-      @define-color cursor #CDD6F4;
-      @define-color background #1E1E2E;
-      @define-color foreground #CDD6F4;
-      @define-color color0  #45475A;
-      @define-color color1  #F38BA8;
-      @define-color color2  #A6E3A1;
-      @define-color color3  #F9E2AF;
-      @define-color color4  #89B4FA;
-      @define-color color5  #F5C2E7;
-      @define-color color6  #94E2D5;
-      @define-color color7  #BAC2DE;
-      @define-color color8  #585B70;
-      @define-color color9  #F38BA8;
-      @define-color color10 #A6E3A1;
-      @define-color color11 #F9E2AF;
-      @define-color color12 #89B4FA;
-      @define-color color13 #F5C2E7;
-      @define-color color14 #94E2D5;
-      @define-color color15 #A6ADC8;
-
       * {
         font-family: "JetBrainsMono Nerd Font Propo";
         font-size: 16px;
         border-radius: 0;
         box-shadow: none;
-      }
-
-      window#waybar {
-        background: transparent;
-      }
-
-      #network:hover,
-      #bluetooth:hover,
-      #custom-powermenu:hover {
-        opacity: 0.5;
+        color: ${config.theme.colors.foreground};
       }
 
       #clock,
-      #network,
-      #bluetooth,
-      #battery,
-      #custom-powermenu {
-        color: @foreground;
-        padding: 6px 0;
-      }
-
-      #workspaces button {
-        color: @foreground;
-        padding: 0;
-      }
-      #workspaces button.active {
-        color: @color2;
-      }
-
-      #language {
-        padding-bottom: 15px;
+      #battery {
+        padding: 12px 0;
       }
 
       #clock {
-        color: @color4;
+        color: ${config.theme.colors.accent};
       }
 
-      #network.disabled {
-        color: @color1;
-      }
-      #network.wifi {
-        color: @color2;
-      }
-      #network.ethernet {
-        color: @color3;
-      }
-
-      #bluetooth.disabled {
-        color: @color1;
-      }
-      #bluetooth.connected {
-        color: @color4;
-      }
-
-      #battery.plugged {
-        color: @color4;
-      }
-      #battery.charging {
-        color: @color2;
-      }
-      #battery.critical {
-        color: @color3;
+      #language {
+        padding-bottom: 12px;
       }
 
       tooltip {
-        background: @background;
-        border: 1px solid @foreground;
+        background: ${config.theme.colors.surface};
+        border: 1px solid ${config.theme.colors.border};
       }
       tooltip * {
-        color: @foreground;
-        margin: 2px;
-        background: @background;
+        background: ${config.theme.colors.surface};
+        color: ${config.theme.colors.foreground};
+      }
+
+      window#waybar {
+        background: ${config.theme.colors.background};
+      }
+
+      #workspaces button {
+        background: none;
+        box-shadow: none;
+        border: none;
       }
     '';
   };

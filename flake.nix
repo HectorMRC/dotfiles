@@ -98,6 +98,7 @@
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/niri.nix
+              ./home-manager/pavucontrol.nix
               ./home-manager/rofi.nix
               ./home-manager/signal.nix
               ./home-manager/spotify.nix
