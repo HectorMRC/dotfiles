@@ -96,15 +96,14 @@
               ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
               ./home-manager/firefox.nix
+              ./home-manager/hyprlock.nix
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/niri.nix
-              ./home-manager/pavucontrol.nix
               ./home-manager/rofi.nix
               ./home-manager/signal.nix
               ./home-manager/spotify.nix
               ./home-manager/ssh.nix
-              ./home-manager/swaylock.nix
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
@@ -118,7 +117,7 @@
 
             theme.name = "gruvbox";
             desktop-environment = {
-              wallpaper = ./assets/wallpapers/gruvbox-cyberpunk-girl.png;
+              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
             };
 
             version-control-systems = [ "jj" ];

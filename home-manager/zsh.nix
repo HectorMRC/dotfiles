@@ -11,7 +11,7 @@
       cheatsheet = ''
         echo "Bluetooth"
         echo "  systemctl [status|start|stop] bluetooth"
-        echi "  bluetoothctl"
+        echo "  bluetoothctl"
         echo "Network"
         echo "  nmcli connection show"
         echo "  nmcli device wifi connect \"<wifi name>\" [password \"<password>\"]"

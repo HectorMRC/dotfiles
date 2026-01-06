@@ -91,7 +91,7 @@ let
 
         Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
         Alt+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun"; }
-        Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+        Mod+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn-sh "hyprlock --grace 5"; }
 
         // Audio keys mapping
         XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
@@ -124,7 +124,7 @@ let
         Mod+H     { focus-column-left; }
         Mod+J     { focus-window-down; }
         Mod+K     { focus-window-up; }
-        Mod+L     { focus-column-right; }
+        // Mod+L     { focus-column-right; }
 
         Mod+Ctrl+Left  { move-column-left; }
         Mod+Ctrl+Down  { move-window-down; }
