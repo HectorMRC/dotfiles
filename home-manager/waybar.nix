@@ -169,7 +169,7 @@
       }
 
       #clock {
-        color: ${config.theme.colors.accent};
+        color: ${config.theme.colors.info};
       }
 
       #language {

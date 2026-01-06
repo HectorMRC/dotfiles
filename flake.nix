@@ -73,6 +73,7 @@
             ./nixos/device.nix
             ./nixos/locale.nix
             ./nixos/network.nix
+            ./nixos/pam.nix
             ./nixos/pipewire.nix
             ./nixos/startup.nix
           ];
@@ -103,6 +104,7 @@
               ./home-manager/signal.nix
               ./home-manager/spotify.nix
               ./home-manager/ssh.nix
+              ./home-manager/swaylock.nix
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
