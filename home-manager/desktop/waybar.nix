@@ -1,4 +1,13 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  pkgs,
+  ...
+}:
+let
+  withNiri = osConfig.programs.niri.enable;
+in
 {
   home.packages = with pkgs; [
     brightnessctl
@@ -10,9 +19,11 @@
   programs.waybar = {
     enable = true;
     settings = {
-      mainBar = {
+      mainBar = with lib; {
         # See Waybar configuration for more options:
         # https://github.com/Alexays/Waybar/wiki/Configuration
+
+        ipc = true;
 
         reload_style_on_change = true;
         layer = "top";
@@ -30,18 +41,22 @@
           "clock"
         ];
 
-        modules-center = [
+        modules-center = mkIf withNiri [
           "niri/workspaces"
         ];
 
-        modules-right = [
-          "niri/language"
-          "pulseaudio#input"
-          "pulseaudio#output"
-          "backlight"
-          "network"
-          "bluetooth"
-          "battery"
+        modules-right = mkMerge [
+          (mkIf withNiri [
+            "niri/language"
+          ])
+          [
+            "pulseaudio#input"
+            "group/audio"
+            "group/brightness"
+            "network"
+            "bluetooth"
+            "battery"
+          ]
         ];
 
         backlight = {
@@ -60,8 +75,18 @@
 
           tooltip = true;
           tooltip-format = "Brightness: {percent}%";
+          interval = 1;
+
+          scroll-step = 0; # disable scrolling
+          reverse-scrolling = true;
 
           on-click-right = "brightnessctl";
+        };
+
+        "backlight/slider" = {
+          min = 0;
+          max = 100;
+          orientation = "vertical";
         };
 
         battery = {
@@ -119,6 +144,32 @@
           tooltip-format = "{calendar}";
         };
 
+        "group/audio" = {
+          orientation = "inherit";
+          drawer = {
+            children-class = "audio";
+            transition-duration = 400;
+            transition-left-to-right = false;
+          };
+          modules = [
+            "pulseaudio#output"
+            # "pulseaudio/slider"
+          ];
+        };
+
+        "group/brightness" = {
+          orientation = "inherit";
+          drawer = {
+            children-class = "brightness";
+            transition-duration = 400;
+            transition-left-to-right = false;
+          };
+          modules = [
+            "backlight"
+            # "backlight/slider"
+          ];
+        };
+
         network = {
           format-icons = {
             wifi = [
@@ -147,7 +198,7 @@
           on-click-right = "nm-connection-editor";
         };
 
-        "niri/workspaces" = {
+        "niri/workspaces" = mkIf withNiri {
           on-click = "activate";
           format = "{icon}";
           format-icons = {
@@ -156,7 +207,7 @@
           };
         };
 
-        "niri/language" = {
+        "niri/language" = mkIf withNiri {
           format = "{}";
           format-en = "us";
           format-es = "es";
@@ -172,12 +223,13 @@
           tooltip = true;
           tooltip-format = "{desc}";
 
+          scroll-step = 0; # disable scrolling
+
           on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
           on-click-right = "pavucontrol";
         };
 
         "pulseaudio#output" = {
-          interval = 1;
           format = "{icon}";
           format-icons = [
             "<span size='14pt'>󰕿</span>"
@@ -188,9 +240,19 @@
 
           tooltip = true;
           tooltip-format = "Volume: {volume}%\n{desc}";
+          interval = 1;
+
+          scroll-step = 0; # disable scrolling
+          reverse-scrolling = true;
 
           on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           on-click-right = "pavucontrol";
+        };
+
+        "pulseaudio/slider" = {
+          min = 0;
+          max = 100;
+          orientation = "vertical";
         };
       };
     };
@@ -208,6 +270,41 @@
         color: ${config.theme.colors.foreground-disabled};
       }
 
+      #backlight-slider,
+      #pulseaudio-slider {
+        min-height: 80px;
+      }
+
+      #backlight-slider slider,
+      #pulseaudio-slider slider {
+        background: transparent;
+      }
+
+      #backlight-slider trough,
+      #pulseaudio-slider trough {
+        min-width: 8px;
+        background: ${config.theme.colors.background};
+      }
+
+      #backlight-slider highlight,
+      #pulseaudio-slider highlight {
+        background: ${config.theme.colors.info};
+      }
+
+      #backlight-slider,
+      #pulseaudio-slider,
+      #backlight-slider slider,
+      #pulseaudio-slider slider,
+      #backlight-slider trough,
+      #pulseaudio-slider trough,
+      #backlight-slider highlight,
+      #pulseaudio-slider highlight {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        outline-style: none;
+      }
+
       #battery.low {
         color: ${config.theme.colors.warning};
       }
@@ -216,7 +313,7 @@
       }
       #battery.charging,
       #battery.plugged {
-        color: ${config.theme.colors.accent};
+        color: ${config.theme.colors.info};
       }
 
       #clock {

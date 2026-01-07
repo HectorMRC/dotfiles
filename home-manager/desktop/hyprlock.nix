@@ -3,7 +3,6 @@ let
   accent = lib.removePrefix "#" config.theme.colors.accent;
   warning = lib.removePrefix "#" config.theme.colors.warning;
   error = lib.removePrefix "#" config.theme.colors.error;
-  background = lib.removePrefix "#" config.theme.colors.background;
   surface = lib.removePrefix "#" config.theme.colors.surface;
   foreground = lib.removePrefix "#" config.theme.colors.foreground;
   foreground-muted = lib.removePrefix "#" config.theme.colors.foreground-muted;
@@ -60,7 +59,7 @@ in
           valign = "center";
         }
         {
-          text = "<span size='14pt'>󰌌</span>  $LAYOUT";
+          text = "<span size='14pt'> </span>$LAYOUT";
           color = "rgb(${foreground-muted})";
           font_size = 12;
           font_family = "Noto Sans";

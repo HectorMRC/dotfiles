@@ -69,13 +69,13 @@
           imports = [
             ./hardware-configuration/dell-inspiron.nix
             ./nixos/bluetooth.nix
-            ./nixos/desktop.nix
             ./nixos/device.nix
             ./nixos/locale.nix
             ./nixos/network.nix
             ./nixos/pam.nix
             ./nixos/pipewire.nix
             ./nixos/startup.nix
+            ./nixos/desktop
           ];
 
           desktop-environment = {
@@ -93,22 +93,15 @@
           home-manager.users.${user-name} = {
             imports = [
               ./home-manager
-              ./home-manager/alacritty.nix
               ./home-manager/direnv.nix
-              ./home-manager/firefox.nix
-              ./home-manager/hyprlock.nix
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
-              ./home-manager/niri.nix
-              ./home-manager/rofi.nix
-              ./home-manager/signal.nix
-              ./home-manager/spotify.nix
               ./home-manager/ssh.nix
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
               ./home-manager/vcs.nix
-              ./home-manager/waybar.nix
               ./home-manager/zsh.nix
+              ./home-manager/desktop
             ];
 
             role-configuration = {
@@ -118,6 +111,7 @@
             theme.name = "gruvbox";
             desktop-environment = {
               wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+              profile = "personal";
             };
 
             version-control-systems = [ "jj" ];
