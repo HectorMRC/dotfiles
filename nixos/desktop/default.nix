@@ -57,6 +57,11 @@ in
       "JetBrains Mono Medium"
     ];
 
+    environment.sessionVariables = {
+      # Force Electron apps to use the Wayland backend natively
+      NIXOS_OZONE_WL = "1";
+    };
+
     # Allow screensharing.
     security.rtkit.enable = true;
   };

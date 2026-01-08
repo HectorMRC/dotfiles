@@ -65,7 +65,10 @@ in
     settings = {
       "$schema" = "https://starship.rs/config-schema.json";
 
-      format = "[](fg:${surface})$username[](fg:${surface} bg:${info})$directory[](fg:${info} bg:${warning})\${custom.vcs}[](fg:${warning})\n[  ](fg:${foreground})";
+      format = ''
+        [](fg:${surface})$username[](fg:${surface} bg:${info})$directory[](fg:${info} bg:${warning})''${custom.vcs}[](fg:${warning})
+        [  ](fg:${foreground})
+      '';
 
       add_newline = true;
 
