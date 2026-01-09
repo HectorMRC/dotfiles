@@ -52,7 +52,7 @@ in
           [
             "pulseaudio#input"
             "group/audio"
-            "group/brightness"
+            # "group/brightness"
             "network"
             "bluetooth"
             "battery"
@@ -198,7 +198,7 @@ in
           on-click-right = "nm-connection-editor";
         };
 
-        "niri/workspaces" = mkIf withNiri {
+        "niri/workspaces" = {
           on-click = "activate";
           format = "{icon}";
           format-icons = {
@@ -207,7 +207,7 @@ in
           };
         };
 
-        "niri/language" = mkIf withNiri {
+        "niri/language" = {
           format = "{}";
           format-en = "us";
           format-es = "es";

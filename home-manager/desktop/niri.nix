@@ -357,6 +357,7 @@ in
 
   config = lib.mkIf withNiri {
     home.packages = with pkgs; [
+      xwayland-satellite
       niri
       wbg
     ];
