@@ -9,6 +9,7 @@
 vim.lsp.enable {
     "lua_ls",
     "nixd",
+    "pylsp",
     "rust_analyzer",
     "tombi",
 }

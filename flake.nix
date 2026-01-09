@@ -23,8 +23,10 @@
       ...
     }:
     let
+      system = "x86_64-linux";
+
       pkgs = import nixpkgs {
-        system = "x86_64-linux";
+        inherit system;
       };
 
       devices = {
@@ -35,9 +37,9 @@
       };
     in
     {
-      devShells.x86_64-linux.default = pkgs.mkShell {
+      devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
-          colmena.packages.x86_64-linux.colmena
+          colmena.packages.${system}.colmena
         ];
         packages = [
           pkgs.nixd
