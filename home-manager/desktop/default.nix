@@ -22,7 +22,6 @@ in
     ./hyprlock.nix
     ./niri.nix
     ./rofi.nix
-    ./spotify.nix
     ./vscode.nix
     ./waybar.nix
   ];
@@ -33,6 +32,7 @@ in
       {
         home.packages = with pkgs; [
           signal-desktop
+          spotify
         ];
 
         # Set natural scroll system-wide.
