@@ -47,9 +47,10 @@ in
         home.packages = with pkgs; [
           inkscape
           mpv
+          novelwriter
+          xwayland-satellite # needed by: novelwriter
           obsidian
         ];
-
       })
     ];
 }
