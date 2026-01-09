@@ -94,6 +94,7 @@
             imports = [
               ./home-manager
               ./home-manager/direnv.nix
+              ./home-manager/keygen.nix
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/ssh.nix
