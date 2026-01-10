@@ -7,7 +7,7 @@
 
 ---@type vim.lsp.Config
 return {
-        cmd = { "pylsp" },
+    cmd = { "pylsp" },
     filetypes = { "python" },
     root_markers = {
         "pyproject.toml",
