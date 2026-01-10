@@ -5,14 +5,14 @@
 }:
 {
   options = with lib; {
-    role-configuration = {
+    role = {
       user-name = mkOption {
         type = types.nonEmptyStr;
       };
     };
   };
 
-  config = with config.role-configuration; {
+  config = with config.role; {
     programs.home-manager.enable = true;
 
     home.username = user-name;

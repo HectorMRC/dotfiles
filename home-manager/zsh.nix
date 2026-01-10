@@ -5,6 +5,8 @@
   ...
 }:
 let
+  withNiri = osConfig.programs.niri.enable;
+
   accent = config.theme.colors.accent;
   success = config.theme.colors.success;
   info = config.theme.colors.info;
@@ -13,9 +15,6 @@ let
   background = config.theme.colors.background;
   surface = config.theme.colors.surface;
   foreground = config.theme.colors.foreground;
-
-  withNiri = osConfig.programs.niri.enable;
-
 in
 {
   programs.zsh = {

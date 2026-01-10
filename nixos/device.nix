@@ -11,8 +11,7 @@ let
   };
 in
 {
-
-  options.role-configuration = with lib; {
+  options.role = with lib; {
     user-name = mkOption {
       type = types.nonEmptyStr;
     };
@@ -22,7 +21,7 @@ in
     };
   };
 
-  config = with config.role-configuration; {
+  config = with config.role; {
     # Allow unfree packages.
     nixpkgs.config.allowUnfree = true;
 

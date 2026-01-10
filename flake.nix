@@ -87,7 +87,7 @@
             ];
           };
 
-          role-configuration = {
+          role = {
             inherit host-name user-name;
             shell = "zsh";
           };
@@ -107,7 +107,7 @@
               ./home-manager/desktop
             ];
 
-            role-configuration = {
+            role = {
               inherit user-name;
             };
 
