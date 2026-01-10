@@ -44,6 +44,9 @@ in
     };
 
     shellAliases = {
+      update = "sudo nixos-rebuild switch";
+      upgrade = "sudo nixos-rebuild switch --upgrade";
+      gc = "sudo nix-collect-garbage -d";
       cheatsheet = ''
         echo "Bluetooth"
         echo "  systemctl [status|start|stop] bluetooth"
