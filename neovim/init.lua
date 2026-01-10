@@ -1,7 +1,9 @@
-vim.g.base46_cache = vim.fn.stdpath "data" .. "/base46/"
-vim.g.mapleader = " " -- must be done before loading Lazy
+vim.g.mapleader = " "
 
--- bootstrap lazy and all plugins
+local with_mason = vim.loop.fs_stat "/etc/nixos" == nil
+local base46_cache_dir = with_mason and "/nvchad/base46/" or "/base46/"
+vim.g.base46_cache = vim.fn.stdpath "data" .. base46_cache_dir
+
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 
 if not vim.uv.fs_stat(lazypath) then
@@ -28,7 +30,6 @@ require("lazy").setup({
     },
 }, lazy_config)
 
--- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
