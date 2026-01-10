@@ -81,7 +81,7 @@
           ];
 
           desktop-environment = {
-            display-manager = "greet";
+            display-manager = "none";
             sessions = [
               "niri"
             ];

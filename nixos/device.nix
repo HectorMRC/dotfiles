@@ -52,6 +52,13 @@ in
     # Enable the OpenSSH daemon.
     services.openssh.enable = true;
 
+    # Laptop.
+    services.logind = {
+      lidSwitch = "suspend";
+      lidSwitchExternalPower = "ignore";
+      lidSwitchDocked = "ignore";
+    };
+
     # Nix configuration.
     nix = {
       gc = {

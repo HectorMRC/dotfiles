@@ -9,6 +9,7 @@ let
     Greet = "greet";
     Ly = "ly";
     Sddm = "sddm";
+    None = "none";
   };
 
   DesktopEnvironments = {
@@ -37,12 +38,12 @@ in
     # Disable the X11 windowing system.
     services.xserver.enable = false;
 
-    # Display managers:
+    # Display manager.
     display-manager.sddm.enable = display-manager == DisplayManagers.Sddm;
     display-manager.ly.enable = display-manager == DisplayManagers.Ly;
     display-manager.greetd.enable = display-manager == DisplayManagers.Greet;
 
-    # Desktop environment:
+    # Desktop environment.
     services.desktopManager.plasma6.enable = builtins.elem DesktopEnvironments.Plasma sessions;
     programs.niri.enable = builtins.elem DesktopEnvironments.Niri sessions;
 
@@ -58,7 +59,7 @@ in
     ];
 
     environment.sessionVariables = {
-      # Force Electron apps to use the Wayland backend natively
+      # Force Electron apps to use the Wayland backend natively.
       NIXOS_OZONE_WL = "1";
     };
 

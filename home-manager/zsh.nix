@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  config,
+  osConfig,
+  lib,
+  ...
+}:
 let
   accent = config.theme.colors.accent;
   success = config.theme.colors.success;
@@ -8,6 +13,9 @@ let
   background = config.theme.colors.background;
   surface = config.theme.colors.surface;
   foreground = config.theme.colors.foreground;
+
+  withNiri = osConfig.programs.niri.enable;
+
 in
 {
   programs.zsh = {
@@ -54,6 +62,17 @@ in
       autoload -U colors && colors
       PROMPT='╭─ %F{${success}}%n@%m%f %F{${info}}%~%f
       ╰─ '
+    '';
+
+    initExtra = lib.mkIf withNiri ''
+      if [[ 
+          "$(tty)" == "/dev/tty1" 
+          && "$XDG_SESSION_TYPE" == "tty" 
+          && -z "$XDG_CURRENT_DESKTOP" 
+          && -z "$WAYLAND_DISPLAY" 
+      ]]; then
+          exec niri-session
+      fi;
     '';
   };
 

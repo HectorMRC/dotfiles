@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
   options.display-manager.sddm = with lib; {
     enable = mkEnableOption "sddm";
