@@ -4,27 +4,24 @@
   pkgs,
   ...
 }:
-let
-  DisplayManagers = {
-    Greet = "greet";
-    Ly = "ly";
-    Sddm = "sddm";
-    None = "none";
-  };
-
-  DesktopEnvironments = {
-    Niri = "niri";
-    Plasma = "plasma";
-  };
-in
 {
   options.desktop-environment = with lib; {
     display-manager = mkOption {
-      type = types.enum (builtins.attrValues DisplayManagers);
+      type = types.enum [
+        "greet"
+        "ly"
+        "sddm"
+        "none"
+      ];
     };
 
     sessions = mkOption {
-      type = types.nonEmptyListOf (types.enum (builtins.attrValues DesktopEnvironments));
+      type = types.nonEmptyListOf (
+        types.enum [
+          "niri"
+          "plasma"
+        ]
+      );
     };
   };
 
@@ -39,13 +36,13 @@ in
     services.xserver.enable = false;
 
     # Display manager.
-    display-manager.sddm.enable = display-manager == DisplayManagers.Sddm;
-    display-manager.ly.enable = display-manager == DisplayManagers.Ly;
-    display-manager.greetd.enable = display-manager == DisplayManagers.Greet;
+    display-manager.sddm.enable = display-manager == "sddm";
+    display-manager.ly.enable = display-manager == "ly";
+    display-manager.greetd.enable = display-manager == "greet";
 
     # Desktop environment.
-    services.desktopManager.plasma6.enable = builtins.elem DesktopEnvironments.Plasma sessions;
-    programs.niri.enable = builtins.elem DesktopEnvironments.Niri sessions;
+    services.desktopManager.plasma6.enable = builtins.elem "plasma" sessions;
+    programs.niri.enable = builtins.elem "niri" sessions;
 
     # Enable Dconf for GTK apps.
     programs.dconf.enable = true;

@@ -1,34 +1,37 @@
 { config, lib, ... }:
-let
-  VersionControlSystems = {
-    Git = "git";
-    Jujutsu = "jj";
-  };
-
-  user = {
-    name = "HectorMRC";
-    email = "thehector1593@gmail.com";
-  };
-in
 {
-  options.version-control-systems =
-    with lib;
-    mkOption {
-      type = types.nonEmptyListOf (types.enum (builtins.attrValues VersionControlSystems));
+  options.version-control-system = with lib; {
+    user = mkOption {
+      type = types.submodule {
+        options = {
+          name = mkOption {
+            type = types.nonEmptyStr;
+          };
+          email = mkOption {
+            type = types.nonEmptyStr;
+          };
+        };
+      };
     };
+    extraTools = mkOption {
+      type = types.listOf (
+        types.enum [
+          "jj"
+        ]
+      );
+    };
+  };
 
-  config = with config; {
+  config = with config.version-control-system; {
     programs.git = {
-      enable =
-        builtins.elem VersionControlSystems.Git version-control-systems
-        || builtins.elem VersionControlSystems.Jujutsu version-control-systems;
+      enable = true;
       settings = {
         inherit user;
       };
     };
 
     programs.jujutsu = {
-      enable = builtins.elem VersionControlSystems.Jujutsu version-control-systems;
+      enable = builtins.elem "jj" extraTools;
       settings = {
         "$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json";
 

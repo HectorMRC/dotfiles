@@ -4,15 +4,10 @@
   pkgs,
   ...
 }:
-let
-  Profiles = {
-    Personal = "personal";
-  };
-in
 {
   options.desktop-environment = with lib; {
     profile = mkOption {
-      type = types.enum (builtins.attrValues Profiles);
+      type = types.enum [ "personal" ];
     };
   };
 
@@ -42,7 +37,7 @@ in
           };
         };
       }
-      (lib.mkIf (profile == Profiles.Personal) {
+      (lib.mkIf (profile == "personal") {
         programs.vscode.enable = true;
         home.packages = with pkgs; [
           inkscape

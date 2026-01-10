@@ -4,13 +4,13 @@
   ...
 }:
 {
-  options.role = with lib; {
+  options.profile = with lib; {
     host-name = mkOption {
       type = types.nonEmptyStr;
     };
   };
 
-  config = with config.role; {
+  config = with config.profile; {
     networking.networkmanager.enable = true;
     networking.hostName = host-name; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.

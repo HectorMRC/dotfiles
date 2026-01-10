@@ -4,24 +4,21 @@
   pkgs,
   ...
 }:
-let
-  Shells = {
-    Bash = "bash";
-    Zsh = "zsh";
-  };
-in
 {
-  options.role = with lib; {
+  options.profile = with lib; {
     user-name = mkOption {
       type = types.nonEmptyStr;
     };
     shell = mkOption {
-      type = types.enum (builtins.attrValues Shells);
-      default = Shells.Bash;
+      type = types.enum [
+        "bash"
+        "zsh"
+      ];
+      default = "bash";
     };
   };
 
-  config = with config.role; {
+  config = with config.profile; {
     # Allow unfree packages.
     nixpkgs.config.allowUnfree = true;
 
@@ -41,6 +38,7 @@ in
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
+      git
       neovim
       tmux
       unzip

@@ -33,10 +33,12 @@
         dell-inspiron = {
           user-name = "hector";
           host-name = "dell-inspiron";
+          ip = "192.168.0.44";
         };
         dell-xps = {
           user-name = "hector";
           host-name = "dell-xps";
+          ip = "192.168.0.22";
         };
       };
     in
@@ -85,16 +87,16 @@
             ./nixos/desktop
           ];
 
+          profile = {
+            inherit host-name user-name;
+            shell = "zsh";
+          };
+
           desktop-environment = {
             display-manager = "none";
             sessions = [
               "niri"
             ];
-          };
-
-          role = {
-            inherit host-name user-name;
-            shell = "zsh";
           };
 
           home-manager.users.${user-name} = {
@@ -112,17 +114,20 @@
               ./home-manager/desktop
             ];
 
-            role = {
-              inherit user-name;
-            };
-
             theme.name = "gruvbox";
+
             desktop-environment = {
               wallpaper = ./assets/wallpapers/raining-osaka.jpg;
               profile = "personal";
             };
 
-            version-control-systems = [ "jj" ];
+            version-control-system = {
+              user = {
+                name = "HectorMRC";
+                email = "thehector1593@gmail.com";
+              };
+              extraTools = [ "jj" ];
+            };
           };
         };
 
@@ -152,7 +157,7 @@
             ];
           };
 
-          role = {
+          profile = {
             inherit host-name user-name;
             shell = "zsh";
           };
@@ -172,17 +177,20 @@
               ./home-manager/desktop
             ];
 
-            role = {
-              inherit user-name;
-            };
-
             theme.name = "gruvbox";
+
             desktop-environment = {
               wallpaper = ./assets/wallpapers/raining-osaka.jpg;
               profile = "personal";
             };
 
-            version-control-systems = [ "jj" ];
+            version-control-system = {
+              user = {
+                name = "HectorMRC";
+                email = "thehector1593@gmail.com";
+              };
+              extraTools = [ "jj" ];
+            };
           };
         };
       };

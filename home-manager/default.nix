@@ -1,25 +1,11 @@
+{ name, ... }:
 {
-  config,
-  lib,
-  ...
-}:
-{
-  options = with lib; {
-    role = {
-      user-name = mkOption {
-        type = types.nonEmptyStr;
-      };
-    };
-  };
+  programs.home-manager.enable = true;
 
-  config = with config.role; {
-    programs.home-manager.enable = true;
+  home.username = name;
+  home.homeDirectory = "/home/${name}";
 
-    home.username = user-name;
-    home.homeDirectory = "/home/${user-name}";
-
-    # The state version is required and should stay at the version you
-    # originally installed.
-    home.stateVersion = "25.11";
-  };
+  # The state version is required and should stay at the version you
+  # originally installed.
+  home.stateVersion = "25.11";
 }
