@@ -60,22 +60,24 @@ in
     history.ignoreAllDups = true;
     history.path = "$HOME/.zsh_history";
 
-    initContent = ''
-      autoload -U colors && colors
-      PROMPT='╭─ %F{${success}}%n@%m%f %F{${info}}%~%f
-      ╰─ '
-    '';
-
-    initExtra = lib.mkIf withNiri ''
-      if [[ 
+    initContent = lib.mkMerge [
+      ''
+        autoload -U colors && colors
+        PROMPT='╭─ %F{${success}}%n@%m%f %F{${info}}%~%f
+        ╰─ '
+      ''
+      (lib.mkIf withNiri ''
+        if [[ 
           "$(tty)" == "/dev/tty1" 
           && "$XDG_SESSION_TYPE" == "tty" 
           && -z "$XDG_CURRENT_DESKTOP" 
           && -z "$WAYLAND_DISPLAY" 
-      ]]; then
+        ]]; then
           exec niri-session
-      fi;
-    '';
+        fi;
+      '')
+    ];
+
   };
 
   programs.starship = {
