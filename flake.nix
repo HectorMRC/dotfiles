@@ -66,6 +66,7 @@
           deployment = {
             tags = [ "home" ];
             targetHost = host-name;
+            allowLocalDeployment = true;
           };
 
           imports = [
