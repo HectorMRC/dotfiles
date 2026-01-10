@@ -34,6 +34,10 @@
           user-name = "hector";
           host-name = "dell-inspiron";
         };
+        dell-xps = {
+          user-name = "hector";
+          host-name = "dell-xps";
+        };
       };
     in
     {
@@ -71,6 +75,66 @@
 
           imports = [
             ./hardware-configuration/dell-inspiron.nix
+            ./nixos/bluetooth.nix
+            ./nixos/device.nix
+            ./nixos/locale.nix
+            ./nixos/network.nix
+            ./nixos/pam.nix
+            ./nixos/pipewire.nix
+            ./nixos/startup.nix
+            ./nixos/desktop
+          ];
+
+          desktop-environment = {
+            display-manager = "none";
+            sessions = [
+              "niri"
+            ];
+          };
+
+          role = {
+            inherit host-name user-name;
+            shell = "zsh";
+          };
+
+          home-manager.users.${user-name} = {
+            imports = [
+              ./home-manager
+              ./home-manager/direnv.nix
+              ./home-manager/keygen.nix
+              ./home-manager/latex.nix
+              ./home-manager/neovim.nix
+              ./home-manager/ssh.nix
+              ./home-manager/theme.nix
+              ./home-manager/tmux.nix
+              ./home-manager/vcs.nix
+              ./home-manager/zsh.nix
+              ./home-manager/desktop
+            ];
+
+            role = {
+              inherit user-name;
+            };
+
+            theme.name = "gruvbox";
+            desktop-environment = {
+              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+              profile = "personal";
+            };
+
+            version-control-systems = [ "jj" ];
+          };
+        };
+
+        dell-xps = with devices.dell-xps; {
+          deployment = {
+            tags = [ "home" ];
+            targetHost = host-name;
+            allowLocalDeployment = true;
+          };
+
+          imports = [
+            ./hardware-configuration/dell-xps.nix
             ./nixos/bluetooth.nix
             ./nixos/device.nix
             ./nixos/locale.nix
