@@ -26,6 +26,7 @@
     lib.mkMerge [
       {
         home.packages = with pkgs; [
+          kdePackages.dolphin
           signal-desktop
           spotify
         ];
