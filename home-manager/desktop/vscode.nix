@@ -14,7 +14,7 @@
     ];
 
     userSettings = {
-      "workbench.colorTheme" = "Gruvbox Dark Soft";
+      "workbench.colorTheme" = "Gruvbox Dark Medium";
 
       "telemetry.telemetryLevel" = "off";
       "telemetry.enableTelemetry" = false;
