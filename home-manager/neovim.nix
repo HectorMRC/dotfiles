@@ -1,4 +1,10 @@
-{ config, name, pkgs, ... }:
+{
+  config,
+  lib,
+  name,
+  pkgs,
+  ...
+}:
 {
   programs.neovim = {
     enable = true;
@@ -21,8 +27,8 @@
     tombi
   ];
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
+  home.sessionVariables = with pkgs; {
+    EDITOR = lib.getExe neovim;
+    VISUAL = lib.getExe neovim;
   };
 }

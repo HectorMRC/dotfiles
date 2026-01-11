@@ -16,10 +16,14 @@
     userSettings = {
       "workbench.colorTheme" = "Gruvbox Dark Medium";
 
+      "editor.wordWrap" = "on";
+
       "telemetry.telemetryLevel" = "off";
       "telemetry.enableTelemetry" = false;
       "telemetry.enableCrashReporter" = false;
+
       "workbench.enableExperiments" = false;
+
       "update.mode" = "none";
     };
   };
