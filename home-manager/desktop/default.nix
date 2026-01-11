@@ -5,7 +5,7 @@
   ...
 }:
 {
-  options.desktop-environment = with lib; {
+  options.desktopEnvironment = with lib; {
     profile = mkOption {
       type = types.enum [ "personal" ];
     };
@@ -22,7 +22,7 @@
   ];
 
   config =
-    with config.desktop-environment;
+    with config.desktopEnvironment;
     lib.mkMerge [
       {
         home.packages = with pkgs; [

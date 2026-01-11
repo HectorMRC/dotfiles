@@ -5,14 +5,14 @@
 }:
 {
   options.profile = with lib; {
-    host-name = mkOption {
+    hostname = mkOption {
       type = types.nonEmptyStr;
     };
   };
 
   config = with config.profile; {
     networking.networkmanager.enable = true;
-    networking.hostName = host-name; # Define your hostname.
+    networking.hostName = hostname; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
     # For storing passwords securely without a full desktop environment.

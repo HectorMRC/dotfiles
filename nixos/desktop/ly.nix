@@ -1,11 +1,11 @@
 { config, lib, ... }:
 {
-  options.display-manager.ly = with lib; {
+  options.displayManager.ly = with lib; {
     enable = mkEnableOption "ly";
   };
 
   config =
-    with config.display-manager;
+    with config.displayManager;
     lib.mkIf ly.enable {
       services.displayManager.ly = {
         enable = true;

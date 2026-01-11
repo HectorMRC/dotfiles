@@ -6,7 +6,7 @@
 }:
 {
   options.profile = with lib; {
-    user-name = mkOption {
+    username = mkOption {
       type = types.nonEmptyStr;
     };
     shell = mkOption {
@@ -26,7 +26,7 @@
     programs.${shell}.enable = true;
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
-    users.users.${user-name} = {
+    users.users.${username} = {
       isNormalUser = true;
       shell = pkgs.${shell};
       extraGroups = [

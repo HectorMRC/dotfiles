@@ -4,12 +4,12 @@
   ...
 }:
 {
-  options.display-manager.sddm = with lib; {
+  options.displayManager.sddm = with lib; {
     enable = mkEnableOption "sddm";
   };
 
   config =
-    with config.display-manager;
+    with config.displayManager;
     lib.mkIf sddm.enable {
       services.displayManager.sddm = {
         enable = true;

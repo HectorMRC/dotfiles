@@ -65,7 +65,7 @@ let
         hide-after-inactive-ms 5000
       }
 
-      spawn-at-startup "${lib.getExe pkgs.wbg}" "-s" "${config.desktop-environment.wallpaper}"
+      spawn-at-startup "${lib.getExe pkgs.wbg}" "-s" "${config.desktopEnvironment.wallpaper}"
       spawn-at-startup "waybar"
 
       screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
@@ -347,7 +347,7 @@ let
   };
 in
 {
-  options.desktop-environment = with lib; {
+  options.desktopEnvironment = with lib; {
     wallpaper = mkOption {
       type = types.nullOr types.path;
       description = "Path to the desktop background image.";

@@ -5,8 +5,8 @@
   ...
 }:
 {
-  options.desktop-environment = with lib; {
-    display-manager = mkOption {
+  options.desktopEnvironment = with lib; {
+    displayManager = mkOption {
       type = types.enum [
         "greet"
         "ly"
@@ -31,14 +31,14 @@
     ./sddm.nix
   ];
 
-  config = with config.desktop-environment; {
+  config = with config.desktopEnvironment; {
     # Disable the X11 windowing system.
     services.xserver.enable = false;
 
     # Display manager.
-    display-manager.sddm.enable = display-manager == "sddm";
-    display-manager.ly.enable = display-manager == "ly";
-    display-manager.greetd.enable = display-manager == "greet";
+    displayManager.sddm.enable = displayManager == "sddm";
+    displayManager.ly.enable = displayManager == "ly";
+    displayManager.greetd.enable = displayManager == "greet";
 
     # Desktop environment.
     services.desktopManager.plasma6.enable = builtins.elem "plasma" sessions;

@@ -31,13 +31,13 @@
 
       devices = {
         dell-inspiron = {
-          user-name = "hector";
-          host-name = "dell-inspiron";
+          username = "hector";
+          hostname = "dell-inspiron";
           ip = "192.168.0.44";
         };
         dell-xps = {
-          user-name = "hector";
-          host-name = "dell-xps";
+          username = "hector";
+          hostname = "dell-xps";
           ip = "192.168.0.22";
         };
       };
@@ -71,7 +71,7 @@
         dell-inspiron = with devices.dell-inspiron; {
           deployment = {
             tags = [ "home" ];
-            targetHost = host-name;
+            targetHost = hostname;
             allowLocalDeployment = true;
           };
 
@@ -88,18 +88,18 @@
           ];
 
           profile = {
-            inherit host-name user-name;
+            inherit hostname username;
             shell = "zsh";
           };
 
-          desktop-environment = {
-            display-manager = "none";
+          desktopEnvironment = {
+            displayManager = "none";
             sessions = [
               "niri"
             ];
           };
 
-          home-manager.users.${user-name} = {
+          home-manager.users.${username} = {
             imports = [
               ./home-manager
               ./home-manager/direnv.nix
@@ -116,10 +116,7 @@
 
             theme.name = "gruvbox";
 
-            desktop-environment = {
-              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
-              profile = "personal";
-            };
+            knownHosts = builtins.attrValues devices;
 
             version-control-system = {
               user = {
@@ -128,13 +125,18 @@
               };
               extraTools = [ "jj" ];
             };
+
+            desktopEnvironment = {
+              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+              profile = "personal";
+            };
           };
         };
 
         dell-xps = with devices.dell-xps; {
           deployment = {
             tags = [ "home" ];
-            targetHost = host-name;
+            targetHost = hostname;
             allowLocalDeployment = true;
           };
 
@@ -150,19 +152,19 @@
             ./nixos/desktop
           ];
 
-          desktop-environment = {
-            display-manager = "none";
+          desktopEnvironment = {
+            displayManager = "none";
             sessions = [
               "niri"
             ];
           };
 
           profile = {
-            inherit host-name user-name;
+            inherit hostname username;
             shell = "zsh";
           };
 
-          home-manager.users.${user-name} = {
+          home-manager.users.${username} = {
             imports = [
               ./home-manager
               ./home-manager/direnv.nix
@@ -179,10 +181,7 @@
 
             theme.name = "gruvbox";
 
-            desktop-environment = {
-              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
-              profile = "personal";
-            };
+            knownHosts = builtins.attrValues devices;
 
             version-control-system = {
               user = {
@@ -190,6 +189,11 @@
                 email = "thehector1593@gmail.com";
               };
               extraTools = [ "jj" ];
+            };
+
+            desktopEnvironment = {
+              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+              profile = "personal";
             };
           };
         };

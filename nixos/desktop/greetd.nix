@@ -12,12 +12,12 @@ let
   };
 in
 {
-  options.display-manager.greetd = with lib; {
+  options.displayManager.greetd = with lib; {
     enable = mkEnableOption "greetd";
   };
 
   config =
-    with config.display-manager;
+    with config.displayManager;
     lib.mkIf greetd.enable {
       services.greetd = {
         enable = true;
