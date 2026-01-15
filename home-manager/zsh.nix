@@ -116,7 +116,19 @@ in
           ".git"
         ];
 
-        command = "[ -d .jj ] && jj log -r @ -n 1 --no-graph --color never -T 'change_id.shortest()' || git branch --show-current";
+        command = ''
+          if [ -d .jj ]; then
+              BOOKMARK=$(jj log -r 'closest_bookmark(@)' --template 'self.local_bookmarks()' --color=never --no-graph --ignore-working-copy)
+              OFFSET=$(jj log -r 'closest_bookmark(@)+::@' -T '"n"' --color=never --no-graph --ignore-working-copy 2>/dev/null | wc -c)
+              if [ "$OFFSET" -gt 0 ]; then
+                BOOKMARK="$BOOKMARK +$OFFSET"
+              fi
+              
+              echo $BOOKMARK
+          else
+              git branch --show-current
+          fi
+        '';
         symbol = "";
         style = "fg:${background} bg:${warning}";
         format = "[ $symbol $output ]($style)";
