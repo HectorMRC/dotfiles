@@ -70,6 +70,17 @@ let
 
       screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
 
+      output "DP-1" {
+          layout {
+              default-column-width { proportion 0.33333; }
+              preset-column-widths {
+                  proportion 0.33333
+                  proportion 0.5
+                  proportion 0.66667
+              }
+          }
+      }
+
       // Window rules let you adjust behavior for individual windows.
       // Find more information on the wiki:
       // https://yalter.github.io/niri/Configuration:-Window-Rules
