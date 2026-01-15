@@ -7,6 +7,9 @@ email = "thehector1593@gmail.com"
 [ui]
 editor = "nvim"
 
+[revset-aliases]
+"closest_bookmark(to)" = "heads(::to & bookmarks())"
+
 [aliases]
 a = ["abandon"]
 d = ["describe"]
@@ -15,5 +18,6 @@ e = ["edit", "--ignore-immutable"]
 f = ["git", "fetch", "--all-remotes"]
 gp = ["git", "push"]
 mm = ["b", "m", "main"]
+mb = ["bookmark", "move", "--from", "closest_bookmark(@-)"]
 n = ["new"]
 sq = ["squash", "-u"]

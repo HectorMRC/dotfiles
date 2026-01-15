@@ -40,6 +40,10 @@
         ui.editor = "nvim";
         ui.default-command = "log";
 
+        revset-aliases = {
+          "closest_bookmark(to)" = "heads(::to & bookmarks())";
+        };
+
         aliases = {
           a = [ "abandon" ];
           d = [ "describe" ];
@@ -65,6 +69,7 @@
             "m"
             "main"
           ];
+          mb = ["bookmark" "move" "--from" "closest_bookmark(@-)"];
           n = [ "new" ];
           sq = [
             "squash"
