@@ -105,7 +105,7 @@ let
 
         Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
         Alt+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun"; }
-        Mod+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn-sh "hyprlock"; }
+        Mod+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn-sh "hyprlock & sleep 1 && systemctl suspend"; }
 
         // Waybar
         Mod+B hotkey-overlay-title="Toggle Waybar" { spawn "pkill" "-SIGUSR1" "waybar"; }

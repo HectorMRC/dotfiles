@@ -74,7 +74,7 @@ in
         color = "rgba(0, 0, 0, 0)";
         rounding = 20;
         border_size = 2;
-        border_color = "rgb(${foreground-muted})";
+        border_color = "rgb(${foreground})";
         rotate = 0;
         xray = false;
 
