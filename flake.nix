@@ -40,6 +40,11 @@
           hostname = "dell-xps";
           ip = "192.168.0.22";
         };
+        zimablade = {
+          username = "hector";
+          hostname = "zimablade";
+          ip = "192.168.0.52";
+        };
       };
     in
     {
@@ -194,6 +199,53 @@
             desktopEnvironment = {
               wallpaper = ./assets/wallpapers/raining-osaka.jpg;
               profile = "personal";
+            };
+          };
+        };
+        
+        zimablade = with devices.zimablade; {
+          deployment = {
+            tags = [ "server" ];
+            targetHost = hostname;
+            allowLocalDeployment = true;
+          };
+
+          imports = [
+            ./hardware-configuration/zimablade.nix
+            ./nixos/device.nix
+            ./nixos/locale.nix
+            ./nixos/network.nix
+            ./nixos/startup.nix
+          ];
+
+          profile = {
+            inherit hostname username;
+            shell = "zsh";
+          };
+
+          home-manager.users.${username} = {
+            imports = [
+              ./home-manager
+              ./home-manager/direnv.nix
+              ./home-manager/keygen.nix
+              ./home-manager/neovim.nix
+              ./home-manager/ssh.nix
+              ./home-manager/theme.nix
+              ./home-manager/tmux.nix
+              ./home-manager/vcs.nix
+              ./home-manager/zsh.nix
+            ];
+
+            theme.name = "gruvbox";
+
+            knownHosts = builtins.attrValues devices;
+
+            version-control-system = {
+              user = {
+                name = "HectorMRC";
+                email = "thehector1593@gmail.com";
+              };
+              extraTools = [ "jj" ];
             };
           };
         };
