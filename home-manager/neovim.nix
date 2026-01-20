@@ -23,6 +23,7 @@
     lua-language-server
     nixd
     nixfmt-rfc-style
+    ripgrep
     stylua
     tombi
   ];

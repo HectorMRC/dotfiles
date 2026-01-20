@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -44,41 +43,5 @@ in
 
   config = {
     theme.colors = themes.${config.theme.name};
-
-    # Set dark-mode system-wide.
-    dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-      };
-    };
-
-    gtk = {
-      enable = true;
-
-      theme = {
-        name = "Adwaita-dark";
-        package = pkgs.gnome-themes-extra;
-      };
-
-      gtk3.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
-      };
-
-      gtk4.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
-      };
-    };
-
-    xdg.portal = {
-      enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      config.common.default = "*";
-    };
-
-    qt = {
-      enable = true;
-      platformTheme.name = "gtk";
-      style.name = "adwaita-dark";
-    };
   };
 }
