@@ -86,7 +86,7 @@ let
       // https://yalter.github.io/niri/Configuration:-Window-Rules
       window-rule {
           match title="Firefox"
-          open-maximized true
+          // open-maximized true
       }
 
       // Open the Firefox picture-in-picture player as floating by default.
