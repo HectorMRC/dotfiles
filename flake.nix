@@ -202,7 +202,7 @@
             };
           };
         };
-        
+
         zimablade = with devices.zimablade; {
           deployment = {
             tags = [ "server" ];

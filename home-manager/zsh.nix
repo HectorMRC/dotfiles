@@ -43,8 +43,6 @@ in
     };
 
     shellAliases = {
-      update = "sudo nixos-rebuild switch";
-      upgrade = "sudo nixos-rebuild switch --upgrade";
       gc = "sudo nix-collect-garbage -d";
       cheatsheet = ''
         echo "Bluetooth"
@@ -88,7 +86,7 @@ in
       "$schema" = "https://starship.rs/config-schema.json";
 
       format = ''
-        [](fg:${surface})$username[](fg:${surface} bg:${info})$directory[](fg:${info} bg:${warning})''${custom.vcs}[](fg:${warning})
+        [](fg:${surface})$username''${custom.hostname}[](fg:${surface} bg:${info})$directory[](fg:${info} bg:${warning})''${custom.vcs}[](fg:${warning})
         [  ](fg:${foreground})
       '';
 
@@ -98,7 +96,8 @@ in
         show_always = true;
         style_user = "fg:${foreground} bg:${surface}";
         style_root = "fg:${error} bg:${surface}";
-        format = "[ $user ]($style)";
+        # Do not add any space after $user, it is set after $custom.hostname.
+        format = "[ $user]($style)";
         disabled = false;
       };
 
@@ -109,29 +108,44 @@ in
         truncation_symbol = "…/";
       };
 
-      custom.vcs = {
-        when = "[[ -d .jj || -d .git ]]";
-        detect_folders = [
-          ".jj"
-          ".git"
-        ];
+      custom = {
+        hostname = {
+          when = "true";
+          command = ''
+            if [ ! -z "$SSH_CLIENT" ]; then
+              echo @$HOST;
+            fi
+          '';
 
-        command = ''
-          if [ -d .jj ]; then
-              BOOKMARK=$(jj log -r 'closest_bookmark(@)' --template 'self.local_bookmarks()' --color=never --no-graph --ignore-working-copy)
-              OFFSET=$(jj log -r 'closest_bookmark(@)+::@' -T '"n"' --color=never --no-graph --ignore-working-copy 2>/dev/null | wc -c)
-              if [ "$OFFSET" -gt 0 ]; then
-                BOOKMARK="$BOOKMARK +$OFFSET"
-              fi
-              
-              echo $BOOKMARK
-          else
-              git branch --show-current
-          fi
-        '';
-        symbol = "";
-        style = "fg:${background} bg:${warning}";
-        format = "[ $symbol $output ]($style)";
+          style = "fg:${info} bg:${surface}";
+          # Do not add any space before $output, hostname comes after $username.
+          format = "[$output ]($style)";
+        };
+
+        vcs = {
+          when = "[[ -d .jj || -d .git ]]";
+          detect_folders = [
+            ".jj"
+            ".git"
+          ];
+
+          command = ''
+            if [ -d .jj ]; then
+                BOOKMARK=$(jj log -r 'closest_bookmark(@)' --template 'self.local_bookmarks()' --color=never --no-graph --ignore-working-copy)
+                OFFSET=$(jj log -r 'closest_bookmark(@)+::@' -T '"n"' --color=never --no-graph --ignore-working-copy 2>/dev/null | wc -c)
+                if [ "$OFFSET" -gt 0 ]; then
+                  BOOKMARK="$BOOKMARK +$OFFSET"
+                fi
+                
+                echo $BOOKMARK
+            else
+                git branch --show-current
+            fi
+          '';
+          symbol = "";
+          style = "fg:${background} bg:${warning}";
+          format = "[ $symbol $output ]($style)";
+        };
       };
     };
   };
