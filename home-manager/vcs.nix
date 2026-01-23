@@ -69,7 +69,12 @@
             "m"
             "main"
           ];
-          mb = ["bookmark" "move" "--from" "closest_bookmark(@-)"];
+          mb = [
+            "bookmark"
+            "move"
+            "--from"
+            "closest_bookmark(@-)"
+          ];
           n = [ "new" ];
           sq = [
             "squash"
