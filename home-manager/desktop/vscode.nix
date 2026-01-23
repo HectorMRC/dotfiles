@@ -9,8 +9,10 @@
       jnoortheen.nix-ide
       rust-lang.rust-analyzer
       tamasfe.even-better-toml
+      tauri-apps.tauri-vscode
       vadimcn.vscode-lldb
       valentjn.vscode-ltex
+      vue.volar
     ];
 
     userSettings = {
