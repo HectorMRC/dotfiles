@@ -10,6 +10,7 @@ return {
             "nixfmt",
             "python-lsp-server",
             "rust-analyzer",
+            "slint-lsp",
             "stylua",
             "tombi",
         },

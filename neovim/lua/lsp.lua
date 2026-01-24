@@ -11,5 +11,6 @@ vim.lsp.enable {
     "nixd",
     "pylsp",
     "rust_analyzer",
+    "slint-lsp",
     "tombi",
 }
