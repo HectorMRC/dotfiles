@@ -13,6 +13,7 @@
 
   imports = [
     ./alacritty.nix
+    ./dolphin.nix
     ./firefox.nix
     ./hyprlock.nix
     ./niri.nix
@@ -36,20 +37,14 @@
       })
       {
         home.packages = with pkgs; [
-          kdePackages.dolphin
           signal-desktop
           spotify
         ];
 
-        # Set natural scroll system-wide.
         dconf.settings = {
           "org/gnome/desktop/peripherals/touchpad" = {
             natural-scroll = true;
           };
-        };
-
-        # Set dark-mode system-wide.
-        dconf.settings = {
           "org/gnome/desktop/interface" = {
             color-scheme = "prefer-dark";
           };
@@ -81,7 +76,7 @@
         qt = {
           enable = true;
           platformTheme.name = "gtk";
-          style.name = "adwaita-dark";
+          style.name = "breeze";
         };
       }
     ];
