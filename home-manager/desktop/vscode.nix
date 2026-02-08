@@ -18,6 +18,8 @@
     userSettings = {
       "workbench.colorTheme" = "Gruvbox Dark Medium";
 
+      "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
+
       "editor.wordWrap" = "on";
 
       "telemetry.telemetryLevel" = "off";

@@ -47,6 +47,11 @@
       zip
     ];
 
+    # Default fonts.
+    fonts.packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+    ];
+
     # Enable the OpenSSH daemon.
     services.openssh.enable = true;
 

@@ -47,11 +47,6 @@
     # Enable Dconf for GTK apps.
     programs.dconf.enable = true;
 
-    fonts.packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
-      literata
-    ];
-
     fonts.fontconfig.defaultFonts.monospace = [
       "JetBrains Mono Medium"
     ];
