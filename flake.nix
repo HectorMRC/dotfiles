@@ -107,6 +107,7 @@
           home-manager.users.${username} = {
             imports = [
               ./home-manager
+              ./home-manager/claude.nix
               ./home-manager/direnv.nix
               ./home-manager/keygen.nix
               ./home-manager/latex.nix
@@ -172,6 +173,7 @@
           home-manager.users.${username} = {
             imports = [
               ./home-manager
+              ./home-manager/claude.nix
               ./home-manager/direnv.nix
               ./home-manager/keygen.nix
               ./home-manager/latex.nix

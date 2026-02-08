@@ -49,6 +49,7 @@
 
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      literata
     ];
 
     fonts.fontconfig.defaultFonts.monospace = [
