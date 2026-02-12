@@ -140,7 +140,7 @@ in
 
         clock = {
           interval = 1;
-          format = "{:%y\n%m\n%d\n\n%H\n%M}";
+          format = "{:%d\n%m\n%y\n\n%H\n%M}";
           tooltip-format = "{calendar}";
         };
 

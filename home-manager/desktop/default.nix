@@ -13,10 +13,12 @@
 
   imports = [
     ./alacritty.nix
+    ./battery.nix
     ./dolphin.nix
     ./firefox.nix
     ./hyprlock.nix
     ./niri.nix
+    ./notify.nix
     ./rofi.nix
     ./vscode.nix
     ./waybar.nix
@@ -30,8 +32,6 @@
         home.packages = with pkgs; [
           inkscape
           mpv
-          novelwriter
-          xwayland-satellite # needed by: novelwriter
           obsidian
         ];
       })
