@@ -40,6 +40,7 @@
     environment.systemPackages = with pkgs; [
       dmidecode
       git
+      htop
       neovim
       tmux
       unzip
