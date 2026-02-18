@@ -76,7 +76,7 @@
         qt = {
           enable = true;
           platformTheme.name = "gtk";
-          style.name = "breeze";
+          style.name = "adwaita-dark";
         };
       }
     ];

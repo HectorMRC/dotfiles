@@ -200,7 +200,7 @@
             };
 
             desktopEnvironment = {
-              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+              wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
               profile = "personal";
             };
           };
