@@ -103,12 +103,12 @@ let
       binds {
         Mod+Shift+Slash { show-hotkey-overlay; }
 
-        Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-        Alt+Space hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun"; }
-        Mod+Alt+L hotkey-overlay-title="Lock the Screen: hyprlock" { spawn-sh "hyprlock --grace 0 & sleep 1; niri msg action power-off-monitors"; }
+        Mod+Return hotkey-overlay-title="Open a terminal" { spawn "alacritty"; }
+        Alt+Space hotkey-overlay-title="Run an application" { spawn-sh "rofi -show drun"; }
+        Mod+Alt+L hotkey-overlay-title="Lock session" { spawn-sh "loginctl lock-session"; }
 
         // Waybar
-        Mod+B hotkey-overlay-title="Toggle Waybar" { spawn "pkill" "-SIGUSR1" "waybar"; }
+        Mod+B hotkey-overlay-title="Toggle waybar" { spawn "pkill" "-SIGUSR1" "waybar"; }
 
         // Audio keys mapping
         XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }

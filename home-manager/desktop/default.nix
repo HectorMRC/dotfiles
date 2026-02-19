@@ -16,6 +16,7 @@
     ./battery.nix
     ./dolphin.nix
     ./firefox.nix
+    ./hypridle.nix
     ./hyprlock.nix
     ./niri.nix
     ./notify.nix
