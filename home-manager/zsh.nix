@@ -1,7 +1,6 @@
 {
   config,
   osConfig,
-  pkgs,
   lib,
   ...
 }:
@@ -91,7 +90,7 @@ in
         [  ](fg:${foreground})
       '';
 
-      add_newline = false;
+      add_newline = true;
 
       username = {
         show_always = true;
