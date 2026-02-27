@@ -71,7 +71,7 @@
         options = "--delete-older-than 10d";
       };
 
-      optimise.automatic = true;
+      optimise.automatic = false;
 
       settings.experimental-features = [
         "nix-command"
