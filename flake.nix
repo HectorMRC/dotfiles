@@ -45,6 +45,11 @@
           hostname = "zimablade";
           ip = "192.168.0.52";
         };
+        thinkpad = {
+          username = "hector";
+          hostname = "thinkpad";
+          ip = "192.168.0.82";
+        };
       };
     in
     {
@@ -249,6 +254,73 @@
                 email = "thehector1593@gmail.com";
               };
               extraTools = [ "jj" ];
+            };
+          };
+        };
+
+        thinkpad = with devices.thinkpad; {
+          deployment = {
+            tags = [ "work" ];
+            targetHost = hostname;
+            allowLocalDeployment = true;
+          };
+
+          imports = [
+            ./hardware-configuration/thinkpad.nix
+            ./nixos/bluetooth.nix
+            ./nixos/device.nix
+            ./nixos/locale.nix
+            ./nixos/network.nix
+            ./nixos/pam.nix
+            ./nixos/pipewire.nix
+            ./nixos/startup.nix
+            ./nixos/desktop
+          ];
+
+          desktopEnvironment = {
+            displayManager = "none";
+            sessions = [
+              "niri"
+            ];
+          };
+
+          profile = {
+            inherit hostname username;
+            shell = "zsh";
+          };
+
+          home-manager.users.${username} = {
+            imports = [
+              ./home-manager
+              ./home-manager/claude.nix
+              ./home-manager/direnv.nix
+              ./home-manager/keygen.nix
+              ./home-manager/latex.nix
+              ./home-manager/neovim.nix
+              ./home-manager/ssh.nix
+              ./home-manager/theme.nix
+              ./home-manager/tmux.nix
+              ./home-manager/vcs.nix
+              ./home-manager/zsh.nix
+              ./home-manager/desktop
+              ./home-manager/desktop/brave.nix
+            ];
+
+            theme.name = "gruvbox";
+
+            knownHosts = builtins.attrValues devices;
+
+            version-control-system = {
+              user = {
+                name = "HectorMRC";
+                email = "hector.morales@veecle.io";
+              };
+              extraTools = [ "jj" ];
+            };
+
+            desktopEnvironment = {
+              wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
+              profile = "work";
             };
           };
         };

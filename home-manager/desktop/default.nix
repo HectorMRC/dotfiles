@@ -36,6 +36,13 @@
           obsidian
         ];
       })
+      (lib.mkIf (profile == "work") {
+        programs.vscode.enable = true;
+        home.packages = with pkgs; [
+          postman
+          slack
+        ];
+      })
       {
         home.packages = with pkgs; [
           signal-desktop
