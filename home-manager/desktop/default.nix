@@ -7,7 +7,10 @@
 {
   options.desktopEnvironment = with lib; {
     profile = mkOption {
-      type = types.enum [ "personal" ];
+      type = types.enum [
+        "personal"
+        "work"
+      ];
     };
   };
 
