@@ -91,7 +91,7 @@ in
         [  ](fg:${foreground})
       '';
 
-      add_newline = true;
+      add_newline = false;
 
       username = {
         show_always = true;
