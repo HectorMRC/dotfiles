@@ -15,13 +15,14 @@ in
   services.mako = {
     enable = true;
 
-    anchor = "top-right";
-    defaultTimeout = 10000; # notifications stay for 10 seconds
-
-    borderRadius = 4; # same as Niri
-    textColor = background;
-    borderColor = info;
-    backgroundColor = info;
+    settings = {
+      anchor = "top-right";
+      default-timeout = 10000; # notifications stay for 10 seconds
+      border-radius = 4; # same as Niri
+      text-color = background;
+      border-color = info;
+      background-color = info;
+    };
 
     extraConfig = ''
       [urgency=low]
