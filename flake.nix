@@ -275,6 +275,7 @@
             ./nixos/pipewire.nix
             ./nixos/startup.nix
             ./nixos/desktop
+            ./nixos/virtualisation.nix
           ];
 
           desktopEnvironment = {
