@@ -4,7 +4,8 @@
     enable = true;
     settings = {
       general = {
-        lock_cmd = "pidof hyprlock || hyprlock";
+        lock_cmd = "pidof hyprlock || hyprlock --grace 10 ";
+        before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "niri msg action power-on-monitors";
       };
 
@@ -14,7 +15,7 @@
           on-timeout = "loginctl lock-session";
         }
         {
-          timeout = 330; # 5 min 30 secs
+          timeout = 330; # 5.5 mins
           on-timeout = "niri msg action power-off-monitors";
           on-resume = "niri msg action power-on-monitors";
         }

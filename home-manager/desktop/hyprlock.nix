@@ -21,11 +21,8 @@ in
       };
 
       general = {
-        no_fade_in = false;
-        disable_loading_bar = false;
         hide_cursor = true;
-        immediate = false;
-        grace = 5;
+        ignore_empty_input = true;
       };
 
       label = [
@@ -50,10 +47,6 @@ in
         {
           text = "$USER";
           color = "rgb(${foreground})";
-          outline_thickness = 2;
-          dots_size = 0.2;
-          dots_spacing = 0.2;
-          dots_center = true;
           font_size = 18;
           font_family = "JetBrainsMono Nerd Font";
           position = "0, -130";
@@ -87,12 +80,7 @@ in
 
       input-field = {
         size = "300, 60";
-        outline_thickness = 2;
         rounding = 20;
-
-        dots_size = 0.2;
-        dots_spacing = 0.2;
-        dots_center = true;
 
         outer_color = "rgba(0, 0, 0, 0)";
         inner_color = "rgb(${surface})";
