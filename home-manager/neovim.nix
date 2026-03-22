@@ -19,17 +19,6 @@
     onChange = "rm -f ${config.xdg.cacheHome}/nvim/luac/%2fhome%2f${name}%2f.config*.luac";
   };
 
-  home.packages = with pkgs; [
-    lua-language-server
-    nixd
-    nixfmt
-    rust-analyzer
-    ripgrep
-    slint-lsp
-    stylua
-    tombi
-  ];
-
   home.sessionVariables = with pkgs; {
     EDITOR = lib.getExe neovim;
     VISUAL = lib.getExe neovim;

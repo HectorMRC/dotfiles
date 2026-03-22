@@ -57,9 +57,11 @@
         buildInputs = [
           colmena.packages.${system}.colmena
         ];
-        packages = [
-          pkgs.nixd
-          pkgs.nixfmt-rfc-style
+        packages = with pkgs; [
+          lua-language-server
+          nixd
+          nixfmt-rfc-style
+          stylua
         ];
       };
 
