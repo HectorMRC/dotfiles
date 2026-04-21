@@ -36,7 +36,6 @@
         home.packages = with pkgs; [
           inkscape
           mpv
-          obsidian
         ];
       })
       (lib.mkIf (profile == "work") {
@@ -48,6 +47,7 @@
       })
       {
         home.packages = with pkgs; [
+          obsidian
           signal-desktop
           spotify
         ];
