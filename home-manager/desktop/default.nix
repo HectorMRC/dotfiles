@@ -47,6 +47,7 @@
       })
       {
         home.packages = with pkgs; [
+          libreoffice
           obsidian
           signal-desktop
           spotify
