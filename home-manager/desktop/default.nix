@@ -24,7 +24,7 @@
     ./niri.nix
     ./notify.nix
     ./rofi.nix
-    ./vscode.nix
+    ./vscodium.nix
     ./waybar.nix
   ];
 
@@ -32,14 +32,16 @@
     with config.desktopEnvironment;
     lib.mkMerge [
       (lib.mkIf (profile == "personal") {
-        programs.vscode.enable = true;
+        programs.vscodium.enable = true;
+
         home.packages = with pkgs; [
           inkscape
           mpv
         ];
       })
       (lib.mkIf (profile == "work") {
-        programs.vscode.enable = true;
+        programs.vscodium.enable = true;
+
         home.packages = with pkgs; [
           postman
           slack
