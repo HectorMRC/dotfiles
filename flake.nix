@@ -60,7 +60,7 @@
         packages = with pkgs; [
           lua-language-server
           nixd
-          nixfmt-rfc-style
+          nixfmt
           stylua
         ];
       };
