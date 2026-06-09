@@ -26,7 +26,7 @@
     programs.ssh = with config; {
       enable = true;
       enableDefaultConfig = false; # default configs are deprecated.
-      matchBlocks = lib.listToAttrs (
+      settings = lib.listToAttrs (
         map (host: {
           name = host.hostname;
           value = {
