@@ -27,6 +27,8 @@
 
       pkgs = import nixpkgs {
         inherit system;
+
+        overlays = [ ];
       };
 
       devices = {
@@ -186,6 +188,7 @@
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/ollama.nix
+              ./home-manager/proton-drive.nix
               ./home-manager/ssh.nix
               ./home-manager/theme.nix
               ./home-manager/tmux.nix
