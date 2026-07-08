@@ -116,7 +116,6 @@
           home-manager.users.${username} = {
             imports = [
               ./home-manager
-              ./home-manager/claude.nix
               ./home-manager/direnv.nix
               ./home-manager/keygen.nix
               ./home-manager/latex.nix
@@ -182,12 +181,12 @@
           home-manager.users.${username} = {
             imports = [
               ./home-manager
-              ./home-manager/claude.nix
               ./home-manager/direnv.nix
               ./home-manager/keygen.nix
               ./home-manager/latex.nix
               ./home-manager/neovim.nix
               ./home-manager/ollama.nix
+              ./home-manager/opencode.nix
               ./home-manager/proton-drive.nix
               ./home-manager/ssh.nix
               ./home-manager/theme.nix
@@ -299,7 +298,6 @@
           home-manager.users.${username} = {
             imports = [
               ./home-manager
-              ./home-manager/claude.nix
               ./home-manager/direnv.nix
               ./home-manager/keygen.nix
               ./home-manager/latex.nix
