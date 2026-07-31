@@ -42,6 +42,7 @@
       git
       htop
       neovim
+      ripgrep
       tmux
       unzip
       wget
