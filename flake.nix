@@ -31,7 +31,7 @@
         overlays = [ ];
       };
 
-      mkHost = import ./lib/host.nix;
+      mkHost = import ./lib/mkHost.nix;
 
       vcsUsers = {
         personal = {
@@ -98,35 +98,48 @@
         dell-inspiron = mkHost {
           knownHosts = devices;
           hostname = "dell-inspiron";
-          tags = [ "home" ];
+          username = "hector";
           vcsUser = vcsUsers.personal;
           wallpaper = ./assets/wallpapers/raining-osaka.jpg;
-          profile = "personal";
+          tags = [
+            "home"
+            "laptop"
+          ];
         };
 
         dell-xps = mkHost {
           knownHosts = devices;
           hostname = "dell-xps";
-          tags = [ "home" ];
+          username = "hector";
           vcsUser = vcsUsers.personal;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
-          profile = "personal";
+          tags = [
+            "home"
+            "laptop"
+          ];
         };
 
         zimablade = mkHost {
           knownHosts = devices;
           hostname = "zimablade";
-          tags = [ "server" ];
+          username = "hector";
           vcsUser = vcsUsers.personal;
+          tags = [
+            "home"
+            "server"
+          ];
         };
 
         thinkpad = mkHost {
           knownHosts = devices;
           hostname = "thinkpad";
-          tags = [ "work" ];
+          username = "hector";
           vcsUser = vcsUsers.work;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
-          profile = "work";
+          tags = [
+            "work"
+            "laptop"
+          ];
         };
       };
     };
