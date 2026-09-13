@@ -84,69 +84,17 @@
           };
         };
 
-        dell-inspiron = with devices.dell-inspiron; {
-          deployment = {
-            tags = [ "home" ];
-            targetHost = hostname;
-            allowLocalDeployment = true;
+        dell-inspiron = mkHost {
+          knownHosts = devices;
+          hostname = "dell-inspiron";
+          username = "hector";
+          tags = [ "home" ];
+          vcsUser = {
+            name = "HectorMRC";
+            email = "thehector1593@gmail.com";
           };
-
-          imports = [
-            ./hardware-configuration/dell-inspiron.nix
-            ./nixos/bluetooth.nix
-            ./nixos/device.nix
-            ./nixos/locale.nix
-            ./nixos/network.nix
-            ./nixos/pam.nix
-            ./nixos/pipewire.nix
-            ./nixos/startup.nix
-            ./nixos/desktop
-          ];
-
-          profile = {
-            inherit hostname username;
-            shell = "zsh";
-          };
-
-          desktopEnvironment = {
-            displayManager = "none";
-            sessions = [
-              "niri"
-            ];
-          };
-
-          home-manager.users.${username} = {
-            imports = [
-              ./home-manager
-              ./home-manager/direnv.nix
-              ./home-manager/keygen.nix
-              ./home-manager/latex.nix
-              ./home-manager/neovim.nix
-              ./home-manager/ssh.nix
-              ./home-manager/theme.nix
-              ./home-manager/tmux.nix
-              ./home-manager/vcs.nix
-              ./home-manager/zsh.nix
-              ./home-manager/desktop
-            ];
-
-            theme.name = "gruvbox";
-
-            knownHosts = builtins.attrValues devices;
-
-            version-control-system = {
-              user = {
-                name = "HectorMRC";
-                email = "thehector1593@gmail.com";
-              };
-              extraTools = [ "jj" ];
-            };
-
-            desktopEnvironment = {
-              wallpaper = ./assets/wallpapers/raining-osaka.jpg;
-              profile = "personal";
-            };
-          };
+          wallpaper = ./assets/wallpapers/raining-osaka.jpg;
+          profile = "personal";
         };
 
         dell-xps = with devices.dell-xps; {
