@@ -111,12 +111,6 @@
           vcsUser = vcsUsers.personal;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
           profile = "personal";
-          extraHomeImports = [
-            ./home-manager/ollama.nix
-            ./home-manager/opencode.nix
-            ./home-manager/proton-drive.nix
-            ./home-manager/desktop/brave.nix
-          ];
         };
 
         zimablade = mkHost {
@@ -133,11 +127,6 @@
           vcsUser = vcsUsers.work;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
           profile = "work";
-          extraHomeImports = [
-            ./home-manager/ollama.nix
-            ./home-manager/opencode.nix
-            ./home-manager/desktop/brave.nix
-          ];
         };
       };
     };

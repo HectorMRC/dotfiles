@@ -40,7 +40,9 @@ let
 
   desktopHomeImports = [
     (home + "/latex.nix")
+    (home + "/opencode.nix")
     (home + "/desktop")
+    (home + "/desktop/brave.nix")
   ];
 in
 {
