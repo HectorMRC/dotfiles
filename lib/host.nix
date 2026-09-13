@@ -13,7 +13,10 @@ let
   hasAny = wanted: tags: builtins.any (t: builtins.elem t tags) wanted;
 
   baseNixosImports = [
-    (nixos + "/device.nix")
+    (nixos + "/user.nix")
+    (nixos + "/packages.nix")
+    (nixos + "/services.nix")
+    (nixos + "/nix.nix")
     (nixos + "/locale.nix")
     (nixos + "/network.nix")
     (nixos + "/startup.nix")
