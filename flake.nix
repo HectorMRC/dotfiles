@@ -33,6 +33,17 @@
 
       mkHost = import ./lib/host.nix;
 
+      vcsUsers = {
+        personal = {
+          name = "HectorMRC";
+          email = "thehector1593@gmail.com";
+        };
+        work = {
+          name = "HectorMRC";
+          email = "hector.morales@veecle.io";
+        };
+      };
+
       devices = {
         dell-inspiron = {
           username = "hector";
@@ -88,10 +99,7 @@
           knownHosts = devices;
           hostname = "dell-inspiron";
           tags = [ "home" ];
-          vcsUser = {
-            name = "HectorMRC";
-            email = "thehector1593@gmail.com";
-          };
+          vcsUser = vcsUsers.personal;
           wallpaper = ./assets/wallpapers/raining-osaka.jpg;
           profile = "personal";
         };
@@ -100,10 +108,7 @@
           knownHosts = devices;
           hostname = "dell-xps";
           tags = [ "home" ];
-          vcsUser = {
-            name = "HectorMRC";
-            email = "thehector1593@gmail.com";
-          };
+          vcsUser = vcsUsers.personal;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
           profile = "personal";
           extraHomeImports = [
@@ -118,20 +123,14 @@
           knownHosts = devices;
           hostname = "zimablade";
           tags = [ "server" ];
-          vcsUser = {
-            name = "HectorMRC";
-            email = "thehector1593@gmail.com";
-          };
+          vcsUser = vcsUsers.personal;
         };
 
         thinkpad = mkHost {
           knownHosts = devices;
           hostname = "thinkpad";
           tags = [ "work" ];
-          vcsUser = {
-            name = "HectorMRC";
-            email = "hector.morales@veecle.io";
-          };
+          vcsUser = vcsUsers.work;
           wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
           profile = "work";
           extraHomeImports = [
