@@ -13,6 +13,7 @@
         "sddm"
         "none"
       ];
+      default = "none";
     };
 
     sessions = mkOption {
@@ -22,6 +23,7 @@
           "plasma"
         ]
       );
+      default = [ "niri" ];
     };
   };
 
