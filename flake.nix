@@ -87,7 +87,6 @@
         dell-inspiron = mkHost {
           knownHosts = devices;
           hostname = "dell-inspiron";
-          username = "hector";
           tags = [ "home" ];
           vcsUser = {
             name = "HectorMRC";
@@ -100,7 +99,6 @@
         dell-xps = mkHost {
           knownHosts = devices;
           hostname = "dell-xps";
-          username = "hector";
           tags = [ "home" ];
           vcsUser = {
             name = "HectorMRC";
@@ -119,7 +117,6 @@
         zimablade = mkHost {
           knownHosts = devices;
           hostname = "zimablade";
-          username = "hector";
           tags = [ "server" ];
           vcsUser = {
             name = "HectorMRC";
@@ -130,7 +127,6 @@
         thinkpad = mkHost {
           knownHosts = devices;
           hostname = "thinkpad";
-          username = "hector";
           tags = [ "work" ];
           vcsUser = {
             name = "HectorMRC";

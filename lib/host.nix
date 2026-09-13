@@ -61,12 +61,13 @@ let
   isDesktop = hasAny desktopTags tags;
   isWork = builtins.elem "work" tags;
 
-  nixosImports =
-    [ (hardware + "/${hostname}.nix") ]
-    ++ baseNixosImports
-    ++ (if isDesktop then desktopNixosImports else [ ])
-    ++ (if isWork then [ (nixos + "/virtualisation.nix") ] else [ ])
-    ++ extraImports;
+  nixosImports = [
+    (hardware + "/${hostname}.nix")
+  ]
+  ++ baseNixosImports
+  ++ (if isDesktop then desktopNixosImports else [ ])
+  ++ (if isWork then [ (nixos + "/virtualisation.nix") ] else [ ])
+  ++ extraImports;
 
   homeImports =
     baseHomeImports ++ (if isDesktop then desktopHomeImports else [ ]) ++ extraHomeImports;
