@@ -6,7 +6,10 @@
   tags,
   knownHosts,
   vcsUser,
-  wallpaper ? null,
+  desktopEnvironment ? {
+    wallpaper = ../assets/wallpapers/ancient-greece.jpeg;
+  },
+  ...
 }:
 let
   nixos = ../nixos;
@@ -89,12 +92,17 @@ in
 
     theme.name = "gruvbox";
 
-    knownHosts = builtins.attrValues knownHosts;
+    knownHosts = builtins.attrValues (
+      builtins.mapAttrs (hostname: host: {
+        inherit hostname;
+        inherit (host) username ip;
+      }) knownHosts
+    );
 
     version-control-system = {
       user = vcsUser;
       extraTools = [ "jj" ];
     };
   }
-  // whenAll [ "laptop" ] { desktopEnvironment = { inherit wallpaper; }; };
+  // whenAll [ "laptop" ] { inherit desktopEnvironment; };
 }

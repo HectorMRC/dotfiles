@@ -32,6 +32,9 @@
       };
 
       mkHost = import ./lib/mkHost.nix;
+      mkHosts = builtins.mapAttrs (hostname: device: mkHost (device // { inherit hostname; }));
+
+      username = "hector";
 
       vcsUsers = {
         personal = {
@@ -46,24 +49,44 @@
 
       devices = {
         dell-inspiron = {
-          username = "hector";
-          hostname = "dell-inspiron";
+          inherit username;
           ip = "192.168.0.44";
+          knownHosts = devices;
+          vcsUser = vcsUsers.personal;
+          tags = [
+            "home"
+            "laptop"
+          ];
         };
         dell-xps = {
-          username = "hector";
-          hostname = "dell-xps";
+          inherit username;
           ip = "192.168.0.22";
+          knownHosts = devices;
+          vcsUser = vcsUsers.personal;
+          tags = [
+            "home"
+            "laptop"
+          ];
         };
         zimablade = {
-          username = "hector";
-          hostname = "zimablade";
+          inherit username;
           ip = "192.168.0.52";
+          knownHosts = devices;
+          vcsUser = vcsUsers.personal;
+          tags = [
+            "home"
+            "server"
+          ];
         };
         thinkpad = {
-          username = "hector";
-          hostname = "thinkpad";
+          inherit username;
           ip = "192.168.0.82";
+          knownHosts = devices;
+          vcsUser = vcsUsers.work;
+          tags = [
+            "work"
+            "laptop"
+          ];
         };
       };
     in
@@ -80,67 +103,23 @@
         ];
       };
 
-      colmenaHive = colmena.lib.makeHive {
-        meta.nixpkgs = pkgs;
+      colmenaHive = colmena.lib.makeHive (
+        {
+          meta.nixpkgs = pkgs;
 
-        defaults = {
-          imports = [
-            home-manager.nixosModules.home-manager
-          ];
+          defaults = {
+            imports = [
+              home-manager.nixosModules.home-manager
+            ];
 
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            sharedModules = [ ];
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              sharedModules = [ ];
+            };
           };
-        };
-
-        dell-inspiron = mkHost {
-          knownHosts = devices;
-          hostname = "dell-inspiron";
-          username = "hector";
-          vcsUser = vcsUsers.personal;
-          wallpaper = ./assets/wallpapers/raining-osaka.jpg;
-          tags = [
-            "home"
-            "laptop"
-          ];
-        };
-
-        dell-xps = mkHost {
-          knownHosts = devices;
-          hostname = "dell-xps";
-          username = "hector";
-          vcsUser = vcsUsers.personal;
-          wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
-          tags = [
-            "home"
-            "laptop"
-          ];
-        };
-
-        zimablade = mkHost {
-          knownHosts = devices;
-          hostname = "zimablade";
-          username = "hector";
-          vcsUser = vcsUsers.personal;
-          tags = [
-            "home"
-            "server"
-          ];
-        };
-
-        thinkpad = mkHost {
-          knownHosts = devices;
-          hostname = "thinkpad";
-          username = "hector";
-          vcsUser = vcsUsers.work;
-          wallpaper = ./assets/wallpapers/ancient-greece.jpeg;
-          tags = [
-            "work"
-            "laptop"
-          ];
-        };
-      };
+        }
+        // mkHosts devices
+      );
     };
 }
