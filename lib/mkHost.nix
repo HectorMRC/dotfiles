@@ -16,8 +16,18 @@ let
   home = ../home-manager;
   hardware = ../hardware-configuration;
 
+  knownTags = [
+    "home"
+    "work"
+    "laptop"
+    "server"
+  ];
+
+  unknownTags = builtins.filter (t: !builtins.elem t knownTags) tags;
+
   whenAll = import ./whenAll.nix tags;
 in
+assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}";
 {
   deployment = {
     inherit tags;
