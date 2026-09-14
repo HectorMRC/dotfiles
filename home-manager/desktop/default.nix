@@ -4,7 +4,7 @@
   ...
 }:
 let
-  whenAll = import ../../lib/whenAll.nix osConfig.deployment.tags;
+  whenTags = import ../../lib/whenAll.nix osConfig.deployment.tags;
 in
 {
   programs.vscodium.enable = true;
@@ -15,15 +15,21 @@ in
       signal-desktop
       spotify
     ]
-    ++ whenAll [ "home" ] [
-      inkscape
-      libreoffice
-      obsidian
-    ]
-    ++ whenAll [ "work" ] [
-      postman
-      slack
-    ];
+    ++
+      whenTags
+        [ "home" ]
+        [
+          inkscape
+          libreoffice
+          obsidian
+        ]
+    ++
+      whenTags
+        [ "work" ]
+        [
+          postman
+          slack
+        ];
 
   dconf.settings = {
     "org/gnome/desktop/peripherals/touchpad" = {

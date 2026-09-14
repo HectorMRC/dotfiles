@@ -25,7 +25,7 @@ let
 
   unknownTags = builtins.filter (t: !builtins.elem t knownTags) tags;
 
-  whenAll = import ./whenAll.nix tags;
+  whenTags = import ./whenAll.nix tags;
 in
 assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}";
 {
@@ -47,7 +47,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
     (nixos + "/virtualisation.nix")
   ]
   ++
-    whenAll
+    whenTags
       [ "laptop" ]
       [
         (nixos + "/bluetooth.nix")
@@ -74,7 +74,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       (home + "/zsh.nix")
     ]
     ++
-      whenAll
+      whenTags
         [ "laptop" ]
         [
           (home + "/opencode.nix")
@@ -93,7 +93,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
           (home + "/desktop/waybar.nix")
         ]
     ++
-      whenAll
+      whenTags
         [ "home" "laptop" ]
         [
           (home + "/latex.nix")
@@ -114,5 +114,5 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       extraTools = [ "jj" ];
     };
   }
-  // whenAll [ "laptop" ] { inherit desktopEnvironment; };
+  // whenTags [ "laptop" ] { inherit desktopEnvironment; };
 }
