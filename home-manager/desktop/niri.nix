@@ -47,17 +47,17 @@ let
 
         focus-ring {
             width 2
-            active-color "${config.theme.colors.info}"
+            active-color "${config.palette.colors.info}"
             inactive-color "#00000000" // transparent
         }
 
         border {
           width 1
           active-color "#00000000" // transparent
-          inactive-color "${config.theme.colors.border}"
+          inactive-color "${config.palette.colors.border}"
 
           // Color of the border around windows that request your attention.
-          urgent-color "${config.theme.colors.warning}";
+          urgent-color "${config.palette.colors.warning}";
         }
       }
 

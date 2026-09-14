@@ -67,8 +67,8 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       (home + "/direnv.nix")
       (home + "/keygen.nix")
       (home + "/neovim.nix")
+      (home + "/palette.nix")
       (home + "/ssh.nix")
-      (home + "/theme.nix")
       (home + "/tmux.nix")
       (home + "/vcs.nix")
       (home + "/zsh.nix")
@@ -100,7 +100,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
           (home + "/proton-drive.nix")
         ];
 
-    theme.name = "gruvbox";
+    palette.name = "gruvbox";
 
     knownHosts = builtins.attrValues (
       builtins.mapAttrs (hostname: host: {

@@ -1,10 +1,10 @@
 { pkgs, config, ... }:
 let
-  info = config.theme.colors.info;
-  warning = config.theme.colors.warning;
-  background = config.theme.colors.background;
-  surface = config.theme.colors.surface;
-  foreground = config.theme.colors.foreground;
+  info = config.palette.colors.info;
+  warning = config.palette.colors.warning;
+  background = config.palette.colors.background;
+  surface = config.palette.colors.surface;
+  foreground = config.palette.colors.foreground;
 in
 {
   home.packages = with pkgs; [

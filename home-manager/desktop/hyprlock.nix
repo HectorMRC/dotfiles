@@ -1,11 +1,11 @@
 { config, lib, ... }:
 let
-  accent = lib.removePrefix "#" config.theme.colors.accent;
-  warning = lib.removePrefix "#" config.theme.colors.warning;
-  error = lib.removePrefix "#" config.theme.colors.error;
-  surface = lib.removePrefix "#" config.theme.colors.surface;
-  foreground = lib.removePrefix "#" config.theme.colors.foreground;
-  foreground-muted = lib.removePrefix "#" config.theme.colors.foreground-muted;
+  accent = lib.removePrefix "#" config.palette.colors.accent;
+  warning = lib.removePrefix "#" config.palette.colors.warning;
+  error = lib.removePrefix "#" config.palette.colors.error;
+  surface = lib.removePrefix "#" config.palette.colors.surface;
+  foreground = lib.removePrefix "#" config.palette.colors.foreground;
+  foreground-muted = lib.removePrefix "#" config.palette.colors.foreground-muted;
 in
 {
   programs.hyprlock = {
@@ -91,7 +91,7 @@ in
 
         fade_on_empty = false;
         font_family = "JetBrainsMono Nerd Font";
-        placeholder_text = ''<i><span foreground="#${config.theme.colors.foreground-disabled}">Enter password</span></i>'';
+        placeholder_text = ''<i><span foreground="#${config.palette.colors.foreground-disabled}">Enter password</span></i>'';
         hide_input = false;
         position = "0, -210";
         halign = "center";

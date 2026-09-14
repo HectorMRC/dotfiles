@@ -4,7 +4,7 @@
   ...
 }:
 let
-  themes = {
+  palettes = {
     gruvbox = {
       primary = "#fe8019";
       secondary = "#ebdbb2";
@@ -27,21 +27,21 @@ let
   };
 in
 {
-  options.theme = {
+  options.palette = {
     name = lib.mkOption {
-      type = lib.types.enum (builtins.attrNames themes);
+      type = lib.types.enum (builtins.attrNames palettes);
       default = "gruvbox";
-      description = "Active system theme.";
+      description = "Active color palette.";
     };
 
     colors = lib.mkOption {
       type = lib.types.attrs;
       readOnly = true;
-      description = "Resolved color palette for the active theme.";
+      description = "Resolved colors for the active palette.";
     };
   };
 
   config = {
-    theme.colors = themes.${config.theme.name};
+    palette.colors = palettes.${config.palette.name};
   };
 }

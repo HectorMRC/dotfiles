@@ -1,14 +1,14 @@
 { config, pkgs, ... }:
 let
-  accent = config.theme.colors.accent;
-  success = config.theme.colors.success;
-  info = config.theme.colors.info;
-  warning = config.theme.colors.warning;
-  error = config.theme.colors.error;
-  background = config.theme.colors.background;
-  surface = config.theme.colors.surface;
-  foreground = config.theme.colors.foreground;
-  foreground-muted = config.theme.colors.foreground-muted;
+  accent = config.palette.colors.accent;
+  success = config.palette.colors.success;
+  info = config.palette.colors.info;
+  warning = config.palette.colors.warning;
+  error = config.palette.colors.error;
+  background = config.palette.colors.background;
+  surface = config.palette.colors.surface;
+  foreground = config.palette.colors.foreground;
+  foreground-muted = config.palette.colors.foreground-muted;
 in
 {
   # Enable alacritty terminal.

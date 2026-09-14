@@ -263,11 +263,11 @@ in
         font-size: 16px;
         border-radius: 8;
         box-shadow: none;
-        color: ${config.theme.colors.foreground};
+        color: ${config.palette.colors.foreground};
       }
 
       *.disabled {
-        color: ${config.theme.colors.foreground-disabled};
+        color: ${config.palette.colors.foreground-disabled};
       }
 
       #backlight-slider,
@@ -283,12 +283,12 @@ in
       #backlight-slider trough,
       #pulseaudio-slider trough {
         min-width: 8px;
-        background: ${config.theme.colors.background};
+        background: ${config.palette.colors.background};
       }
 
       #backlight-slider highlight,
       #pulseaudio-slider highlight {
-        background: ${config.theme.colors.info};
+        background: ${config.palette.colors.info};
       }
 
       #backlight-slider,
@@ -306,18 +306,18 @@ in
       }
 
       #battery.low {
-        color: ${config.theme.colors.warning};
+        color: ${config.palette.colors.warning};
       }
       #battery.critical {
-        color: ${config.theme.colors.error};
+        color: ${config.palette.colors.error};
       }
       #battery.charging,
       #battery.plugged {
-        color: ${config.theme.colors.info};
+        color: ${config.palette.colors.info};
       }
 
       #clock {
-        color: ${config.theme.colors.info};
+        color: ${config.palette.colors.info};
       }
 
       #language {
@@ -325,39 +325,39 @@ in
       }
 
       .modules-left {
-        background-color: ${config.theme.colors.surface};
+        background-color: ${config.palette.colors.surface};
         border-radius: 8px;
         padding: 12px 0;
       }
 
       .modules-center {
-        background-color: ${config.theme.colors.surface};
+        background-color: ${config.palette.colors.surface};
         border-radius: 8px;
         padding: 12px 0;
       }
 
       .modules-right {
-        background-color: ${config.theme.colors.surface};
+        background-color: ${config.palette.colors.surface};
         border-radius: 8px;
         padding: 12px 0;
       }
 
       #pulseaudio.output.muted {
-        color: ${config.theme.colors.foreground-disabled};
+        color: ${config.palette.colors.foreground-disabled};
       }
 
       #pulseaudio.input.source-muted {
-        color: ${config.theme.colors.foreground-disabled};
+        color: ${config.palette.colors.foreground-disabled};
       }
 
       tooltip {
-        background: ${config.theme.colors.surface};
-        border: 1px solid ${config.theme.colors.border};
+        background: ${config.palette.colors.surface};
+        border: 1px solid ${config.palette.colors.border};
         margin: 12px;
       }
       tooltip * {
-        background: ${config.theme.colors.surface};
-        color: ${config.theme.colors.foreground};
+        background: ${config.palette.colors.surface};
+        color: ${config.palette.colors.foreground};
       }
 
       window#waybar {
