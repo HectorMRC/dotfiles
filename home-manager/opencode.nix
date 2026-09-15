@@ -1,7 +1,23 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
+let
+  # Import a pinned revision of nixpkgs containing opencode 1.18.21
+  pkgs-pinned =
+    import
+      (fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/c27cdad491a991b11ed731760aa2ef8db0cb0410.tar.gz";
+        sha256 = "1r58xn9xdka8bw710i431srl3dmy7dyrhd32rjv709f2mkb6m1ix";
+      })
+      {
+        system = pkgs.system;
+      };
+in
 {
   programs.opencode = {
     enable = true;
+
+    # Temporary fix
+    # Opencode 1.18.30 fails with TypeError: undefined is not an object (evaluating 'a.name')
+    package = pkgs-pinned.opencode;
 
     settings = {
       autoupdate = false;
