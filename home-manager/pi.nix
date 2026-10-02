@@ -6,6 +6,11 @@ in
   programs.pi-coding-agent = {
     enable = true;
     context = ../pi/AGENTS.md;
+
+    settings = {
+      defaultProvider = "anthropic";
+      enabledModels = [ "anthropic/*" ];
+    };
   };
 
   # Pi has no built-in permission system.
