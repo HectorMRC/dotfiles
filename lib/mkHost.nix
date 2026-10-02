@@ -78,6 +78,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
         [ "laptop" ]
         [
           (home + "/opencode.nix")
+          (home + "/pi.nix")
           (home + "/desktop")
           (home + "/desktop/alacritty.nix")
           (home + "/desktop/battery.nix")
