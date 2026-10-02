@@ -2,17 +2,21 @@
 {
   programs.tmux = {
     enable = true;
+    
+    terminal = "tmux-256color";
     extraConfig = ''
-      # Enable mouse input
       setw -g mouse on
 
-      # Open/split window in the current directory
+      set -ga terminal-overrides ",alacritty:RGB"
+
       bind c new-window -c "#{pane_current_path}"
       bind '"' split-window -v -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"
 
-      # Set status background color
       set -g status-style "bg=#90a959,fg=#262626"
+      
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
     '';
   };
 }
