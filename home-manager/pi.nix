@@ -13,6 +13,8 @@ in
     };
   };
 
-  # Pi has no built-in permission system.
-  home.file."${cfg.configDir}/extensions/permissions.ts".source = ../pi/extensions/permissions.ts;
+  home.file."${cfg.configDir}/extensions" = {
+    source = ../pi/extensions;
+    recursive = true;
+  };
 }
