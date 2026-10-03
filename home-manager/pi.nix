@@ -115,6 +115,7 @@ in
     settings = {
       defaultProvider = "anthropic";
       theme = theme.name;
+      hideThinkingBlock = true;
       defaultTools = [
         "read"
         "bash"
