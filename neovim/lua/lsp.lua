@@ -13,4 +13,5 @@ vim.lsp.enable {
     "rust_analyzer",
     "slint-lsp",
     "tombi",
+    "ts_ls",
 }

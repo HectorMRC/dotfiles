@@ -99,7 +99,9 @@
           lua-language-server
           nixd
           nixfmt
+          nodejs
           stylua
+          typescript-language-server
         ];
       };
 
