@@ -2,7 +2,7 @@
  * Input editor for plan mode.
  *
  * - Plan mode: border painted in the theme's warning color and a
- *   "⏸ PLAN MODE" label embedded in the top border.
+ *   "PLAN MODE" label embedded in the top border.
  * - Execution mode: "📋 done/total" progress label in the top border.
  * - The streaming "Working…" status is embedded in the top border too,
  *   next to the label (embedWorkingStatus).
@@ -67,7 +67,7 @@ export class PlanModeEditor extends PromptBoxEditor {
 		const theme = this.planState.theme();
 		switch (this.planState.mode()) {
 			case "plan":
-				return [theme.fg("warning", theme.bold("⏸ PLAN MODE")), theme.fg("warning", theme.bold("⏸ PLAN"))];
+				return [theme.fg("warning", theme.bold("PLAN MODE")), theme.fg("warning", theme.bold("⏸ PLAN"))];
 			case "executing": {
 				const { completed, total } = this.planState.progress();
 				return [theme.fg("accent", `📋 ${completed}/${total}`)];

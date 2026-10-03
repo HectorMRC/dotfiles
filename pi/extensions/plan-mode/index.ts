@@ -29,6 +29,10 @@ const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write"];
 const PLAN_MODE_DISABLED_TOOLS = new Set<string>(["edit", "write"]);
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
 
+const DONE_TAG_INSTRUCTIONS = `Mark each step as soon as it is finished: write [DONE:n] (n = step number) in your
+response text right after completing step n, before starting work on the next step.
+Do not save the tags up for a final summary - progress is tracked live from them.`;
+
 interface PlanModeState {
 	enabled: boolean;
 	todos?: TodoItem[];
@@ -260,23 +264,35 @@ Remaining steps:
 ${todoList}
 
 Execute each step in order.
-After completing a step, include a [DONE:n] tag in your response.`,
+${DONE_TAG_INSTRUCTIONS}`,
 					display: false,
 				},
 			};
 		}
 	});
 
-	// Track progress after each turn
-	pi.on("turn_end", async (event, ctx) => {
-		if (!executionMode || todoItems.length === 0) return;
-		if (!isAssistantMessage(event.message)) return;
+	// Track progress live. [DONE:n] tags are picked up while the assistant
+	// text streams (message_update) and again when the message is final
+	// (message_end). Previously this only ran on turn_end, i.e. after all
+	// tool calls of the message had finished executing.
+	function syncDoneTags(message: AgentMessage, ctx: ExtensionContext): boolean {
+		if (!executionMode || todoItems.length === 0 || !isAssistantMessage(message)) return false;
+		const before = todoItems.filter((t) => t.completed).length;
+		markCompletedSteps(getTextContent(message), todoItems);
+		const changed = todoItems.filter((t) => t.completed).length !== before;
+		if (changed) updateStatus(ctx);
+		return changed;
+	}
 
-		const text = getTextContent(event.message);
-		if (markCompletedSteps(text, todoItems) > 0) {
-			updateStatus(ctx);
+	let unsavedProgress = false;
+	pi.on("message_update", async (event, ctx) => {
+		if (syncDoneTags(event.message, ctx)) unsavedProgress = true;
+	});
+	pi.on("message_end", async (event, ctx) => {
+		if (syncDoneTags(event.message, ctx) || unsavedProgress) {
+			unsavedProgress = false;
+			persistState();
 		}
-		persistState();
 	});
 
 	// Handle plan completion and plan mode UI
@@ -299,16 +315,13 @@ After completing a step, include a [DONE:n] tag in your response.`,
 
 		if (!planModeEnabled || !ctx.hasUI) return;
 
-		// Extract todos from last assistant message
+		// Extract todos from the last assistant message. Only prompt when that
+		// message actually contains a plan; otherwise a follow-up answer in plan
+		// mode would re-open the menu with the previous (stale) plan.
 		const lastAssistant = [...event.messages].reverse().find(isAssistantMessage);
-		if (lastAssistant) {
-			const extracted = extractTodoItems(getTextContent(lastAssistant));
-			if (extracted.length > 0) {
-				todoItems = extracted;
-			}
-		}
-
-		if (todoItems.length === 0) return;
+		const extracted = lastAssistant ? extractTodoItems(getTextContent(lastAssistant)) : [];
+		if (extracted.length === 0) return;
+		todoItems = extracted;
 		persistState();
 
 		// Show plan steps and prompt for next action
@@ -342,7 +355,7 @@ Remaining steps:
 ${remainingList}
 
 Start with: ${firstTodoItem.text}
-After completing a step, include a [DONE:n] tag in your response.`;
+${DONE_TAG_INSTRUCTIONS}`;
 			pi.sendMessage(planTodoListMessage, { deliverAs: "followUp" });
 			pi.sendMessage(
 				{ customType: "plan-mode-execute", content: execMessage, display: true },
@@ -359,6 +372,16 @@ After completing a step, include a [DONE:n] tag in your response.`;
 
 	// Restore state on session start/resume
 	pi.on("session_start", async (_event, ctx) => {
+		// Reset in-memory state: session_start also fires for /new, /resume and
+		// /fork, and state from the previous session must not leak into it.
+		const wasPlanMode = planModeEnabled;
+		const previousTools = toolsBeforePlanMode;
+		planModeEnabled = false;
+		executionMode = false;
+		todoItems = [];
+		toolsBeforePlanMode = undefined;
+		unsavedProgress = false;
+
 		if (pi.getFlag("plan") === true) {
 			planModeEnabled = true;
 		}
@@ -404,7 +427,13 @@ After completing a step, include a [DONE:n] tag in your response.`;
 		}
 
 		if (planModeEnabled) {
+			// Don't snapshot the previous session's read-only set as the "normal" tools.
+			if (wasPlanMode && toolsBeforePlanMode === undefined) toolsBeforePlanMode = previousTools;
 			enablePlanModeTools();
+		} else if (wasPlanMode) {
+			// Previous session left the read-only tool set active.
+			toolsBeforePlanMode = previousTools;
+			restoreNormalModeTools();
 		}
 		installEditor(ctx);
 		updateStatus(ctx);
