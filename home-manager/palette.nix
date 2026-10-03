@@ -8,6 +8,7 @@ let
     gruvbox = {
       primary = "#fe8019";
       secondary = "#ebdbb2";
+      sunken = "#1d2021";
       background = "#282828";
       surface = "#3c3836";
       foreground = "#fbf1c7";
