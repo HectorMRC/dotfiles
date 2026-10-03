@@ -62,8 +62,60 @@ async function ask(
 	return { block: true, reason: `${reason}: denied by the user` };
 }
 
+// Display only: puts each chained command on its own line. Splits on `&&`,
+// `||`, `;` and `|` outside quotes and parentheses.
+function formatCommand(command: string): string {
+	const lines: string[] = [];
+	let operator = "";
+	let current = "";
+	let quote: string | undefined;
+	let depth = 0;
+
+	const push = () => {
+		const text = current.trim();
+		if (text !== "") lines.push(operator ? `    ${operator} ${text}` : text);
+	};
+	const split = (next: string) => {
+		push();
+		operator = next;
+		current = "";
+	};
+
+	for (let i = 0; i < command.length; i++) {
+		const char = command[i];
+		const pair = command.slice(i, i + 2);
+
+		if (char === "\\" && quote !== "'") {
+			current += command.slice(i, i + 2);
+			i++;
+		} else if (quote) {
+			if (char === quote) quote = undefined;
+			current += char;
+		} else if (char === "'" || char === '"') {
+			quote = char;
+			current += char;
+		} else if (char === "(") {
+			depth++;
+			current += char;
+		} else if (char === ")") {
+			depth = Math.max(0, depth - 1);
+			current += char;
+		} else if (depth === 0 && (pair === "&&" || pair === "||")) {
+			split(pair);
+			i++;
+		} else if (depth === 0 && (char === ";" || char === "|")) {
+			split(char);
+		} else {
+			current += char;
+		}
+	}
+	push();
+
+	return lines.join("\n");
+}
+
 function describe(input: Record<string, unknown>): string {
-	if (typeof input.command === "string") return input.command;
+	if (typeof input.command === "string") return formatCommand(input.command);
 	if (typeof input.path === "string") return input.path;
 	return JSON.stringify(input, null, 2);
 }
