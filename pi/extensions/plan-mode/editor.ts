@@ -67,7 +67,7 @@ export class PlanModeEditor extends PromptBoxEditor {
 		const theme = this.planState.theme();
 		switch (this.planState.mode()) {
 			case "plan":
-				return [theme.fg("warning", theme.bold("PLAN MODE")), theme.fg("warning", theme.bold("⏸ PLAN"))];
+				return [theme.fg("warning", theme.bold(" Plan mode")), theme.fg("warning", theme.bold("⏸ PLAN"))];
 			case "executing": {
 				const { completed, total } = this.planState.progress();
 				return [theme.fg("accent", `📋 ${completed}/${total}`)];
