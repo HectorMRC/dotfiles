@@ -9,7 +9,6 @@ in
 
     settings = {
       defaultProvider = "anthropic";
-      enabledModels = [ "anthropic/*" ];
     };
   };
 
