@@ -132,9 +132,20 @@ export function extractTodoItems(message: string): TodoItem[] {
 	if (!headerMatch) return items;
 
 	const planSection = message.slice(message.indexOf(headerMatch[0]) + headerMatch[0].length);
-	const numberedPattern = /^\s*(\d+)[.)]\s+\*{0,2}([^*\n]+)/gm;
+	const numberedPattern = /^\s*(\d+)[.)]\s+\*{0,2}([^*\n]+)/;
 
-	for (const match of planSection.matchAll(numberedPattern)) {
+	// Only the first numbered list after the header counts. Blank lines and
+	// indented continuation lines (sub-bullets, wrapped text) are allowed
+	// inside the list; any other unindented line ends it, so numbered
+	// questions or notes after the plan aren't picked up as steps.
+	let listStarted = false;
+	for (const line of planSection.split("\n")) {
+		const match = line.match(numberedPattern);
+		if (!match) {
+			if (listStarted && line.trim() !== "" && !/^\s/.test(line)) break;
+			continue;
+		}
+		listStarted = true;
 		const text = match[2]
 			.trim()
 			.replace(/\*{1,2}$/, "")

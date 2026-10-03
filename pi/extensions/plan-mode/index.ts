@@ -73,6 +73,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 					total: todoItems.length,
 				}),
 				theme: () => ctx.ui.theme,
+				ctx: () => ctx,
 			});
 			return editor;
 		});

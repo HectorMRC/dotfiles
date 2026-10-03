@@ -6,10 +6,12 @@
  * - Execution mode: "📋 done/total" progress label in the top border.
  * - The streaming "Working…" status is embedded in the top border too,
  *   next to the label (embedWorkingStatus).
+ * - Status line + prompt symbol inside the box come from PromptBoxEditor.
  */
 
-import { CustomEditor, type KeybindingsManager, type Theme } from "@earendil-works/pi-coding-agent";
+import type { ExtensionContext, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type EditorTheme, type TUI, visibleWidth } from "@earendil-works/pi-tui";
+import { PromptBoxEditor } from "../prompt-box/editor.ts";
 
 export type PlanEditorMode = "plan" | "executing" | "normal";
 
@@ -17,6 +19,7 @@ export interface PlanEditorState {
 	mode(): PlanEditorMode;
 	progress(): { completed: number; total: number };
 	theme(): Theme;
+	ctx(): ExtensionContext;
 }
 
 // Mirrors the (private) indicator CustomEditor stores for embedded working status.
@@ -27,12 +30,12 @@ interface BorderStatusIndicator {
 
 type ColorFn = (str: string) => string;
 
-export class PlanModeEditor extends CustomEditor {
+export class PlanModeEditor extends PromptBoxEditor {
 	// Not named `state`: the base Editor uses that field internally.
 	private readonly planState: PlanEditorState;
 
 	constructor(tui: TUI, theme: EditorTheme, keybindings: KeybindingsManager, state: PlanEditorState) {
-		super(tui, theme, keybindings, { embedWorkingStatus: true });
+		super(tui, theme, keybindings, { embedWorkingStatus: true, ctx: () => state.ctx() });
 		this.planState = state;
 
 		// `borderColor` is an own field set by Editor's constructor, and pi
@@ -49,6 +52,10 @@ export class PlanModeEditor extends CustomEditor {
 				baseColor = fn;
 			},
 		});
+	}
+
+	protected override promptColor(text: string): string {
+		return this.planState.mode() === "plan" ? this.planState.theme().fg("warning", text) : super.promptColor(text);
 	}
 
 	/** Request a re-render after plan state changes. */
