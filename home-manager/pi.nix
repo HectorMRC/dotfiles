@@ -115,6 +115,15 @@ in
     settings = {
       defaultProvider = "anthropic";
       theme = theme.name;
+      defaultTools = [
+        "read"
+        "bash"
+        "edit"
+        "write"
+        "grep"
+        "find"
+        "ls"
+      ];
     };
   };
 

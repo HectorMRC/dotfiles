@@ -13,5 +13,21 @@ Built-in tools always take priority over bash equivalents:
 - Reading files: use `read`, never `cat`, `head`, `tail`, `less`, or `sed -n`.
 - Modifying files: use `edit`, never `sed -i`, `awk`, `perl -pi`, or similar.
 - Creating/overwriting files: use `write`, never heredocs, `echo >`, `printf >`, or `tee`.
+- Listing directories: use `ls`, never bash `ls` or `tree`.
+- Finding files: use `find`, never bash `find` or `fd`.
+- Searching contents: use `grep`, never bash `rg` or `grep`.
 
-Use bash only for things no built-in tool covers: searching/listing (`rg`, `find`, `ls`), running builds/tests/scripts, and VCS commands.
+Use bash only for things no built-in tool covers: running builds/tests/scripts and VCS commands.
+
+Never inspect a known file or one already in context with anything but `read`.
+
+Stay in the working directory and use paths relative to it (e.g. `npm --prefix some/dir ...`). Only `cd` when a command cannot work any other way.
+
+# Writing
+
+Applies to code, comments, docs and READMEs:
+
+- Be as brief as possible while staying clear. Go straight to the point.
+- No filler, repetition or padded sentences.
+- No AI tells, such as em dashes.
+- Write for humans first.

@@ -25,7 +25,7 @@ import { extractTodoItems, isSafeCommand, markCompletedSteps, type TodoItem } fr
 
 // Tools
 const PLAN_MODE_TOOLS = ["read", "bash", "grep", "find", "ls"];
-const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write"];
+const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write", "grep", "find", "ls"];
 const PLAN_MODE_DISABLED_TOOLS = new Set<string>(["edit", "write"]);
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
 
