@@ -10,12 +10,17 @@
  * - Extracts numbered plan steps from "Plan:" sections
  * - [DONE:n] markers to complete steps during execution
  * - Progress tracking widget during execution
+ * - Input editor shows the mode instead of a footer status:
+ *   - plan mode: border in warning color + "⏸ PLAN MODE" in the top border
+ *   - execution: "📋 done/total" in the top border
+ *   - the streaming "Working…" status is embedded in the top border as well
  */
 
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage, TextContent } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Key } from "@earendil-works/pi-tui";
+import { type PlanEditorMode, PlanModeEditor } from "./editor.ts";
 import { extractTodoItems, isSafeCommand, markCompletedSteps, type TodoItem } from "./utils.ts";
 
 // Tools
@@ -49,6 +54,29 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	let executionMode = false;
 	let todoItems: TodoItem[] = [];
 	let toolsBeforePlanMode: string[] | undefined;
+	let editor: PlanModeEditor | undefined;
+
+	function editorMode(): PlanEditorMode {
+		if (planModeEnabled) return "plan";
+		if (executionMode && todoItems.length > 0) return "executing";
+		return "normal";
+	}
+
+	function installEditor(ctx: ExtensionContext): void {
+		if (!ctx.hasUI) return;
+		ctx.ui.setStatus("plan-mode", undefined); // no footer status
+		ctx.ui.setEditorComponent((tui, theme, keybindings) => {
+			editor = new PlanModeEditor(tui, theme, keybindings, {
+				mode: editorMode,
+				progress: () => ({
+					completed: todoItems.filter((t) => t.completed).length,
+					total: todoItems.length,
+				}),
+				theme: () => ctx.ui.theme,
+			});
+			return editor;
+		});
+	}
 
 	pi.registerFlag("plan", {
 		description: "Start in plan mode (read-only exploration)",
@@ -57,15 +85,8 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	});
 
 	function updateStatus(ctx: ExtensionContext): void {
-		// Footer status
-		if (executionMode && todoItems.length > 0) {
-			const completed = todoItems.filter((t) => t.completed).length;
-			ctx.ui.setStatus("plan-mode", ctx.ui.theme.fg("accent", `📋 ${completed}/${todoItems.length}`));
-		} else if (planModeEnabled) {
-			ctx.ui.setStatus("plan-mode", ctx.ui.theme.fg("warning", "⏸ plan"));
-		} else {
-			ctx.ui.setStatus("plan-mode", undefined);
-		}
+		// Editor border (mode label + color) reads state lazily; just re-render.
+		editor?.refresh();
 
 		// Widget showing todo list
 		if (executionMode && todoItems.length > 0) {
@@ -384,6 +405,7 @@ After completing a step, include a [DONE:n] tag in your response.`;
 		if (planModeEnabled) {
 			enablePlanModeTools();
 		}
+		installEditor(ctx);
 		updateStatus(ctx);
 	});
 }
