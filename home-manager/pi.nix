@@ -1,6 +1,14 @@
-{ config, ... }:
+{ config, osConfig, ... }:
 let
   cfg = config.programs.pi-coding-agent;
+  whenTags = import ../lib/whenAll.nix osConfig.deployment.tags;
+
+  mcp = {
+    mcpServers.linear = {
+      url = "https://mcp.linear.app/mcp";
+      description = "Linear issues, projects, teams and workflow statuses";
+    };
+  };
   colors = config.palette.colors;
 
   # Every color is derived from the palette; nothing is inherited from pi's
@@ -128,10 +136,18 @@ in
     };
   };
 
-  home.file."${cfg.configDir}/extensions" = {
-    source = ../pi/extensions;
-    recursive = true;
+  home.file = {
+    "${cfg.configDir}/extensions" = {
+      source = ../pi/extensions;
+      recursive = true;
+    };
+    "${cfg.configDir}/themes/${theme.name}.json".text = builtins.toJSON theme;
+  }
+  // whenTags [ "work" ] {
+    "${cfg.configDir}/skills" = {
+      source = ../pi/skills;
+      recursive = true;
+    };
+    "${cfg.configDir}/mcp.json".text = builtins.toJSON mcp;
   };
-
-  home.file."${cfg.configDir}/themes/${theme.name}.json".text = builtins.toJSON theme;
 }

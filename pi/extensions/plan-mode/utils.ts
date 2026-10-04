@@ -82,6 +82,8 @@ const SAFE_PATTERNS = [
 	/^\s*git\s+ls-/i,
 	/^\s*git\s+(blame|rev-parse|describe|shortlog)\b/i,
 	/^\s*jj\s+(st|status|log|diff|show|evolog|file\s+(list|show)|bookmark\s+list|op\s+log)\b/i,
+	/^\s*gh\s+(pr|issue|run|repo)\s+(view|diff|list|checks|status)\b/i,
+	/^\s*gh\s+auth\s+status\b/i,
 	/^\s*npm\s+(list|ls|view|info|search|outdated|audit)/i,
 	/^\s*yarn\s+(list|info|why|audit)/i,
 	/^\s*node\s+--version/i,
@@ -173,10 +175,6 @@ export function cleanStepText(text: string): string {
 	let cleaned = text
 		.replace(/\*{1,2}([^*]+)\*{1,2}/g, "$1") // bold/italic
 		.replace(/`([^`]+)`/g, "$1") // inline code
-		.replace(
-			/^(Use|Run|Execute|Create|Write|Read|Check|Verify|Update|Modify|Add|Remove|Delete|Install)\s+(the\s+)?/i,
-			"",
-		)
 		.replace(/\s+/g, " ")
 		.trim();
 
@@ -195,7 +193,8 @@ export function extractTodoItems(message: string): TodoItem[] {
 	if (!headerMatch) return items;
 
 	const planSection = message.slice(message.indexOf(headerMatch[0]) + headerMatch[0].length);
-	const numberedPattern = /^\s*(\d+)[.)]\s+\*{0,2}([^*\n]+)/;
+	// Unindented only: indented numbers are sub-steps of the previous step.
+	const numberedPattern = /^(\d+)[.)]\s+\*{0,2}([^*\n]+)/;
 
 	// Only the first numbered list after the header counts. Any unindented,
 	// non-blank, non-numbered line ends it.

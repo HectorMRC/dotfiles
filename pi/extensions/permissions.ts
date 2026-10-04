@@ -1,5 +1,7 @@
-// Read-only tools run freely inside the working directory (symlinks resolved);
-// anything else asks for confirmation, or is blocked when there is no UI.
+// Read-only tools run freely inside the working directory (symlinks resolved).
+// Tools declaring `readOnlyHint` (e.g. MCP reads) and codemode scripts also run
+// freely; each tool a script calls is checked on its own. Anything else asks for
+// confirmation, or is blocked when there is no UI.
 
 import { realpathSync } from "node:fs";
 import { homedir } from "node:os";
@@ -120,11 +122,20 @@ function describe(input: Record<string, unknown>): string {
 }
 
 export default function (pi: ExtensionAPI) {
+	// `annotations` exists at runtime since Pi 0.99; the pinned typings predate it.
+	const isDeclaredReadOnly = (name: string) => {
+		const tool = pi.getAllTools().find((t) => t.name === name) as
+			| { annotations?: { readOnlyHint?: boolean } }
+			| undefined;
+		return tool?.annotations?.readOnlyHint === true;
+	};
+
 	pi.on("tool_call", async (event, ctx) => {
 		const input = event.input as Record<string, unknown>;
 		const readOnly = READ_ONLY_TOOLS[event.toolName];
 
 		if (!readOnly) {
+			if (event.toolName === "codemode" || isDeclaredReadOnly(event.toolName)) return undefined;
 			return ask(
 				ctx,
 				event.toolName === "bash" ? "error" : "accent",
