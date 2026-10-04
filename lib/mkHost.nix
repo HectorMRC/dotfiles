@@ -93,6 +93,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
           (home + "/desktop/vscodium.nix")
           (home + "/desktop/waybar.nix")
         ]
+    ++ whenTags [ "work" ] [ (home + "/gh.nix") ]
     ++
       whenTags
         [ "home" "laptop" ]
