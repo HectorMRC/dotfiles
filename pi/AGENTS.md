@@ -19,6 +19,8 @@ Built-in tools always take priority over bash equivalents:
 
 Use bash only for things no built-in tool covers: running builds/tests/scripts and VCS commands.
 
+Never bundle built-in tool work into one bash call to save round trips. Make parallel built-in tool calls instead. Bash calls using the commands above are blocked automatically; filtering another command's output after a pipe (`jj log | grep foo`) is allowed.
+
 Never inspect a known file or one already in context with anything but `read`.
 
 Stay in the working directory and use paths relative to it (e.g. `npm --prefix some/dir ...`). Only `cd` when a command cannot work any other way.
