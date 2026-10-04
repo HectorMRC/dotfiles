@@ -242,8 +242,11 @@ in
           tooltip-format = "Volume: {volume}%\n{desc}";
           interval = 1;
 
-          scroll-step = 0; # disable scrolling
           reverse-scrolling = true;
+          smooth-scrolling-threshold = 1;
+
+          on-scroll-up = "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+";
+          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
 
           on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           on-click-right = "pavucontrol";
