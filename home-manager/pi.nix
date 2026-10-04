@@ -3,12 +3,23 @@ let
   cfg = config.programs.pi-coding-agent;
   whenTags = import ../lib/whenAll.nix osConfig.deployment.tags;
 
-  mcp = {
-    mcpServers.linear = {
+  skills = ../pi/skills;
+  enabledSkills =
+    whenTags
+      [ "work" ]
+      [
+        (skills + "/linear-plan-to-issues")
+        (skills + "/pr-description")
+        (skills + "/pr-explain")
+      ];
+
+  mcpServers = whenTags [ "work" ] {
+    linear = {
       url = "https://mcp.linear.app/mcp";
       description = "Linear issues, projects, teams and workflow statuses";
     };
   };
+
   colors = config.palette.colors;
 
   # Every color is derived from the palette; nothing is inherited from pi's
@@ -142,12 +153,15 @@ in
       recursive = true;
     };
     "${cfg.configDir}/themes/${theme.name}.json".text = builtins.toJSON theme;
+    "${cfg.configDir}/mcp.json".text = builtins.toJSON { inherit mcpServers; };
   }
-  // whenTags [ "work" ] {
-    "${cfg.configDir}/skills" = {
-      source = ../pi/skills;
-      recursive = true;
-    };
-    "${cfg.configDir}/mcp.json".text = builtins.toJSON mcp;
-  };
+  // builtins.listToAttrs (
+    map (skill: {
+      name = "${cfg.configDir}/skills/${baseNameOf skill}";
+      value = {
+        source = skill;
+        recursive = true;
+      };
+    }) enabledSkills
+  );
 }
