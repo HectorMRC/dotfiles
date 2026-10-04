@@ -1,19 +1,6 @@
 /**
- * Plan Mode Extension
- *
- * Read-only exploration mode for safe code analysis.
- * When enabled, built-in write tools are disabled.
- *
- * Features:
- * - /plan command or Ctrl+Alt+P to toggle
- * - Bash restricted to allowlisted read-only commands
- * - Extracts numbered plan steps from "Plan:" sections
- * - [DONE:n] markers to complete steps during execution
- * - Progress tracking widget during execution
- * - Input editor shows the mode instead of a footer status:
- *   - plan mode: border in warning color + "⏸ PLAN MODE" in the top border
- *   - execution: "📋 done/total" in the top border
- *   - the streaming "Working…" status is embedded in the top border as well
+ * Plan mode: read-only exploration (/plan or Ctrl+Alt+P). Extracts numbered
+ * steps from a "Plan:" section and tracks [DONE:n] markers during execution.
  */
 
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
@@ -23,7 +10,6 @@ import { Key } from "@earendil-works/pi-tui";
 import { type PlanEditorMode, PlanModeEditor } from "./editor.ts";
 import { extractTodoItems, isSafeCommand, markCompletedSteps, type TodoItem } from "./utils.ts";
 
-// Tools
 const PLAN_MODE_TOOLS = ["read", "bash", "grep", "find", "ls"];
 const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write", "grep", "find", "ls"];
 const PLAN_MODE_DISABLED_TOOLS = new Set<string>(["edit", "write"]);
@@ -40,12 +26,10 @@ interface PlanModeState {
 	toolsBeforePlanMode?: string[];
 }
 
-// Type guard for assistant messages
 function isAssistantMessage(m: AgentMessage): m is AssistantMessage {
 	return m.role === "assistant" && Array.isArray(m.content);
 }
 
-// Extract text content from an assistant message
 function getTextContent(message: AssistantMessage): string {
 	return message.content
 		.filter((block): block is TextContent => block.type === "text")
@@ -68,7 +52,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 
 	function installEditor(ctx: ExtensionContext): void {
 		if (!ctx.hasUI) return;
-		ctx.ui.setStatus("plan-mode", undefined); // no footer status
+		ctx.ui.setStatus("plan-mode", undefined);
 		ctx.ui.setEditorComponent((tui, theme, keybindings) => {
 			editor = new PlanModeEditor(tui, theme, keybindings, {
 				mode: editorMode,
@@ -90,10 +74,9 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	});
 
 	function updateStatus(ctx: ExtensionContext): void {
-		// Editor border (mode label + color) reads state lazily; just re-render.
+		// The editor reads plan state lazily.
 		editor?.refresh();
 
-		// Widget showing todo list
 		if (executionMode && todoItems.length > 0) {
 			const lines = todoItems.map((item) => {
 				if (item.completed) {
@@ -186,7 +169,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		handler: async (ctx) => togglePlanMode(ctx),
 	});
 
-	// Block destructive bash commands in plan mode
 	pi.on("tool_call", async (event) => {
 		if (!planModeEnabled || event.toolName !== "bash") return;
 
@@ -199,7 +181,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 	});
 
-	// Filter out stale plan mode context when not in plan mode
+	// Drop stale plan mode context once plan mode is off.
 	pi.on("context", async (event) => {
 		if (planModeEnabled) return;
 
@@ -223,7 +205,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		};
 	});
 
-	// Inject plan/execution context before agent starts
 	pi.on("before_agent_start", async () => {
 		if (planModeEnabled) {
 			return {
@@ -271,10 +252,7 @@ ${DONE_TAG_INSTRUCTIONS}`,
 		}
 	});
 
-	// Track progress live. [DONE:n] tags are picked up while the assistant
-	// text streams (message_update) and again when the message is final
-	// (message_end). Previously this only ran on turn_end, i.e. after all
-	// tool calls of the message had finished executing.
+	// Picks up [DONE:n] tags live while the message streams.
 	function syncDoneTags(message: AgentMessage, ctx: ExtensionContext): boolean {
 		if (!executionMode || todoItems.length === 0 || !isAssistantMessage(message)) return false;
 		const before = todoItems.filter((t) => t.completed).length;
@@ -295,9 +273,7 @@ ${DONE_TAG_INSTRUCTIONS}`,
 		}
 	});
 
-	// Handle plan completion and plan mode UI
 	pi.on("agent_end", async (event, ctx) => {
-		// Check if execution is complete
 		if (executionMode && todoItems.length > 0) {
 			if (todoItems.every((t) => t.completed)) {
 				const completedList = todoItems.map((t) => `~~${t.text}~~`).join("\n");
@@ -308,23 +284,20 @@ ${DONE_TAG_INSTRUCTIONS}`,
 				executionMode = false;
 				todoItems = [];
 				updateStatus(ctx);
-				persistState(); // Save cleared state so resume doesn't restore old execution mode
+				persistState();
 			}
 			return;
 		}
 
 		if (!planModeEnabled || !ctx.hasUI) return;
 
-		// Extract todos from the last assistant message. Only prompt when that
-		// message actually contains a plan; otherwise a follow-up answer in plan
-		// mode would re-open the menu with the previous (stale) plan.
+		// Only prompt when the last message has a plan, not on follow-up answers.
 		const lastAssistant = [...event.messages].reverse().find(isAssistantMessage);
 		const extracted = lastAssistant ? extractTodoItems(getTextContent(lastAssistant)) : [];
 		if (extracted.length === 0) return;
 		todoItems = extracted;
 		persistState();
 
-		// Show plan steps and prompt for next action
 		const todoListText = todoItems.map((t, i) => `${i + 1}. ☐ ${t.text}`).join("\n");
 		const planTodoListMessage = {
 			customType: "plan-todo-list",
@@ -370,10 +343,8 @@ ${DONE_TAG_INSTRUCTIONS}`;
 		}
 	});
 
-	// Restore state on session start/resume
 	pi.on("session_start", async (_event, ctx) => {
-		// Reset in-memory state: session_start also fires for /new, /resume and
-		// /fork, and state from the previous session must not leak into it.
+		// Also fires for /new, /resume and /fork: don't leak previous session state.
 		const wasPlanMode = planModeEnabled;
 		const previousTools = toolsBeforePlanMode;
 		planModeEnabled = false;
@@ -388,7 +359,6 @@ ${DONE_TAG_INSTRUCTIONS}`;
 
 		const entries = ctx.sessionManager.getEntries();
 
-		// Restore persisted state
 		const planModeEntry = entries
 			.filter((e: { type: string; customType?: string }) => e.type === "custom" && e.customType === "plan-mode")
 			.pop() as { data?: PlanModeState } | undefined;
@@ -400,11 +370,10 @@ ${DONE_TAG_INSTRUCTIONS}`;
 			toolsBeforePlanMode = planModeEntry.data.toolsBeforePlanMode ?? toolsBeforePlanMode;
 		}
 
-		// On resume: re-scan messages to rebuild completion state
-		// Only scan messages AFTER the last "plan-mode-execute" to avoid picking up [DONE:n] from previous plans
+		// On resume, rebuild completion from messages after the last
+		// "plan-mode-execute", ignoring [DONE:n] from previous plans.
 		const isResume = planModeEntry !== undefined;
 		if (isResume && executionMode && todoItems.length > 0) {
-			// Find the index of the last plan-mode-execute entry (marks when current execution started)
 			let executeIndex = -1;
 			for (let i = entries.length - 1; i >= 0; i--) {
 				const entry = entries[i] as { type: string; customType?: string };
@@ -414,7 +383,6 @@ ${DONE_TAG_INSTRUCTIONS}`;
 				}
 			}
 
-			// Only scan messages after the execute marker
 			const messages: AssistantMessage[] = [];
 			for (let i = executeIndex + 1; i < entries.length; i++) {
 				const entry = entries[i];

@@ -1,13 +1,9 @@
 /**
- * Prompt box editor: the input editor with a status line (cwd, model,
- * context %, tokens, cost) rendered inside the box, right below the top
- * border, and a prompt symbol marking where the user input starts.
- *
  *   ───────────────────────────────────────────────
  *    ~/project        claude-opus · ctx 23% · 152k tok · $0.123
  *
- *     user input
- *      wrapped input stays aligned
+ *      user input
+ *       wrapped input stays aligned
  *   ───────────────────────────────────────────────
  */
 
@@ -20,10 +16,11 @@ import {
 import type { EditorTheme, TUI, TuiMouseEvent, TuiMouseEventResult } from "@earendil-works/pi-tui";
 import { buildStatusLine } from "./status.ts";
 
-export const PROMPT_SYMBOL = "";
-/** Columns reserved on the left for the prompt symbol (symbol + space). */
-const PROMPT_PADDING = 2;
-/** Rows inserted between the top border and the input (status line + blank). */
+/** Nerd Font glyph, same as the starship prompt (home-manager/zsh.nix). */
+export const PROMPT_SYMBOL = "\u{f4b5}";
+/** Space + symbol + space. */
+const PROMPT_PADDING = 3;
+/** Status line + blank line, inserted below the top border. */
 const STATUS_ROWS = 2;
 
 export interface PromptBoxOptions extends Omit<CustomEditorOptions, "paddingX"> {
@@ -44,20 +41,19 @@ export class PromptBoxEditor extends CustomEditor {
 		super.setPaddingX(PROMPT_PADDING);
 	}
 
-	/** Color of the prompt symbol. Subclasses may override (e.g. plan mode). */
 	protected promptColor(text: string): string {
-		return this.getCtx().ui.theme.fg("accent", text);
+		return this.getCtx().ui.theme.fg("text", text);
 	}
 
 	override render(width: number): string[] {
 		const lines = super.render(width);
 		if (lines.length < 2 || width < PROMPT_PADDING + 2) return lines;
 
-		// Prompt symbol on the first input line (only when not scrolled past it).
+		// Only when not scrolled past the first input line.
 		const scrollOffset = (this as unknown as { scrollOffset?: number }).scrollOffset ?? 0;
 		const first = lines[1];
 		if (scrollOffset === 0 && first !== undefined && first.startsWith(" ".repeat(PROMPT_PADDING))) {
-			lines[1] = `${this.promptColor(PROMPT_SYMBOL)}${" ".repeat(PROMPT_PADDING - 1)}${first.slice(PROMPT_PADDING)}`;
+			lines[1] = ` ${this.promptColor(PROMPT_SYMBOL)} ${first.slice(PROMPT_PADDING)}`;
 		}
 
 		lines.splice(1, 0, buildStatusLine(this.getCtx(), width), "");

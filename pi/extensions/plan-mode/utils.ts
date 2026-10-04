@@ -1,9 +1,3 @@
-/**
- * Pure utility functions for plan mode.
- * Extracted for testability.
- */
-
-// Destructive commands blocked in plan mode
 const DESTRUCTIVE_PATTERNS = [
 	/\brm\b/i,
 	/\brmdir\b/i,
@@ -38,7 +32,7 @@ const DESTRUCTIVE_PATTERNS = [
 	/\bsystemctl\s+(start|stop|restart|enable|disable)/i,
 	/\bservice\s+\S+\s+(start|stop|restart)/i,
 	/\b(vim?|nano|emacs|code|subl)\b/i,
-	// Read-only commands with writing / executing options
+	// Read-only commands with write/exec options
 	/\bfind\b.*\s-(delete|fprint0?|fprintf|fls)\b/,
 	/\bfind\b.*\s-(exec|execdir|ok|okdir)\s+(?!(grep|rg|cat|head|tail|wc|ls|stat|file|du)\b)/,
 	/\bsed\b.*\s(-[a-zA-Z]*i|--in-place)\b/,
@@ -46,7 +40,6 @@ const DESTRUCTIVE_PATTERNS = [
 	/\bawk\b.*\bsystem\s*\(/,
 ];
 
-// Safe read-only commands allowed in plan mode
 const SAFE_PATTERNS = [
 	/^\s*cat\b/,
 	/^\s*head\b/,
@@ -104,16 +97,13 @@ const SAFE_PATTERNS = [
 	/^\s*eza\b/,
 ];
 
-// Redirections that don't write files: fd duplication and /dev/null.
+// fd duplication and /dev/null: redirections that don't write files.
 const HARMLESS_REDIRECTS = /(&>>?|\d*>>?)\s*\/dev\/null\b|\d*>&\d+|\d*<&\d+/g;
 
 /**
- * Split a shell command line into its simple commands: on `;`, `|`, `&`,
- * `&&`, `||`, newlines and subshell parens, plus the contents of command /
- * process substitutions (`$(...)`, backticks, `<(...)`, `>(...)`).
- * Quote-aware: operators inside quotes don't split, but substitutions inside
- * double quotes still do (the shell runs them). Errs on the side of
- * producing extra segments, which then fail the allowlist.
+ * Split a command line into simple commands, including the contents of
+ * `$(...)`, backticks, `<(...)` and `>(...)`. Quote-aware. Errs towards extra
+ * segments, which then fail the allowlist.
  */
 export function splitCommands(command: string): string[] {
 	const parts: string[] = [];
@@ -137,7 +127,7 @@ export function splitCommands(command: string): string[] {
 			current += c;
 			continue;
 		}
-		// Substitutions are live outside quotes and inside double quotes.
+		// Substitutions also run inside double quotes.
 		if (c === "`" || ((c === "$" || c === "<" || c === ">") && next === "(")) {
 			push();
 			if (c !== "`") i++;
@@ -163,12 +153,7 @@ export function splitCommands(command: string): string[] {
 	return parts;
 }
 
-/**
- * A command is allowed only if every simple command in it (pipeline stages,
- * `&&`/`;` chains, substitutions) is allowlisted and none is destructive.
- * Previously only the start of the whole line was checked, so e.g.
- * `ls && python x.py` or `cat f | sh` slipped through.
- */
+/** Every simple command must be allowlisted and none destructive. */
 export function isSafeCommand(command: string): boolean {
 	const segments = splitCommands(command.replace(HARMLESS_REDIRECTS, " "));
 	if (segments.length === 0) return false;
@@ -186,8 +171,8 @@ export interface TodoItem {
 
 export function cleanStepText(text: string): string {
 	let cleaned = text
-		.replace(/\*{1,2}([^*]+)\*{1,2}/g, "$1") // Remove bold/italic
-		.replace(/`([^`]+)`/g, "$1") // Remove code
+		.replace(/\*{1,2}([^*]+)\*{1,2}/g, "$1") // bold/italic
+		.replace(/`([^`]+)`/g, "$1") // inline code
 		.replace(
 			/^(Use|Run|Execute|Create|Write|Read|Check|Verify|Update|Modify|Add|Remove|Delete|Install)\s+(the\s+)?/i,
 			"",
@@ -212,10 +197,8 @@ export function extractTodoItems(message: string): TodoItem[] {
 	const planSection = message.slice(message.indexOf(headerMatch[0]) + headerMatch[0].length);
 	const numberedPattern = /^\s*(\d+)[.)]\s+\*{0,2}([^*\n]+)/;
 
-	// Only the first numbered list after the header counts. Blank lines and
-	// indented continuation lines (sub-bullets, wrapped text) are allowed
-	// inside the list; any other unindented line ends it, so numbered
-	// questions or notes after the plan aren't picked up as steps.
+	// Only the first numbered list after the header counts. Any unindented,
+	// non-blank, non-numbered line ends it.
 	let listStarted = false;
 	for (const line of planSection.split("\n")) {
 		const match = line.match(numberedPattern);

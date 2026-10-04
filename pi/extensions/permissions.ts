@@ -62,8 +62,7 @@ async function ask(
 	return { block: true, reason: `${reason}: denied by the user` };
 }
 
-// Display only: puts each chained command on its own line. Splits on `&&`,
-// `||`, `;` and `|` outside quotes and parentheses.
+// Display only: one chained command per line.
 function formatCommand(command: string): string {
 	const lines: string[] = [];
 	let operator = "";

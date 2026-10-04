@@ -1,11 +1,6 @@
 /**
- * Prompt Box Extension
- *
- * Hides the built-in footer; its info (cwd, model, context %, tokens, cost)
- * is rendered inside the input editor by PromptBoxEditor (./editor.ts).
- *
- * The editor itself is installed by the plan-mode extension, whose
- * PlanModeEditor extends PromptBoxEditor (only one editor can be active).
+ * Hides the built-in footer; PromptBoxEditor shows its info instead. The
+ * editor is installed by plan-mode, whose editor extends PromptBoxEditor.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -24,7 +19,6 @@ export default function promptBoxExtension(pi: ExtensionAPI): void {
 		rerender();
 	});
 
-	// Keep model / cost / tokens / context % current in the status line.
 	pi.on("model_select", rerender);
 	pi.on("turn_end", rerender);
 	pi.on("agent_end", rerender);

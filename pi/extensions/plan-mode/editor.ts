@@ -1,14 +1,3 @@
-/**
- * Input editor for plan mode.
- *
- * - Plan mode: border painted in the theme's warning color and a
- *   "PLAN MODE" label embedded in the top border.
- * - Execution mode: "📋 done/total" progress label in the top border.
- * - The streaming "Working…" status is embedded in the top border too,
- *   next to the label (embedWorkingStatus).
- * - Status line + prompt symbol inside the box come from PromptBoxEditor.
- */
-
 import type { ExtensionContext, KeybindingsManager, Theme } from "@earendil-works/pi-coding-agent";
 import { type EditorTheme, type TUI, visibleWidth } from "@earendil-works/pi-tui";
 import { PromptBoxEditor } from "../prompt-box/editor.ts";
@@ -38,10 +27,9 @@ export class PlanModeEditor extends PromptBoxEditor {
 		super(tui, theme, keybindings, { embedWorkingStatus: true, ctx: () => state.ctx() });
 		this.planState = state;
 
-		// `borderColor` is an own field set by Editor's constructor, and pi
-		// reassigns it on thinking-level / bash-mode changes. Intercept it so
-		// plan mode keeps the warning color while remembering pi's color for
-		// when plan mode is turned off.
+		// pi reassigns `borderColor` on thinking-level / bash-mode changes.
+		// Intercept it to keep the warning color in plan mode while remembering
+		// pi's color for later.
 		let baseColor: ColorFn = this.borderColor;
 		const warning: ColorFn = (s) => this.planState.theme().fg("warning", s);
 		Object.defineProperty(this, "borderColor", {
@@ -58,7 +46,6 @@ export class PlanModeEditor extends PromptBoxEditor {
 		return this.planState.mode() === "plan" ? this.planState.theme().fg("warning", text) : super.promptColor(text);
 	}
 
-	/** Request a re-render after plan state changes. */
 	refresh(): void {
 		this.tui.requestRender();
 	}
