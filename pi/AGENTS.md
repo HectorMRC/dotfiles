@@ -25,6 +25,10 @@ Never inspect a known file or one already in context with anything but `read`.
 
 Stay in the working directory and use paths relative to it (e.g. `npm --prefix some/dir ...`). Only `cd` when a command cannot work any other way.
 
+# Plans
+
+When executing a tracked plan, write `[DONE:n]` in visible response text, never only in reasoning, right after finishing step n. This includes steps you find already done: verify them, then tag them. Never end a turn with a finished step untagged. Do not execute a plan until the execute message arrives.
+
 # Writing
 
 Applies to code, comments, docs and READMEs:

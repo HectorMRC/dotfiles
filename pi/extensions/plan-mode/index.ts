@@ -264,6 +264,8 @@ ${DONE_TAG_INSTRUCTIONS}`,
 	}
 
 	let unsavedProgress = false;
+	// Unmarked steps listed by the last reminder, so each set is reminded once.
+	let remindedSteps: string | undefined;
 	pi.on("message_update", async (event, ctx) => {
 		if (syncDoneTags(event.message, ctx)) unsavedProgress = true;
 	});
@@ -276,17 +278,19 @@ ${DONE_TAG_INSTRUCTIONS}`,
 
 	pi.on("agent_end", async (event, ctx) => {
 		if (executionMode && todoItems.length > 0) {
-			if (todoItems.every((t) => t.completed)) {
-				const completedList = todoItems.map((t) => `~~${t.text}~~`).join("\n");
-				pi.sendMessage(
-					{ customType: "plan-complete", content: `**Plan Complete!** ✓\n\n${completedList}`, display: true },
-					{ triggerTurn: false },
-				);
-				executionMode = false;
-				todoItems = [];
-				updateStatus(ctx);
-				persistState();
-			}
+			// Unmarked steps are handled in agent_before_settle.
+			if (todoItems.some((t) => !t.completed)) return;
+
+			remindedSteps = undefined;
+			const completedList = todoItems.map((t) => `~~${t.text}~~`).join("\n");
+			pi.sendMessage(
+				{ customType: "plan-complete", content: `**Plan Complete!** ✓\n\n${completedList}`, display: true },
+				{ triggerTurn: false },
+			);
+			executionMode = false;
+			todoItems = [];
+			updateStatus(ctx);
+			persistState();
 			return;
 		}
 
@@ -318,19 +322,19 @@ ${DONE_TAG_INSTRUCTIONS}`,
 
 			planModeEnabled = false;
 			executionMode = true;
+			remindedSteps = undefined;
 			restoreNormalModeTools();
 			updateStatus(ctx);
 			persistState();
 
-			const remainingList = todoItems.map((t) => `${t.step}. ${t.text}`).join("\n");
+			// One message, so the step list never arrives without the tagging instructions.
 			const execMessage = `Execute the plan.
 
-Remaining steps:
-${remainingList}
+Steps:
+${todoListText}
 
 Start with: ${firstTodoItem.text}
 ${DONE_TAG_INSTRUCTIONS}`;
-			pi.sendMessage(planTodoListMessage, { deliverAs: "followUp" });
 			pi.sendMessage(
 				{ customType: "plan-mode-execute", content: execMessage, display: true },
 				{ triggerTurn: true, deliverAs: "followUp" },
@@ -344,6 +348,32 @@ ${DONE_TAG_INSTRUCTIONS}`;
 		}
 	});
 
+	// Fires only when pi is about to go idle, so queued user messages run first.
+	pi.on("agent_before_settle", async (event) => {
+		if (!executionMode || event.outcome !== "completed") return;
+		const remaining = todoItems.filter((t) => !t.completed);
+		const key = remaining.map((t) => t.step).join(",");
+		if (remaining.length === 0 || key === remindedSteps) return;
+
+		remindedSteps = key;
+		const list = remaining.map((t) => `${t.step}. ${t.text}`).join("\n");
+		return {
+			entries: [
+				{
+					type: "custom_message",
+					customType: "plan-untagged-steps",
+					content: `These plan steps are not marked as done:
+
+${list}
+
+For each one: if it is finished, verify it and write [DONE:n] in your response text now. Otherwise, state in one line why it is not finished. Do not start new work.`,
+					display: true,
+				},
+			],
+			continue: true,
+		};
+	});
+
 	pi.on("session_start", async (_event, ctx) => {
 		// Also fires for /new, /resume and /fork: don't leak previous session state.
 		const wasPlanMode = planModeEnabled;
@@ -353,6 +383,7 @@ ${DONE_TAG_INSTRUCTIONS}`;
 		todoItems = [];
 		toolsBeforePlanMode = undefined;
 		unsavedProgress = false;
+		remindedSteps = undefined;
 
 		if (pi.getFlag("plan") === true) {
 			planModeEnabled = true;

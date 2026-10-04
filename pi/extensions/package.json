@@ -1,12 +1,12 @@
 {
-  "private": true,
-  "description": "Editor-only type support for pi extensions. At runtime pi provides these imports itself; run `npm install` here only for LSP/IDE support.",
-  "devDependencies": {
-    "@earendil-works/pi-agent-core": "0.85.1",
-    "@earendil-works/pi-ai": "0.85.1",
-    "@earendil-works/pi-coding-agent": "0.85.1",
-    "@earendil-works/pi-tui": "0.85.1",
-    "@types/node": "^24",
-    "typescript": "^5"
-  }
+	"private": true,
+	"description": "Editor-only type support for pi extensions. At runtime pi provides these imports itself; run `npm install` here only for LSP/IDE support.",
+	"devDependencies": {
+		"@earendil-works/pi-agent-core": "0.99.2",
+		"@earendil-works/pi-ai": "0.99.2",
+		"@earendil-works/pi-coding-agent": "0.99.2",
+		"@earendil-works/pi-tui": "0.99.2",
+		"@types/node": "^24",
+		"typescript": "^5"
+	}
 }

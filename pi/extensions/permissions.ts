@@ -236,13 +236,8 @@ function describe(input: Record<string, unknown>): string {
 }
 
 export default function (pi: ExtensionAPI) {
-	// `annotations` exists at runtime since Pi 0.99; the pinned typings predate it.
-	const isDeclaredReadOnly = (name: string) => {
-		const tool = pi.getAllTools().find((t) => t.name === name) as
-			| { annotations?: { readOnlyHint?: boolean } }
-			| undefined;
-		return tool?.annotations?.readOnlyHint === true;
-	};
+	const isDeclaredReadOnly = (name: string) =>
+		pi.getAllTools().find((t) => t.name === name)?.annotations?.readOnlyHint === true;
 
 	pi.on("tool_call", async (event, ctx) => {
 		const input = event.input as Record<string, unknown>;
