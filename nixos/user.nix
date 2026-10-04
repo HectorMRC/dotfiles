@@ -28,6 +28,7 @@
       shell = pkgs.${shell};
       extraGroups = [
         "networkmanager"
+        "video"
         "wheel"
       ];
     };

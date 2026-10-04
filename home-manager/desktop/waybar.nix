@@ -225,7 +225,7 @@ in
 
           scroll-step = 0; # disable scrolling
 
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+          on-click = "swayosd-client --input-volume mute-toggle";
           on-click-right = "pavucontrol";
         };
 
@@ -245,10 +245,10 @@ in
           reverse-scrolling = true;
           smooth-scrolling-threshold = 1;
 
-          on-scroll-up = "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+";
-          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-";
+          on-scroll-up = "swayosd-client --output-volume +1";
+          on-scroll-down = "swayosd-client --output-volume -1";
 
-          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-click = "swayosd-client --output-volume mute-toggle";
           on-click-right = "pavucontrol";
         };
 

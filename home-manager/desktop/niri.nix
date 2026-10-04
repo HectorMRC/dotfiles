@@ -111,21 +111,20 @@ let
         Mod+B hotkey-overlay-title="Toggle waybar" { spawn "pkill" "-SIGUSR1" "waybar"; }
 
         // Audio keys mapping
-        XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-        XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-        XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-        XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+        XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "+10"; }
+        XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "-10"; }
+        XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+        XF86AudioMicMute     allow-when-locked=true { spawn "swayosd-client" "--input-volume" "mute-toggle"; }
 
-        // Media keys mapping using playerctl.
-        // This will work with any MPRIS-enabled media player.
-        XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-        XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
-        XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
-        XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+        // Media keys mapping (any MPRIS-enabled media player).
+        XF86AudioPlay        allow-when-locked=true { spawn "swayosd-client" "--playerctl" "play-pause"; }
+        XF86AudioStop        allow-when-locked=true { spawn "swayosd-client" "--playerctl" "stop"; }
+        XF86AudioPrev        allow-when-locked=true { spawn "swayosd-client" "--playerctl" "prev"; }
+        XF86AudioNext        allow-when-locked=true { spawn "swayosd-client" "--playerctl" "next"; }
 
-        // Example brightness key mappings for brightnessctl.
-        XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-        XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+        // Brightness keys mapping.
+        XF86MonBrightnessUp   allow-when-locked=true { spawn "swayosd-client" "--brightness" "+10"; }
+        XF86MonBrightnessDown allow-when-locked=true { spawn "swayosd-client" "--brightness" "-10"; }
 
         // Open/close the Overview: a zoomed-out view of workspaces and windows.
         // You can also move the mouse into the top-left hot corner,

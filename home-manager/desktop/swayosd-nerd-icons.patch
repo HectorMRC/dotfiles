@@ -1,0 +1,49 @@
+--- a/src/server/osd_window.rs
++++ b/src/server/osd_window.rs
+@@ -18,8 +18,6 @@
+ 	application::ActionOptions,
+ };
+ 
+-const ICON_SIZE: i32 = 32;
+-
+ /// A window that our application can open that contains the main project view.
+ #[derive(Clone, Debug)]
+ pub struct SwayosdWindow {
+@@ -389,12 +387,33 @@
+ 		self.window.show();
+ 	}
+ 
+-	fn build_icon_widget(&self, icon_name: &str) -> gtk::Image {
+-		let icon = gtk::gio::ThemedIcon::from_names(&[icon_name, "missing-symbolic"]);
++	fn build_icon_widget(&self, icon_name: &str) -> gtk::Label {
++		let glyph = match icon_name {
++			"sink-volume-muted-symbolic" => "\u{f075f}",
++			"sink-volume-low-symbolic" => "\u{f057f}",
++			"sink-volume-medium-symbolic" => "\u{f0580}",
++			"sink-volume-high-symbolic" => "\u{f057e}",
++			"source-volume-muted-symbolic" => "\u{f036d}",
++			name if name.starts_with("source-volume-") => "\u{f036c}",
++			"display-brightness-symbolic" => "\u{f00df}",
++			"keyboard-brightness-off-symbolic" => "\u{f0310}",
++			name if name.starts_with("keyboard-brightness-") => "\u{f030c}",
++			"caps-lock-symbolic" => "\u{f0632}",
++			"num-lock-symbolic" => "\u{f03a0}",
++			"scroll-lock-symbolic" => "\u{f033e}",
++			"play-large-symbolic" => "\u{f040a}",
++			"pause-large-symbolic" => "\u{f03e4}",
++			"stop-large-symbolic" => "\u{f04db}",
++			"media-seek-forward-symbolic" => "\u{f0211}",
++			"media-seek-backward-symbolic" => "\u{f045f}",
++			"playlist-shuffle-symbolic" => "\u{f049f}",
++			"playlist-consecutive-symbolic" => "\u{f0456}",
++			_ => "\u{f0625}",
++		};
+ 
+ 		cascade! {
+-			gtk::Image::from_gicon(&icon.upcast::<gtk::gio::Icon>());
+-			..set_pixel_size(ICON_SIZE);
++			gtk::Label::new(Some(glyph));
++			..add_css_class("icon");
+ 		}
+ 	}
+ 

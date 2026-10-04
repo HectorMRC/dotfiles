@@ -90,6 +90,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
           (home + "/desktop/niri.nix")
           (home + "/desktop/notify.nix")
           (home + "/desktop/rofi.nix")
+          (home + "/desktop/swayosd.nix")
           (home + "/desktop/vscodium.nix")
           (home + "/desktop/waybar.nix")
         ]

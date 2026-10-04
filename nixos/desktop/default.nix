@@ -31,6 +31,7 @@
     ./greetd.nix
     ./ly.nix
     ./sddm.nix
+    ./swayosd.nix
   ];
 
   config = with config.desktopEnvironment; {
