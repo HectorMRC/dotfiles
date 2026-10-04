@@ -7,6 +7,58 @@
 }:
 let
   withNiri = osConfig.programs.niri.enable;
+  colors = config.palette.colors;
+
+  calendarCss = pkgs.writeText "calendar.css" ''
+    * {
+      font-family: "JetBrainsMono Nerd Font Propo";
+      font-size: 14px;
+    }
+
+    window {
+      background-color: ${colors.surface};
+      border: 1px solid ${colors.border};
+    }
+
+    calendar {
+      background-color: transparent;
+      color: ${colors.foreground};
+      border: none;
+      padding: 4px;
+    }
+
+    calendar.header {
+      background: transparent;
+      border: none;
+      font-weight: bold;
+    }
+
+    calendar.button {
+      color: ${colors.foreground-disabled};
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    calendar.button:hover {
+      color: ${colors.foreground};
+    }
+
+    calendar.highlight {
+      color: ${colors.foreground-disabled};
+      font-weight: normal;
+    }
+
+    calendar:indeterminate {
+      color: ${colors.border};
+    }
+
+    calendar:selected {
+      background-color: transparent;
+      color: ${colors.primary};
+      font-weight: bold;
+    }
+  '';
 in
 {
   home.packages = with pkgs; [
@@ -141,12 +193,14 @@ in
         clock = {
           interval = 1;
           format = "{:%d\n%m\n%y\n\n%H\n%M}";
-          tooltip-format = "{calendar}";
-          calendar.format = {
-            months = "<b>{}</b>";
-            weekdays = "<span color='${config.palette.colors.foreground-disabled}'>{}</span>";
-            today = "<span color='${config.palette.colors.primary}'><b>{}</b></span>";
-          };
+          tooltip = false;
+          on-click = toString (
+            pkgs.writeShellScript "calendar-toggle" ''
+              pkill -f 'yad --calendar' || exec ${pkgs.yad}/bin/yad --calendar --title=Calendar \
+                --no-buttons --close-on-unfocus --undecorated --skip-taskbar --borders=12 \
+                --css=${calendarCss}
+            ''
+          );
         };
 
         "group/audio" = {

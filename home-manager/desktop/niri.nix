@@ -96,6 +96,13 @@ let
       }
 
       window-rule {
+          match title="^Calendar$"
+          open-floating true
+          open-focused true
+          default-floating-position x=12 y=12 relative-to="top-left"
+      }
+
+      window-rule {
         geometry-corner-radius 4
         clip-to-geometry true
       }
