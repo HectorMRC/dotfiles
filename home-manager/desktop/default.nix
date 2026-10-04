@@ -66,10 +66,14 @@ in
       pkgs.xdg-desktop-portal-gnome
       pkgs.xdg-desktop-portal-gtk
     ];
-    config.common.default = [
-      "gnome"
-      "gtk"
-    ];
+    config.common = {
+      default = [
+        "gnome"
+        "gtk"
+      ];
+      # The gnome Access backend needs GNOME Shell, so camera requests fail under niri.
+      "org.freedesktop.impl.portal.Access" = [ "gtk" ];
+    };
   };
 
   qt = {
