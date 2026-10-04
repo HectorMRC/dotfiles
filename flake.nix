@@ -96,6 +96,7 @@
           colmena.packages.${system}.colmena
         ];
         packages = with pkgs; [
+          biome
           lua-language-server
           nixd
           nixfmt

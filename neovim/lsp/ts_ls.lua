@@ -10,4 +10,12 @@ return {
     cmd = { "typescript-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+    on_attach = function(_, bufnr)
+        vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+            buffer = bufnr,
+            callback = function()
+                vim.cmd [[silent! !biome format --write %]]
+            end,
+        })
+    end,
 }

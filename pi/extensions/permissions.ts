@@ -45,13 +45,7 @@ function isInside(root: string, path: string): boolean {
 	return rel === "" || (rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel));
 }
 
-async function ask(
-	ctx: ExtensionContext,
-	color: ThemeColor,
-	title: string,
-	message: string,
-	reason: string,
-) {
+async function ask(ctx: ExtensionContext, color: ThemeColor, title: string, message: string, reason: string) {
 	if (!ctx.hasUI) {
 		return { block: true, reason: `${reason} (no UI available for confirmation)` };
 	}

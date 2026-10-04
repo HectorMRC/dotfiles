@@ -81,7 +81,8 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			const lines = todoItems.map((item) => {
 				if (item.completed) {
 					return (
-						ctx.ui.theme.fg("success", "☑ ") + ctx.ui.theme.fg("muted", ctx.ui.theme.strikethrough(item.text))
+						ctx.ui.theme.fg("success", "☑ ") +
+						ctx.ui.theme.fg("muted", ctx.ui.theme.strikethrough(item.text))
 					);
 				}
 				return `${ctx.ui.theme.fg("muted", "☐ ")}${item.text}`;
@@ -386,7 +387,11 @@ ${DONE_TAG_INSTRUCTIONS}`;
 			const messages: AssistantMessage[] = [];
 			for (let i = executeIndex + 1; i < entries.length; i++) {
 				const entry = entries[i];
-				if (entry.type === "message" && "message" in entry && isAssistantMessage(entry.message as AgentMessage)) {
+				if (
+					entry.type === "message" &&
+					"message" in entry &&
+					isAssistantMessage(entry.message as AgentMessage)
+				) {
 					messages.push(entry.message as AssistantMessage);
 				}
 			}

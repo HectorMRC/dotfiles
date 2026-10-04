@@ -160,8 +160,7 @@ export function isSafeCommand(command: string): boolean {
 	const segments = splitCommands(command.replace(HARMLESS_REDIRECTS, " "));
 	if (segments.length === 0) return false;
 	return segments.every(
-		(segment) =>
-			!DESTRUCTIVE_PATTERNS.some((p) => p.test(segment)) && SAFE_PATTERNS.some((p) => p.test(segment)),
+		(segment) => !DESTRUCTIVE_PATTERNS.some((p) => p.test(segment)) && SAFE_PATTERNS.some((p) => p.test(segment)),
 	);
 }
 

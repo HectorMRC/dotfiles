@@ -69,7 +69,8 @@ export class PlanModeEditor extends PromptBoxEditor {
 		if (labels.length === 0 || width <= 0) return super.renderTopBorder(width, hiddenLineCount);
 
 		const border = this.borderColor;
-		const indicator = (this as unknown as { workingStatusIndicator?: BorderStatusIndicator }).workingStatusIndicator;
+		const indicator = (this as unknown as { workingStatusIndicator?: BorderStatusIndicator })
+			.workingStatusIndicator;
 		const overflow = hiddenLineCount > 0 ? ` ↑ ${hiddenLineCount} more ` : undefined;
 
 		for (const label of labels) {
