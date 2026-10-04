@@ -142,6 +142,11 @@ in
           interval = 1;
           format = "{:%d\n%m\n%y\n\n%H\n%M}";
           tooltip-format = "{calendar}";
+          calendar.format = {
+            months = "<b>{}</b>";
+            weekdays = "<span color='${config.palette.colors.foreground-disabled}'>{}</span>";
+            today = "<span color='${config.palette.colors.primary}'><b>{}</b></span>";
+          };
         };
 
         "group/audio" = {
