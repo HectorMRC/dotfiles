@@ -40,6 +40,8 @@
         ui.editor = "nvim";
         ui.default-command = "log";
 
+        templates.git_push_bookmark = ''"${config.home.username}/push-" ++ change_id.short()'';
+
         revset-aliases = {
           "closest_bookmark(to)" = "heads(::to & bookmarks())";
         };
