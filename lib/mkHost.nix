@@ -53,6 +53,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
         (nixos + "/bluetooth.nix")
         (nixos + "/pam.nix")
         (nixos + "/pipewire.nix")
+        (nixos + "/removable-media.nix")
         (nixos + "/desktop")
       ];
 
