@@ -22,6 +22,12 @@ let
   tomlSrc = sourceWith [ (withExt [ "toml" ]) ];
 in
 mkChecks {
+  actionlint = {
+    src = sourceWith [ (root + /.github/workflows) ];
+    nativeBuildInputs = [ pkgs.actionlint ];
+    buildPhase = "actionlint -verbose .github/workflows/*";
+  };
+
   nixfmt = {
     src = sourceWith [ (withExt [ "nix" ]) ];
     nativeBuildInputs = [ pkgs.nixfmt ];

@@ -147,6 +147,7 @@
           flake-checks
         ];
         packages = with pkgs; [
+          actionlint
           biome
           lua-language-server
           nixd
