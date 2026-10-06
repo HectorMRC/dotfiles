@@ -55,6 +55,12 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
         (nixos + "/pipewire.nix")
         (nixos + "/removable-media.nix")
         (nixos + "/desktop")
+      ]
+  ++
+    whenTags
+      [ "server" ]
+      [
+        (nixos + "/comin.nix")
       ];
 
   profile = {
