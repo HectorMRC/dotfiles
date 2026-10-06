@@ -89,22 +89,6 @@
           ];
         };
       };
-    in
-    {
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
-          colmena.packages.${system}.colmena
-        ];
-        packages = with pkgs; [
-          biome
-          lua-language-server
-          nixd
-          nixfmt
-          nodejs
-          stylua
-          typescript-language-server
-        ];
-      };
 
       colmenaHive = colmena.lib.makeHive (
         {
@@ -124,5 +108,25 @@
         }
         // mkHosts devices
       );
+    in
+    {
+      inherit colmenaHive;
+
+      nixosConfigurations = colmenaHive.nodes;
+
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [
+          colmena.packages.${system}.colmena
+        ];
+        packages = with pkgs; [
+          biome
+          lua-language-server
+          nixd
+          nixfmt
+          nodejs
+          stylua
+          typescript-language-server
+        ];
+      };
     };
 }
