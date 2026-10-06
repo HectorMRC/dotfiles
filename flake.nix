@@ -115,15 +115,36 @@
         }
         // mkHosts devices
       );
+
+      checks = import ./lib/checks.nix {
+        inherit pkgs;
+        root = ./.;
+      };
+
+      checkArgs = map (name: pkgs.lib.escapeShellArg ".#checks.${system}.${name}") (
+        builtins.attrNames checks
+      );
+
+      flake-checks = pkgs.writeShellApplication {
+        name = "flake-checks";
+        runtimeInputs = [ pkgs.git ];
+        text = ''
+          root="$(git rev-parse --show-toplevel)"
+          nix build ${toString checkArgs} --out-link "$root/.direnv/check-results/result" "$@"
+        '';
+      };
     in
     {
       inherit colmenaHive;
+
+      checks.${system} = checks;
 
       nixosConfigurations = colmenaHive.nodes;
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           colmena.packages.${system}.colmena
+          flake-checks
         ];
         packages = with pkgs; [
           biome
@@ -132,6 +153,7 @@
           nixfmt
           nodejs
           stylua
+          tombi
           typescript-language-server
         ];
       };
