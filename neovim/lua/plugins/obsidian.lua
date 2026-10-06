@@ -8,7 +8,7 @@ return {
         workspaces = {
             {
                 name = "Mai fou llum",
-                path = "~/git/hectormrc/docs/Mai fou llum/"
+                path = "~/git/hectormrc/docs/Mai fou llum/",
             },
         },
     },
