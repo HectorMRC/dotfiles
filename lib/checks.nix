@@ -61,4 +61,19 @@ mkChecks {
     nativeBuildInputs = [ pkgs.tombi ];
     buildPhase = "tombi lint --offline --verbose";
   };
+
+  yamllint = {
+    src = sourceWith [
+      (withExt [
+        "yaml"
+        "yml"
+      ])
+      (root + /.yamllint)
+    ];
+    nativeBuildInputs = [ pkgs.yamllint ];
+    buildPhase = ''
+      yamllint --list-files .
+      yamllint --config-file .yamllint .
+    '';
+  };
 }

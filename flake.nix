@@ -155,6 +155,7 @@
           stylua
           tombi
           typescript-language-server
+          yamllint
         ];
       };
     };
