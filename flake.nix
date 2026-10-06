@@ -13,6 +13,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -20,6 +25,7 @@
       nixpkgs,
       colmena,
       home-manager,
+      comin,
       ...
     }:
     let
@@ -97,6 +103,7 @@
           defaults = {
             imports = [
               home-manager.nixosModules.home-manager
+              comin.nixosModules.comin
             ];
 
             home-manager = {
