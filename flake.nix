@@ -18,6 +18,11 @@
       url = "github:nlewo/comin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -26,6 +31,7 @@
       colmena,
       home-manager,
       comin,
+      agenix,
       ...
     }:
     let
@@ -104,6 +110,7 @@
             imports = [
               home-manager.nixosModules.home-manager
               comin.nixosModules.comin
+              agenix.nixosModules.default
             ];
 
             home-manager = {
@@ -144,6 +151,7 @@
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
           colmena.packages.${system}.colmena
+          agenix.packages.${system}.default
           flake-checks
         ];
         packages = with pkgs; [
