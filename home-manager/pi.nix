@@ -17,6 +17,7 @@ let
     linear = {
       url = "https://mcp.linear.app/mcp";
       description = "Linear issues, projects, teams and workflow statuses";
+      exposure = "deferred";
     };
   };
 
@@ -135,6 +136,7 @@ in
       defaultProvider = "anthropic";
       theme = theme.name;
       hideThinkingBlock = true;
+      extensions = [ "-builtin:codemode" ];
       defaultTools = [
         "read"
         "bash"

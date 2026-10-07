@@ -5,7 +5,7 @@ description: Create Linear issues from a plan agreed in the conversation, under 
 
 # Create Linear issues from a plan
 
-Linear is reached through the `linear` MCP server. Before the first call, run `describeNamespace("mcp__linear")` in codemode (or search tools for "linear") to learn the actual tool names and parameters. Do not guess them. If the server is not connected, tell the user to run `pi mcp login linear` and stop.
+Linear is reached through the `linear` MCP server. Before the first call, use `tool_search` for "linear" to learn the actual tool names and parameters. Do not guess them. If the server is not connected, tell the user to run `pi mcp login linear` and stop.
 
 ## Conventions
 
