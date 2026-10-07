@@ -7,6 +7,7 @@
     git
     htop
     neovim
+    nmap
     ripgrep
     tmux
     unzip
