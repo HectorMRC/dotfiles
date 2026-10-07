@@ -8,6 +8,7 @@
     htop
     neovim
     nmap
+    openssl
     ripgrep
     tmux
     unzip

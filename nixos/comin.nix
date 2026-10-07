@@ -8,7 +8,7 @@ let
       coreutils
       curl
     ];
-    
+
     text = ''
       url_file=${config.age.secrets.ntfy-url.path}
       state_file=${stateDir}/last-system
