@@ -8,7 +8,7 @@ let
         sha256 = "1r58xn9xdka8bw710i431srl3dmy7dyrhd32rjv709f2mkb6m1ix";
       })
       {
-        system = pkgs.system;
+        system = pkgs.stdenv.hostPlatform.system;
       };
 in
 {
