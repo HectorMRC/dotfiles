@@ -21,3 +21,7 @@ jobs:
       - uses: cachix/install-nix-action@a49548c11d9846ad46ecc0115273879b045f001c  # v31.10.7
       - name: nix flake check
         run: nix flake check --option keep-going true
+      - name: evaluate NixOS configurations
+        run: >-
+          nix eval --json .#nixosConfigurations
+          --apply 'builtins.mapAttrs (_: c: c.config.system.build.toplevel.drvPath)'
