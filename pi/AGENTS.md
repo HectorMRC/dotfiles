@@ -23,6 +23,7 @@ There is no shell. Use these tools:
 - Nix flakes: use `nix-flake-check`, `nix-log` and `nix-flake-info`.
 - Web: use `web-fetch`, `upload` and the exa search tool.
 - PR reviews: use `gh-pr-comments`.
+- MCP servers: use `mcporter`.
 
 When no tool covers a task, ask the user to run the command.
 
