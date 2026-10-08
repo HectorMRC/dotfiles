@@ -147,7 +147,6 @@ in
       extensions = [ "-builtin:codemode" ];
       defaultTools = [
         "read"
-        "bash"
         "edit"
         "write"
         "ls"

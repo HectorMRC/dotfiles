@@ -3,12 +3,10 @@ import type { AssistantMessage, TextContent } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Key } from "@earendil-works/pi-tui";
 import { type PlanEditorMode, PlanModeEditor } from "./editor.ts";
-import { isSafeCommand } from "./safe-commands.ts";
 import { extractTodoItems, markCompletedSteps, type TodoItem } from "./todo-items.ts";
 
-// bash commands are filtered by isSafeCommand.
-const PLAN_MODE_TOOLS = ["read", "bash", "rg", "fd", "ls"];
-const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write", "rg", "fd", "ls"];
+const PLAN_MODE_TOOLS = ["read", "rg", "fd", "ls"];
+const NORMAL_MODE_TOOLS = ["read", "edit", "write", "rg", "fd", "ls"];
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
 
 const DONE_TAG_INSTRUCTIONS = `Mark each step as soon as it is finished: write [DONE:n] (n = step number) in your
@@ -137,7 +135,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 
 		if (planModeEnabled) {
 			enablePlanModeTools();
-			ctx.ui.notify("Plan mode enabled. Built-in write tools disabled.");
+			ctx.ui.notify("Plan mode enabled. Only read-only tools are available.");
 		} else {
 			restoreNormalModeTools();
 			ctx.ui.notify("Plan mode disabled. Full access restored.");
@@ -166,18 +164,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	pi.registerShortcut(Key.ctrlAlt("p"), {
 		description: "Toggle plan mode",
 		handler: async (ctx) => togglePlanMode(ctx),
-	});
-
-	pi.on("tool_call", async (event) => {
-		if (!planModeEnabled || event.toolName !== "bash") return;
-
-		const command = event.input.command as string;
-		if (!isSafeCommand(command)) {
-			return {
-				block: true,
-				reason: `Plan mode: command blocked (not allowlisted). Use /plan to disable plan mode first.\nCommand: ${command}`,
-			};
-		}
 	});
 
 	pi.on("context", async (event) => {
@@ -213,7 +199,6 @@ You are in plan mode - a read-only exploration mode for safe code analysis.
 
 Restrictions:
 - Only read-only tools are available
-- Bash is restricted to an allowlist of read-only commands
 
 Ask the user clarifying questions when needed.
 

@@ -2,38 +2,35 @@
 
 Pick the VCS from the working directory:
 
-- `.jj` exists: use Jujutsu (the `jj-*` tools, or `jj` for anything they lack), even if `.git` also exists.
-- Otherwise, `.git` exists: use Git.
-- Otherwise: it is not a repository; do not run VCS commands.
+- `.jj` exists: use the `jj-*` tools, even if `.git` also exists.
+- Otherwise, `.git` exists: there are no Git tools; ask the user to run Git commands.
+- Otherwise: it is not a repository.
 
 # Tool usage
 
-Dedicated tools always take priority over bash equivalents:
+There is no shell. Use these tools:
 
-- Reading files: use `read`, never `cat`, `head`, `tail`, `less`, or `sed -n`.
-- Modifying files: use `edit`, never `sed -i`, `awk`, `perl -pi`, or similar.
-- Moving code blocks: use `cut-lines`/`copy-lines` and `paste-lines`.
-- Creating/overwriting files: use `write`, never heredocs, `echo >`, `printf >`, or `tee`.
-- Listing directories: use `ls`, never bash `ls` or `tree`.
-- Finding files: use `fd`, never bash `find` or `fd`.
-- Searching contents: use `rg`, never bash `rg` or `grep`.
-- File operations: use `cp`, `mv`, `rm`, `mkdir` and `tar`.
+- Reading files: `read`.
+- Modifying files: `edit`.
+- Moving code blocks: `cut-lines`/`copy-lines` and `paste-lines`.
+- Creating/overwriting files: `write`.
+- Listing directories: `ls`.
+- Finding files: `fd`.
+- Searching contents: `rg`.
+- File operations: `cp`, `mv`, `rm`, `mkdir` and `tar`.
 - Jujutsu: use the `jj-*` tools.
 - Rust: use `cargo-clippy`, `cargo-test` and `cargo-dependency-path`.
 - Nix flakes: use `nix-flake-check`, `nix-log` and `nix-flake-info`.
 - Web: use `web-fetch`, `upload` and the exa search tool.
 - PR reviews: use `gh-pr-comments`.
 
-Use bash only for things no tool covers.
+When no tool covers a task, ask the user to run the command.
 
-Never bundle tool work into one bash call to save round trips.
-Make parallel tool calls instead.
-Bash calls using the commands above are blocked automatically; filtering another command's output after a pipe (`jj log | grep foo`) is allowed.
+Make independent tool calls in parallel.
 
 Never inspect a known file or one already in context with anything but `read`.
 
-Stay in the working directory and use paths relative to it (e.g. `npm --prefix some/dir ...`).
-Only `cd` when a command cannot work any other way.
+Stay in the working directory and use paths relative to it.
 
 # Plans
 
