@@ -7,6 +7,7 @@
 -- }
 
 vim.lsp.enable {
+    "denols",
     "lua_ls",
     "nixd",
     "pylsp",
