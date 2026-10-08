@@ -1,18 +1,14 @@
-/**
- * Plan mode: read-only exploration (/plan or Ctrl+Alt+P). Extracts numbered
- * steps from a "Plan:" section and tracks [DONE:n] markers during execution.
- */
-
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage, TextContent } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Key } from "@earendil-works/pi-tui";
 import { type PlanEditorMode, PlanModeEditor } from "./editor.ts";
-import { extractTodoItems, isSafeCommand, markCompletedSteps, type TodoItem } from "./utils.ts";
+import { isSafeCommand } from "./safe-commands.ts";
+import { extractTodoItems, markCompletedSteps, type TodoItem } from "./todo-items.ts";
 
-const PLAN_MODE_TOOLS = ["read", "bash", "grep", "find", "ls"];
-const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write", "grep", "find", "ls"];
-const PLAN_MODE_DISABLED_TOOLS = new Set<string>(["edit", "write"]);
+// bash commands are filtered by isSafeCommand.
+const PLAN_MODE_TOOLS = ["read", "bash", "rg", "fd", "ls"];
+const NORMAL_MODE_TOOLS = ["read", "bash", "edit", "write", "rg", "fd", "ls"];
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
 
 const DONE_TAG_INSTRUCTIONS = `Mark each step as soon as it is finished: write [DONE:n] (n = step number) in your
@@ -74,7 +70,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	});
 
 	function updateStatus(ctx: ExtensionContext): void {
-		// The editor reads plan state lazily.
 		editor?.refresh();
 
 		if (executionMode && todoItems.length > 0) {
@@ -98,10 +93,13 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	}
 
 	function getPlanModeTools(activeToolNames: string[]): string[] {
-		return uniqueToolNames([
-			...activeToolNames.filter((name) => !PLAN_MODE_DISABLED_TOOLS.has(name)),
-			...PLAN_MODE_TOOLS,
-		]);
+		const readOnly = new Set(
+			pi
+				.getAllTools()
+				.filter((t) => t.annotations?.readOnlyHint)
+				.map((t) => t.name),
+		);
+		return uniqueToolNames([...activeToolNames.filter((name) => readOnly.has(name)), ...PLAN_MODE_TOOLS]);
 	}
 
 	function getNormalModeTools(activeToolNames: string[]): string[] {
@@ -182,7 +180,6 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		}
 	});
 
-	// Drop stale plan mode context once plan mode is off.
 	pi.on("context", async (event) => {
 		if (planModeEnabled) return;
 
@@ -215,8 +212,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 You are in plan mode - a read-only exploration mode for safe code analysis.
 
 Restrictions:
-- Built-in edit and write tools are disabled
-- Other currently active tools remain available
+- Only read-only tools are available
 - Bash is restricted to an allowlist of read-only commands
 
 Ask the user clarifying questions when needed.
@@ -253,7 +249,6 @@ ${DONE_TAG_INSTRUCTIONS}`,
 		}
 	});
 
-	// Picks up [DONE:n] tags live while the message streams.
 	function syncDoneTags(message: AgentMessage, ctx: ExtensionContext): boolean {
 		if (!executionMode || todoItems.length === 0 || !isAssistantMessage(message)) return false;
 		const before = todoItems.filter((t) => t.completed).length;
@@ -264,7 +259,7 @@ ${DONE_TAG_INSTRUCTIONS}`,
 	}
 
 	let unsavedProgress = false;
-	// Unmarked steps listed by the last reminder, so each set is reminded once.
+	// So each set of unmarked steps is reminded once.
 	let remindedSteps: string | undefined;
 	pi.on("message_update", async (event, ctx) => {
 		if (syncDoneTags(event.message, ctx)) unsavedProgress = true;
@@ -375,7 +370,7 @@ For each one: if it is finished, verify it and write [DONE:n] in your response t
 	});
 
 	pi.on("session_start", async (_event, ctx) => {
-		// Also fires for /new, /resume and /fork: don't leak previous session state.
+		// Also fires for /new, /resume and /fork.
 		const wasPlanMode = planModeEnabled;
 		const previousTools = toolsBeforePlanMode;
 		planModeEnabled = false;
@@ -402,8 +397,7 @@ For each one: if it is finished, verify it and write [DONE:n] in your response t
 			toolsBeforePlanMode = planModeEntry.data.toolsBeforePlanMode ?? toolsBeforePlanMode;
 		}
 
-		// On resume, rebuild completion from messages after the last
-		// "plan-mode-execute", ignoring [DONE:n] from previous plans.
+		// Ignore [DONE:n] tags from previous plans.
 		const isResume = planModeEntry !== undefined;
 		if (isResume && executionMode && todoItems.length > 0) {
 			let executeIndex = -1;

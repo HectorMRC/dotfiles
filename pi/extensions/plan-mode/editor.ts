@@ -11,7 +11,7 @@ export interface PlanEditorState {
 	ctx(): ExtensionContext;
 }
 
-// Mirrors the (private) indicator CustomEditor stores for embedded working status.
+// Shape of CustomEditor's private working status indicator.
 interface BorderStatusIndicator {
 	renderInBorder(width: number): string;
 	renderSpinnerInBorder(width: number): string;
@@ -27,9 +27,7 @@ export class PlanModeEditor extends PromptBoxEditor {
 		super(tui, theme, keybindings, { embedWorkingStatus: true, ctx: () => state.ctx() });
 		this.planState = state;
 
-		// pi reassigns `borderColor` on thinking-level / bash-mode changes.
-		// Intercept it to keep the warning color in plan mode while remembering
-		// pi's color for later.
+		// pi reassigns `borderColor`; keep the warning color while in plan mode.
 		let baseColor: ColorFn = this.borderColor;
 		const warning: ColorFn = (s) => this.planState.theme().fg("warning", s);
 		Object.defineProperty(this, "borderColor", {
@@ -101,7 +99,7 @@ export class PlanModeEditor extends PromptBoxEditor {
 			if (overflow) {
 				const overflowWidth = visibleWidth(overflow);
 				if (overflowWidth + 2 <= rest) {
-					// Center within the full width when possible, otherwise right after the left block.
+					// Centered when it fits.
 					const centered = Math.floor((width - overflowWidth) / 2) - (leftWidth + 1);
 					const before = Math.max(1, Math.min(centered, rest - overflowWidth - 1));
 					tail = "─".repeat(before) + overflow + "─".repeat(rest - before - overflowWidth);

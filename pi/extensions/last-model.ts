@@ -1,5 +1,4 @@
-// Remembers the last selected model in its own file and restores it when a
-// fresh session starts. settings.json stays read-only (managed by Nix).
+// Own state file: settings.json is managed by Nix.
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -17,9 +16,7 @@ function load(): LastModel | undefined {
 	try {
 		const data = JSON.parse(readFileSync(STATE_FILE, "utf-8"));
 		if (typeof data?.provider === "string" && typeof data?.model === "string") return data;
-	} catch {
-		// Missing or invalid file: keep Pi's own startup model.
-	}
+	} catch {}
 	return undefined;
 }
 
@@ -27,9 +24,7 @@ function save(state: LastModel): void {
 	try {
 		mkdirSync(dirname(STATE_FILE), { recursive: true });
 		writeFileSync(STATE_FILE, `${JSON.stringify(state, null, 2)}\n`, "utf-8");
-	} catch {
-		// Not worth interrupting the session over.
-	}
+	} catch {}
 }
 
 function cliChoseModel(): boolean {
@@ -45,7 +40,7 @@ export default function (pi: ExtensionAPI) {
 	pi.on("session_start", async (event, ctx) => {
 		if (event.reason !== "startup" && event.reason !== "new") return;
 		if (cliChoseModel()) return;
-		// Resumed sessions (e.g. --continue) keep their own model.
+		// Resumed sessions keep their own model.
 		if (ctx.sessionManager.getEntries().some((entry) => entry.type === "message")) return;
 
 		const last = load();

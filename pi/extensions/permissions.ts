@@ -1,25 +1,32 @@
-// Read-only tools run freely inside the working directory (symlinks resolved).
-// Tools declaring `readOnlyHint` (e.g. MCP reads) and codemode scripts also run
-// freely; each tool a script calls is checked on its own. Bash commands that
-// duplicate a built-in tool are blocked with a hint. Anything else asks for
-// confirmation, or is blocked when there is no UI.
-
 import { realpathSync } from "node:fs";
 import { homedir } from "node:os";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionContext, ThemeColor } from "@earendil-works/pi-coding-agent";
+import { CACHE_DIR } from "./lib/cache-dir.ts";
 
 const READ_ONLY_TOOLS: Record<string, { arg: string; fallback?: string }> = {
 	read: { arg: "path" },
 	grep: { arg: "path", fallback: "." },
 	find: { arg: "path", fallback: "." },
 	ls: { arg: "path", fallback: "." },
+	rg: { arg: "path", fallback: "." },
+	fd: { arg: "path", fallback: "." },
+	"copy-lines": { arg: "path" },
 };
+
+// A URL can leak data.
+const ALWAYS_CONFIRM = new Set(["web-fetch"]);
+
+const READABLE_ROOTS = [
+	CACHE_DIR,
+	join(homedir(), ".cargo", "registry"),
+	join(homedir(), ".cargo", "git"),
+	"/nix/store",
+];
 
 const UNICODE_SPACES = /[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g;
 
-// Mirrors Pi's own path handling (utils/paths.ts).
 function normalize(input: string): string {
 	let path = input.replace(UNICODE_SPACES, " ");
 	if (path.startsWith("@")) path = path.slice(1);
@@ -29,8 +36,7 @@ function normalize(input: string): string {
 	return path;
 }
 
-// realpath that also works for missing paths, by resolving the nearest
-// existing ancestor, so a symlinked parent cannot escape the check.
+// Resolves missing paths too, so a symlinked parent cannot escape the check.
 function canonicalize(path: string): string {
 	try {
 		return realpathSync(path);
@@ -61,7 +67,6 @@ async function ask(ctx: ExtensionContext, color: ThemeColor, title: string, mess
 
 type Segment = { operator: string; text: string };
 
-// Splits a command on top-level `&&`, `||`, `;` and `|`, respecting quotes and parens.
 function splitCommand(command: string): Segment[] {
 	const segments: Segment[] = [];
 	let operator = "";
@@ -112,14 +117,12 @@ function splitCommand(command: string): Segment[] {
 	return segments;
 }
 
-// Display only: one chained command per line.
 function formatCommand(command: string): string {
 	return splitCommand(command)
 		.map(({ operator, text }) => (operator ? `    ${operator} ${text}` : text))
 		.join("\n");
 }
 
-// Whitespace-separated words with quotes and escapes removed.
 function words(text: string): string[] {
 	const result: string[] = [];
 	let current = "";
@@ -161,18 +164,37 @@ const BANNED: Record<string, string> = {
 	tail: "read",
 	less: "read",
 	more: "read",
-	grep: "grep",
-	egrep: "grep",
-	fgrep: "grep",
-	rg: "grep",
-	find: "find",
-	fd: "find",
+	grep: "rg",
+	egrep: "rg",
+	fgrep: "rg",
+	rg: "rg",
+	find: "fd",
+	fd: "fd",
 	sed: "read or edit",
 	awk: "read or edit",
 	gawk: "read or edit",
+	cp: "cp",
+	mv: "mv",
+	rm: "rm",
+	mkdir: "mkdir",
 };
 
-// Returns the command name and the built-in tool to use instead, if banned.
+const JJ_TOOLS: Record<string, string> = {
+	status: "jj-status",
+	st: "jj-status",
+	log: "jj-log",
+	show: "jj-show",
+	diff: "jj-diff",
+	new: "jj-new",
+	commit: "jj-commit",
+	ci: "jj-commit",
+	describe: "jj-describe",
+	desc: "jj-describe",
+	squash: "jj-squash",
+	restore: "jj-restore",
+	rebase: "jj-rebase",
+};
+
 function bannedCommand(segment: Segment): [string, string] | undefined {
 	const argv = words(segment.text.replace(/^[({\s]+/, ""));
 	let i = 0;
@@ -187,11 +209,16 @@ function bannedCommand(segment: Segment): [string, string] | undefined {
 	// Filtering another command's output is fine.
 	if (segment.operator === "|") return undefined;
 
+	if (name === "jj") {
+		const sub = args.find((a) => !a.startsWith("-"));
+		const tool = sub && JJ_TOOLS[sub];
+		return tool ? [`jj ${sub}`, tool] : undefined;
+	}
+
 	const tool = BANNED[name];
 	return tool ? [name, tool] : undefined;
 }
 
-// First unquoted output redirection to a file, ignoring fds, /dev/* and `>(...)`.
 function fileRedirect(command: string): string | undefined {
 	let quote: string | undefined;
 
@@ -219,7 +246,7 @@ function checkBash(command: string): string | undefined {
 		const banned = bannedCommand(segment);
 		if (banned) {
 			const [name, tool] = banned;
-			return `Blocked: use the built-in ${tool} tool instead of bash \`${name}\` (see AGENTS.md). For several lookups, make parallel built-in tool calls.`;
+			return `Blocked: use the ${tool} tool instead of bash \`${name}\` (see AGENTS.md). For several lookups, make parallel tool calls.`;
 		}
 	}
 	const target = fileRedirect(command);
@@ -231,8 +258,9 @@ function checkBash(command: string): string | undefined {
 
 function describe(input: Record<string, unknown>): string {
 	if (typeof input.command === "string") return formatCommand(input.command);
-	if (typeof input.path === "string") return input.path;
-	return JSON.stringify(input, null, 2);
+	return Object.entries(input)
+		.map(([key, value]) => `${key}: ${typeof value === "string" ? value : JSON.stringify(value)}`)
+		.join("\n");
 }
 
 export default function (pi: ExtensionAPI) {
@@ -244,7 +272,8 @@ export default function (pi: ExtensionAPI) {
 		const readOnly = READ_ONLY_TOOLS[event.toolName];
 
 		if (!readOnly) {
-			if (event.toolName === "codemode" || isDeclaredReadOnly(event.toolName)) return undefined;
+			const confirm = ALWAYS_CONFIRM.has(event.toolName);
+			if (!confirm && (event.toolName === "codemode" || isDeclaredReadOnly(event.toolName))) return undefined;
 			if (event.toolName === "bash" && typeof input.command === "string") {
 				const reason = checkBash(input.command);
 				if (reason) return { block: true, reason };
@@ -259,19 +288,23 @@ export default function (pi: ExtensionAPI) {
 		}
 
 		const raw = input[readOnly.arg];
-		const arg = typeof raw === "string" && raw !== "" ? raw : readOnly.fallback;
-		if (arg === undefined) return undefined; // The tool itself reports it.
+		const given = (Array.isArray(raw) ? raw : [raw]).filter((a): a is string => typeof a === "string" && a !== "");
+		const args = given.length > 0 ? given : readOnly.fallback !== undefined ? [readOnly.fallback] : [];
 
 		const root = canonicalize(resolve(ctx.cwd));
-		const target = canonicalize(resolve(ctx.cwd, normalize(arg)));
-		if (isInside(root, target)) return undefined;
-
-		return ask(
-			ctx,
-			"warning",
-			`Allow ${event.toolName} outside the working directory?`,
-			arg === target ? target : `${arg}\n→ ${target}`,
-			`${event.toolName} of ${target} is outside ${root}`,
-		);
+		const roots = [root, ...READABLE_ROOTS.map(canonicalize)];
+		for (const arg of args) {
+			const target = canonicalize(resolve(ctx.cwd, normalize(arg)));
+			if (roots.some((r) => isInside(r, target))) continue;
+			const answer = await ask(
+				ctx,
+				"warning",
+				`Allow ${event.toolName} outside the working directory?`,
+				arg === target ? target : `${arg}\n→ ${target}`,
+				`${event.toolName} of ${target} is outside ${root}`,
+			);
+			if (answer) return answer;
+		}
+		return undefined;
 	});
 }

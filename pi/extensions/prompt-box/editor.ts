@@ -16,7 +16,7 @@ import {
 import type { EditorTheme, TUI, TuiMouseEvent, TuiMouseEventResult } from "@earendil-works/pi-tui";
 import { buildStatusLine } from "./status.ts";
 
-/** Nerd Font glyph, same as the starship prompt (home-manager/zsh.nix). */
+/** Nerd Font glyph. */
 export const PROMPT_SYMBOL = "\u{f4b5}";
 /** Space + symbol + space. */
 const PROMPT_PADDING = 3;

@@ -1,7 +1,4 @@
-/**
- * Hides the built-in footer; PromptBoxEditor shows its info instead. The
- * editor is installed by plan-mode, whose editor extends PromptBoxEditor.
- */
+// The editor is installed by plan-mode, whose editor extends PromptBoxEditor.
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { TUI } from "@earendil-works/pi-tui";

@@ -13,7 +13,15 @@ let
         (skills + "/pr-explain")
       ];
 
-  mcpServers = whenTags [ "work" ] {
+  mcpServers = {
+    exa = {
+      url = "https://mcp.exa.ai/mcp";
+      description = "Exa web search and code context";
+      exposure = "deferred";
+      toolExposure.web_search_exa = "direct";
+    };
+  }
+  // whenTags [ "work" ] {
     linear = {
       url = "https://mcp.linear.app/mcp";
       description = "Linear issues, projects, teams and workflow statuses";
@@ -142,8 +150,6 @@ in
         "bash"
         "edit"
         "write"
-        "grep"
-        "find"
         "ls"
       ];
     };

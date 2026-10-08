@@ -1,8 +1,3 @@
-/**
- * Status line shown inside the prompt box:
- *   <cwd>                         <model> · <ctx%> · <tokens> tok · $<cost>
- */
-
 import { relative, resolve, sep, isAbsolute } from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
@@ -20,7 +15,7 @@ export function formatCwd(cwd: string, home = process.env.HOME): string {
 	return `~${sep}${rel}`;
 }
 
-/** Truncate from the start so the end (the actual directory) stays visible. */
+// Keeps the end of the path visible.
 export function truncateStart(text: string, maxWidth: number, ellipsis = "…"): string {
 	if (visibleWidth(text) <= maxWidth) return text;
 	const room = maxWidth - visibleWidth(ellipsis);
@@ -43,7 +38,7 @@ export function formatTokens(count: number): string {
 	return `${Math.round(count / 1_000_000)}M`;
 }
 
-/** Total tokens and cost across the whole session (all branches, incl. compactions). */
+// All branches, including compacted messages.
 function sessionTotals(ctx: ExtensionContext): { tokens: number; cost: number } {
 	let tokens = 0;
 	let cost = 0;
