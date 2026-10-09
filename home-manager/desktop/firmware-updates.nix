@@ -67,7 +67,7 @@ let
         exit 0
     fi
 
-    if yad --list --title="Firmware updates" \
+    if yad --list --title="Firmware updates" --name=firmware-updates \
         --image=${icon} \
         --text="${heading}" \
         --column=Device --column=Current --column=Available \
