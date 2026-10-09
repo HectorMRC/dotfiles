@@ -39,7 +39,7 @@ in
 
     path = [ pkgs.netbird ];
     script = ''
-      if ! netbird status | grep -q Connected && [ ! -f /var/lib/netbird/config.json ]; then
+      if ! netbird status | grep -q "Connected"; then
         netbird up --setup-key="$(cat ${config.age.secrets.netbird-setup-key.path})"
       fi
     '';
