@@ -1,4 +1,3 @@
-# Push notifications via ntfy. Import from any module that needs them.
 {
   config,
   lib,

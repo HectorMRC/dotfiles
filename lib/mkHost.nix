@@ -61,6 +61,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       [ "server" ]
       [
         (nixos + "/comin.nix")
+        (nixos + "/hdd-power.nix")
         (nixos + "/netbird.nix")
       ];
 

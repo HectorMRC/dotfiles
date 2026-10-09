@@ -43,10 +43,13 @@
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/dbe84bb2-eb85-4471-b749-a0b1d0762d65";
     fsType = "ext4";
-    # 'nofail' prevents boot loops if the device is unplugged.
+
     options = [
       "defaults"
+      # prevents boot loops if the device is unplugged.
       "nofail"
+      # avoids disk writes on reads, letting the HDD stay spun down.
+      "noatime"
     ];
   };
 
