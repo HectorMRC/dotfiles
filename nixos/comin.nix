@@ -4,13 +4,12 @@ let
 
   comin-notify = pkgs.writeShellApplication {
     name = "comin-notify";
-    runtimeInputs = with pkgs; [
-      coreutils
-      curl
+    runtimeInputs = [
+      pkgs.coreutils
+      config.ntfy.send
     ];
 
     text = ''
-      url_file=${config.age.secrets.ntfy-url.path}
       state_file=${stateDir}/last-system
 
       host=''${COMIN_HOSTNAME:-unknown}
@@ -48,16 +47,13 @@ let
         body+=$'\n\n'"''${err:0:1000}"
       fi
 
-      curl -fsS --max-time 10 \
-        -H "Title: $title" \
-        -H "Priority: $priority" \
-        -H "Tags: $tags" \
-        --data-binary "$body" \
-        "$(<"$url_file")"
+      printf '%s' "$body" | ntfy-send "$title" "$priority" "$tags"
     '';
   };
 in
 {
+  imports = [ ./ntfy.nix ];
+
   services.comin = {
     enable = true;
     remotes = [
@@ -72,8 +68,6 @@ in
     postBuildCommand = pkgs.lib.getExe comin-notify;
     postDeploymentCommand = pkgs.lib.getExe comin-notify;
   };
-
-  age.secrets.ntfy-url.file = ../secrets/ntfy-url.age;
 
   systemd.tmpfiles.rules = [ "d ${stateDir} 0700 root root -" ];
 }

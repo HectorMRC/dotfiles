@@ -1,8 +1,23 @@
 { config, pkgs, ... }:
 let
   hostName = config.networking.hostName;
+
+  netbird-notify = pkgs.writeShellApplication {
+    name = "netbird-notify";
+    runtimeInputs = [
+      pkgs.systemd
+      config.ntfy.send
+    ];
+
+    text = ''
+      log=$(journalctl -u netbird-autoconnect.service -n 20 -o cat --no-pager || true)
+      printf '%s' "''${log:0:1000}" | ntfy-send "${hostName}: netbird autoconnect failed" high x
+    '';
+  };
 in
 {
+  imports = [ ./ntfy.nix ];
+
   services.resolved.enable = true;
 
   services.netbird = {
@@ -13,19 +28,35 @@ in
 
   systemd.services.netbird-autoconnect = {
     description = "Automatic login to NetBird network";
-    after = [ "network-online.target" "netbird.service" ];
-    wants = [ "network-online.target" "netbird.service" ];
+    after = [
+      "network-online.target"
+      "netbird.service"
+    ];
+    wants = [
+      "network-online.target"
+      "netbird.service"
+    ];
     wantedBy = [ "multi-user.target" ];
+    onFailure = [ "netbird-notify.service" ];
+
+    path = [ pkgs.netbird ];
+    script = ''
+      if ! netbird status | grep -q Connected && [ ! -f /var/lib/netbird/config.json ]; then
+        netbird up --setup-key="$(cat ${config.age.secrets.netbird-setup-key.path})"
+      fi
+    '';
 
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pkgs.bash}/bin/bash -c '\
-        if ! ${pkgs.netbird}/bin/netbird status | grep -q \"Connected\" && [ ! -f /var/lib/netbird/config.json ]; then \
-          ${pkgs.netbird}/bin/netbird up \
-            --setup-key=$(cat ${config.age.secrets.netbird-setup-key.path}); \
-        fi \
-      '";
+    };
+  };
+
+  systemd.services.netbird-notify = {
+    description = "Notify NetBird autoconnect failure";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.lib.getExe netbird-notify;
     };
   };
 }
