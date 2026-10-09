@@ -3,7 +3,7 @@ let
   zimablade = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGzazjDoj2BB2VGj3V5X9SKDHFkMF/J7tdsv8UpDak9+";
 in
 {
-  "ntfy-url.age".publicKeys = [
+  "zimablade-ntfy-url.age".publicKeys = [
     hector
     zimablade
   ];

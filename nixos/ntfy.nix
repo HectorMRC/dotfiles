@@ -13,7 +13,7 @@
   };
 
   config = {
-    age.secrets.ntfy-url.file = ../secrets/ntfy-url.age;
+    age.secrets.ntfy-url.file = ../secrets/${config.networking.hostName}-ntfy-url.age;
 
     ntfy.send = pkgs.writeShellApplication {
       name = "ntfy-send";
