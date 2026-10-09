@@ -7,4 +7,8 @@ in
     hector
     zimablade
   ];
+  "zimablade-netbird-setup-key.age".publicKeys = [
+    hector
+    zimablade
+  ];
 }
