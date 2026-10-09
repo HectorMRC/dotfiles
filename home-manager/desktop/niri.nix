@@ -104,6 +104,7 @@ let
 
       window-rule {
           match app-id=r#"^firmware-updates$"#
+          match app-id=r#"^battery-critical$"#
           match app-id=r#"blueman-manager"#
           match app-id=r#"pavucontrol"#
           match app-id=r#"nm-connection-editor"#

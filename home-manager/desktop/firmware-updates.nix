@@ -19,7 +19,6 @@ let
     window {
       background-color: ${colors.surface};
       color: ${colors.foreground};
-      border: 1px solid ${colors.border};
     }
   '';
 
