@@ -388,18 +388,21 @@ in
 
       .modules-left {
         background-color: ${config.palette.colors.surface};
+        border: 1px solid ${colors.border};
         border-radius: 8px;
         padding: 12px 0;
       }
 
       .modules-center {
         background-color: ${config.palette.colors.surface};
+        border: 1px solid ${colors.border};
         border-radius: 8px;
         padding: 12px 0;
       }
 
       .modules-right {
         background-color: ${config.palette.colors.surface};
+        border: 1px solid ${colors.border};
         border-radius: 8px;
         padding: 12px 0;
       }
