@@ -20,9 +20,7 @@ in
 
   services.resolved.enable = true;
 
-  services.netbird = {
-    enable = true;
-  };
+  services.netbird.enable = true;
 
   age.secrets.netbird-setup-key.file = ../secrets/${hostName}-netbird-setup-key.age;
 

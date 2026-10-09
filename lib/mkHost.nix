@@ -51,6 +51,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       [ "laptop" ]
       [
         (nixos + "/bluetooth.nix")
+        (nixos + "/fwupd.nix")
         (nixos + "/pam.nix")
         (nixos + "/pipewire.nix")
         (nixos + "/removable-media.nix")
