@@ -1,7 +1,7 @@
 # Secrets
 
 Encrypted with [agenix](https://github.com/ryantm/agenix).
-`secrets.nix` lists the public keys allowed to decrypt each file.
+`agenix-rules.nix` lists the public keys allowed to decrypt each file.
 
 Run from this directory, inside `nix develop`:
 
