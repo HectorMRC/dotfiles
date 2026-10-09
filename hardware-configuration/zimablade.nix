@@ -46,9 +46,18 @@
 
     options = [
       "defaults"
-      # prevents boot loops if the device is unplugged.
       "nofail"
-      # avoids disk writes on reads, letting the HDD stay spun down.
+      "noatime"
+    ];
+  };
+
+  fileSystems."/srv" = {
+    device = "/dev/disk/by-uuid/39d3cd8b-cbeb-4067-a8a7-0d485a96a65f";
+    fsType = "ext4";
+
+    options = [
+      "defaults"
+      "nofail"
       "noatime"
     ];
   };
