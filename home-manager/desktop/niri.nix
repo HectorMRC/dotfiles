@@ -103,6 +103,12 @@ let
       }
 
       window-rule {
+          match title="^Firmware updates$"
+          open-floating true
+          open-focused true
+      }
+
+      window-rule {
         geometry-corner-radius 4
         clip-to-geometry true
       }

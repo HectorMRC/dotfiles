@@ -95,6 +95,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
           (home + "/desktop/brave.nix")
           (home + "/desktop/dolphin.nix")
           (home + "/desktop/firefox.nix")
+          (home + "/desktop/firmware-updates.nix")
           (home + "/desktop/hypridle.nix")
           (home + "/desktop/hyprlock.nix")
           (home + "/desktop/niri.nix")
