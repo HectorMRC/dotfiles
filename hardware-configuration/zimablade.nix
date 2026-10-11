@@ -51,7 +51,7 @@
     ];
   };
 
-  fileSystems."/srv" = {
+  fileSystems."/srv/storage" = {
     device = "/dev/disk/by-uuid/39d3cd8b-cbeb-4067-a8a7-0d485a96a65f";
     fsType = "ext4";
 
