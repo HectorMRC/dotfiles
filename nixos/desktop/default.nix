@@ -35,19 +35,16 @@
   ];
 
   config = with config.desktopEnvironment; {
-    # Disable the X11 windowing system.
     services.xserver.enable = false;
 
-    # Display manager.
     displayManager.sddm.enable = displayManager == "sddm";
     displayManager.ly.enable = displayManager == "ly";
     displayManager.greetd.enable = displayManager == "greet";
 
-    # Desktop environment.
     services.desktopManager.plasma6.enable = builtins.elem "plasma" sessions;
     programs.niri.enable = builtins.elem "niri" sessions;
 
-    # Enable Dconf for GTK apps.
+    # Required by GTK apps.
     programs.dconf.enable = true;
 
     fonts.fontconfig.defaultFonts.monospace = [
@@ -59,7 +56,6 @@
       NIXOS_OZONE_WL = "1";
     };
 
-    # Allow screensharing.
     security.rtkit.enable = true;
   };
 }
