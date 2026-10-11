@@ -37,16 +37,17 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
 
   imports = [
     (hardware + "/${hostname}.nix")
-    (nixos + "/user.nix")
-    (nixos + "/packages.nix")
-    (nixos + "/gnome-keyring.nix")
-    (nixos + "/logind.nix")
-    (nixos + "/openssh.nix")
-    (nixos + "/polkit.nix")
-    (nixos + "/nix.nix")
-    (nixos + "/locale.nix")
-    (nixos + "/network.nix")
+
     (nixos + "/boot.nix")
+    (nixos + "/gnome-keyring.nix")
+    (nixos + "/locale.nix")
+    (nixos + "/logind.nix")
+    (nixos + "/network.nix")
+    (nixos + "/nix.nix")
+    (nixos + "/openssh.nix")
+    (nixos + "/packages.nix")
+    (nixos + "/polkit.nix")
+    (nixos + "/user.nix")
     (nixos + "/virtualisation.nix")
   ]
   ++
@@ -54,11 +55,11 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       [ "laptop" ]
       [
         (nixos + "/bluetooth.nix")
+        (nixos + "/desktop")
         (nixos + "/fwupd.nix")
         (nixos + "/pam.nix")
         (nixos + "/pipewire.nix")
         (nixos + "/removable-media.nix")
-        (nixos + "/desktop")
       ]
   ++
     whenTags
