@@ -43,7 +43,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
     (nixos + "/nix.nix")
     (nixos + "/locale.nix")
     (nixos + "/network.nix")
-    (nixos + "/startup.nix")
+    (nixos + "/boot.nix")
     (nixos + "/virtualisation.nix")
   ]
   ++
