@@ -83,6 +83,7 @@
         zimablade = {
           inherit username;
           ip = "192.168.0.52";
+          lanInterface = "enp2s0";
           knownHosts = devices;
           vcsUser = vcsUsers.personal;
           tags = [

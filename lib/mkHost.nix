@@ -4,6 +4,7 @@
   hostname,
   username,
   ip,
+  lanInterface ? null,
   tags,
   knownHosts,
   vcsUser,
@@ -72,7 +73,12 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       ];
 
   profile = {
-    inherit hostname username ip;
+    inherit
+      hostname
+      username
+      ip
+      lanInterface
+      ;
     shell = "zsh";
   };
 
