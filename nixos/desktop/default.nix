@@ -5,10 +5,16 @@
   ...
 }:
 {
-  options.desktopEnvironment = with lib; {
+  options.desktop = with lib; {
+    wallpaper = mkOption {
+      type = types.nullOr types.path;
+      description = "Path to the desktop background image.";
+      default = null;
+    };
+
     displayManager = mkOption {
       type = types.enum [
-        "greet"
+        "greetd"
         "ly"
         "sddm"
         "none"
@@ -34,12 +40,8 @@
     ./swayosd.nix
   ];
 
-  config = with config.desktopEnvironment; {
+  config = with config.desktop; {
     services.xserver.enable = false;
-
-    displayManager.sddm.enable = displayManager == "sddm";
-    displayManager.ly.enable = displayManager == "ly";
-    displayManager.greetd.enable = displayManager == "greet";
 
     services.desktopManager.plasma6.enable = builtins.elem "plasma" sessions;
     programs.niri.enable = builtins.elem "niri" sessions;

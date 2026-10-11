@@ -65,7 +65,7 @@ let
         hide-after-inactive-ms 5000
       }
 
-      spawn-at-startup "${lib.getExe pkgs.wbg}" "-s" "${config.desktopEnvironment.wallpaper}"
+      spawn-at-startup "${lib.getExe pkgs.wbg}" "-s" "${osConfig.desktop.wallpaper}"
       spawn-at-startup "waybar"
 
       screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
@@ -375,14 +375,6 @@ let
   };
 in
 {
-  options.desktopEnvironment = with lib; {
-    wallpaper = mkOption {
-      type = types.nullOr types.path;
-      description = "Path to the desktop background image.";
-      default = null;
-    };
-  };
-
   config = lib.mkIf withNiri {
     home.packages = with pkgs; [
       xwayland-satellite

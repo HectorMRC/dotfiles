@@ -6,7 +6,7 @@
   tags,
   knownHosts,
   vcsUser,
-  desktopEnvironment ? {
+  desktop ? {
     wallpaper = ../assets/wallpapers/ancient-greece.jpeg;
   },
   ...
@@ -131,6 +131,6 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       user = vcsUser;
       extraTools = [ "jj" ];
     };
-  }
-  // whenTags [ "laptop" ] { inherit desktopEnvironment; };
+  };
 }
+// whenTags [ "laptop" ] { inherit desktop; }
