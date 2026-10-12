@@ -6,6 +6,7 @@
   ip,
   lanInterface ? null,
   tags,
+  services ? { },
   knownHosts,
   vcsUser,
   desktop ? {
@@ -42,6 +43,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
 
     (nixos + "/boot.nix")
     (nixos + "/gnome-keyring.nix")
+    (nixos + "/immich.nix")
     (nixos + "/locale.nix")
     (nixos + "/network.nix")
     (nixos + "/nix.nix")
@@ -78,6 +80,7 @@ assert unknownTags == [ ] || throw "mkHost: unknown tags ${toString unknownTags}
       username
       ip
       lanInterface
+      services
       ;
     shell = "zsh";
   };

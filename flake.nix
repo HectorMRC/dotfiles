@@ -90,6 +90,7 @@
             "home"
             "server"
           ];
+          services.immich.enable = true;
         };
         thinkpad = {
           inherit username;

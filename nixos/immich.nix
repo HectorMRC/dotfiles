@@ -1,33 +1,38 @@
 { config, lib, ... }:
 let
-  cfg = config.services.immich;
+  cfg = config.profile.services.immich;
+  immich = config.services.immich;
   inherit (config.profile) lanInterface;
 in
 {
-  assertions = [
-    {
-      assertion = lanInterface != null;
-      message = "immich: the device must set lanInterface";
-    }
-  ];
+  options.profile.services.immich.enable = lib.mkEnableOption "Immich";
 
-  services.immich = {
-    enable = true;
-    host = config.profile.ip;
-    mediaLocation = "/srv/storage/immich";
-  };
+  config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lanInterface != null;
+        message = "immich: the device must set lanInterface";
+      }
+    ];
 
-  networking.firewall.interfaces = lib.mkIf (lanInterface != null) {
-    ${lanInterface}.allowedTCPPorts = [ cfg.port ];
-  };
+    services.immich = {
+      enable = true;
+      host = config.profile.ip;
+      mediaLocation = "/srv/storage/immich";
+    };
 
-  systemd.tmpfiles.rules = [
-    "d ${cfg.mediaLocation} 0700 ${cfg.user} ${cfg.group} -"
-  ];
+    networking.firewall.interfaces = lib.mkIf (lanInterface != null) {
+      ${lanInterface}.allowedTCPPorts = [ immich.port ];
+    };
 
-  systemd.services.immich-server = {
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-    unitConfig.RequiresMountsFor = [ cfg.mediaLocation ];
+    systemd.tmpfiles.rules = [
+      "d ${immich.mediaLocation} 0700 ${immich.user} ${immich.group} -"
+    ];
+
+    systemd.services.immich-server = {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      unitConfig.RequiresMountsFor = [ immich.mediaLocation ];
+    };
   };
 }
