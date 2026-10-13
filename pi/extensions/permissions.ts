@@ -65,8 +65,15 @@ async function ask(ctx: ExtensionContext, color: ThemeColor, title: string, mess
 	return { block: true, reason: `${reason}: denied by the user` };
 }
 
-function describe(input: Record<string, unknown>): string {
+const HIDDEN_ARGS: Record<string, string[]> = {
+	edit: ["edits"],
+	write: ["content"],
+};
+
+function describe(toolName: string, input: Record<string, unknown>): string {
+	const hidden = HIDDEN_ARGS[toolName] ?? [];
 	return Object.entries(input)
+		.filter(([key]) => !hidden.includes(key))
 		.map(([key, value]) => `${key}: ${typeof value === "string" ? value : JSON.stringify(value)}`)
 		.join("\n");
 }
@@ -86,7 +93,7 @@ export default function (pi: ExtensionAPI) {
 				ctx,
 				"accent",
 				`Allow ${event.toolName}?`,
-				describe(input),
+				describe(event.toolName, input),
 				`${event.toolName} requires confirmation`,
 			);
 		}
