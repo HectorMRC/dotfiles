@@ -7,11 +7,12 @@ import newChange from "./new.ts";
 import rebase from "./rebase.ts";
 import restore from "./restore.ts";
 import show from "./show.ts";
+import split from "./split.ts";
 import squash from "./squash.ts";
 import status from "./status.ts";
 
 export default function (pi: ExtensionAPI) {
-	for (const tool of [status, log, show, diff, commit, describe, newChange, squash, restore, rebase]) {
+	for (const tool of [status, log, show, diff, commit, describe, newChange, squash, split, restore, rebase]) {
 		pi.registerTool(tool);
 	}
 }
