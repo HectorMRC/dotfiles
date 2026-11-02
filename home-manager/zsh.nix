@@ -51,6 +51,8 @@ in
         echo "Network"
         echo "  nmcli connection show"
         echo "  nmcli device wifi connect \"<wifi name>\" [password \"<password>\"]"
+        echo "Firmware"
+        echo "  fwupdmgr update"
       '';
     };
 
