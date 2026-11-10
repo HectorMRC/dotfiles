@@ -10,8 +10,10 @@ const NORMAL_MODE_TOOLS = ["read", "edit", "write", "rg", "fd", "ls"];
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
 
 const DONE_TAG_INSTRUCTIONS = `Mark each step as soon as it is finished: write [DONE:n] (n = step number) in your
-response text right after completing step n, before starting work on the next step.
-Do not save the tags up for a final summary - progress is tracked live from them.`;
+visible response text, never only in reasoning, right after completing step n, before starting the next step.
+This includes steps you find already done: verify them, then tag them.
+Never end a turn with a finished step untagged.
+Do not save the tags up for a final summary: progress is tracked live from them.`;
 
 interface PlanModeState {
 	enabled: boolean;
@@ -209,7 +211,8 @@ Plan:
 2. Second step description
 ...
 
-Do NOT attempt to make changes - just describe what you would do.`,
+Do NOT attempt to make changes - just describe what you would do.
+Do not execute the plan until the execute message arrives.`,
 					display: false,
 				},
 			};

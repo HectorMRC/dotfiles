@@ -3,6 +3,16 @@ let
   cfg = config.programs.pi-coding-agent;
   whenTags = import ../lib/whenAll.nix osConfig.deployment.tags;
 
+  # One topic per file; tool-specific rules live in each extension's promptGuidelines.
+  contextDir = ../pi/context;
+  context = builtins.concatStringsSep "\n" (
+    map builtins.readFile [
+      (contextDir + "/tool-usage.md")
+      (contextDir + "/version-control.md")
+      (contextDir + "/writing.md")
+    ]
+  );
+
   skills = ../pi/skills;
   enabledSkills =
     whenTags
@@ -138,7 +148,7 @@ in
 {
   programs.pi-coding-agent = {
     enable = true;
-    context = ../pi/AGENTS.md;
+    inherit context;
 
     settings = {
       defaultProvider = "anthropic";

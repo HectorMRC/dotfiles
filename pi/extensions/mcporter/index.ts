@@ -8,6 +8,7 @@ const mcporter = defineTool({
 	name: "mcporter",
 	label: "mcporter",
 	description: "Run mcporter to list MCP servers and their tools, or call a tool (`call server.tool key=value`).",
+	promptGuidelines: ["For MCP servers not connected to pi, use `mcporter`."],
 	parameters: Type.Object({
 		args: Type.Array(Type.String(), { description: "Arguments after `mcporter`, one per item", minItems: 1 }),
 	}),

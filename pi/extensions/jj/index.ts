@@ -11,8 +11,10 @@ import split from "./split.ts";
 import squash from "./squash.ts";
 import status from "./status.ts";
 
+const promptGuidelines = ["When `.jj` exists, use the `jj-*` tools for version control, even if `.git` also exists."];
+
 export default function (pi: ExtensionAPI) {
 	for (const tool of [status, log, show, diff, commit, describe, newChange, squash, split, restore, rebase]) {
-		pi.registerTool(tool);
+		pi.registerTool({ ...tool, promptGuidelines });
 	}
 }

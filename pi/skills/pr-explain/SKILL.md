@@ -26,7 +26,8 @@ Be precise and concrete. Name functions, types and files. Do not restate the dif
 
 - **TL;DR**: 1-2 sentences on what the PR does.
 - **Why**: the motivation, from the description, commits or linked issues. Say so if it is unclear.
-- **What changed**: grouped by area or concern, not by file.
+- **What changed**: a short overview grouped by area or concern.
+- **Per file**: every changed file, each with 1-3 sentences on what changed in it and why.
 - **How it works**: the main flow of the new behavior, citing `path:line` and quoting short snippets only where they clarify.
 - **Risks and review focus**: breaking changes, migrations, concurrency, security, error handling, performance, missing or weak tests. Mark each as a fact or a suspicion.
 - **Status**: draft or ready, CI result, review state and open discussions.
