@@ -79,10 +79,17 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			const theme = ctx.ui.theme;
 			const lines: string[] = [];
 			const previous = todoItems.slice(0, current).findLast((t) => t.completed);
-			if (previous) lines.push(theme.fg("dim", `☑ ${theme.strikethrough(previous.text)}`));
-			lines.push(theme.bold(`☐ ${todoItems[current]?.text ?? ""}`));
+			if (previous) lines.push(theme.fg("dim", `☑ ${theme.strikethrough(previous.title)}`));
+			const currentItem = todoItems[current];
+			if (currentItem) {
+				lines.push(theme.bold(`☐ ${currentItem.title}`));
+				if (currentItem.description) lines.push(`  ${currentItem.description}`);
+			}
 			const next = todoItems.slice(current + 1).find((t) => !t.completed);
-			if (next) lines.push(theme.fg("muted", `☐ ${next.text}`));
+			if (next) {
+				lines.push(theme.fg("muted", `☐ ${next.title}`));
+				if (next.description) lines.push(theme.fg("muted", `  ${next.description}`));
+			}
 			ctx.ui.setWidget("plan-todos", () => ({
 				render: (width: number) => lines.map((line) => truncateToWidth(line, width, "…")),
 				invalidate: () => {},
@@ -214,8 +221,8 @@ Ask the user clarifying questions when needed.
 Create a detailed numbered plan under a "Plan:" header:
 
 Plan:
-1. First step description
-2. Second step description
+1. **Short title**: description
+2. **Short title**: description
 ...
 
 Do NOT attempt to make changes - just describe what you would do.
@@ -276,12 +283,6 @@ Do not execute the plan until the execute message arrives.`,
 		persistState();
 
 		const todoListText = todoItems.map((t, i) => `${i + 1}. ☐ ${t.text}`).join("\n");
-		const planTodoListMessage = {
-			customType: "plan-todo-list",
-			content: `**Plan Steps (${todoItems.length}):**\n\n${todoListText}`,
-			display: true,
-		};
-
 		const choice = await ctx.ui.select("Plan mode - what next?", [
 			"Execute the plan (track progress)",
 			"Stay in plan mode",
@@ -314,7 +315,6 @@ ${DONE_TAG_INSTRUCTIONS}`;
 		} else if (choice === "Refine the plan") {
 			const refinement = await ctx.ui.editor("Refine the plan:", "");
 			if (refinement?.trim()) {
-				pi.sendMessage(planTodoListMessage, { deliverAs: "followUp" });
 				pi.sendUserMessage(refinement.trim(), { deliverAs: "followUp" });
 			}
 		}

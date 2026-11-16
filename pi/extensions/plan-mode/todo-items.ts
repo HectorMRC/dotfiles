@@ -1,7 +1,22 @@
 export interface TodoItem {
 	step: number;
 	text: string;
+	title: string;
+	description?: string;
 	completed: boolean;
+}
+
+// Matches "**Title**: description", "Title: description" and "Title - description".
+const TITLE_PATTERNS = [/^\*\*([^*]+)\*\*[:.]?\s+(.+)$/, /^([^:]{1,80}?):\s+(.+)$/, /^(.{1,80}?)\s+[-–—]\s+(.+)$/];
+
+function splitTitle(text: string): { title: string; description?: string } {
+	for (const pattern of TITLE_PATTERNS) {
+		const match = text.match(pattern);
+		if (match?.[1] && match[2]) {
+			return { title: cleanStepText(match[1]), description: cleanStepText(match[2]) };
+		}
+	}
+	return { title: cleanStepText(text) };
 }
 
 function cleanStepText(text: string): string {
@@ -41,7 +56,7 @@ export function extractTodoItems(message: string): TodoItem[] {
 		if (start.length > 5 && !start.startsWith("`") && !start.startsWith("/") && !start.startsWith("-")) {
 			const cleaned = cleanStepText(text);
 			if (cleaned.length > 3) {
-				items.push({ step: items.length + 1, text: cleaned, completed: false });
+				items.push({ step: items.length + 1, text: cleaned, ...splitTitle(text), completed: false });
 			}
 		}
 	}
