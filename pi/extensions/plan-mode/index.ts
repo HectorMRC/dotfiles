@@ -8,6 +8,8 @@ import { extractTodoItems, markCompletedSteps, type TodoItem } from "./todo-item
 const PLAN_MODE_TOOLS = ["read", "rg", "fd", "ls"];
 const NORMAL_MODE_TOOLS = ["read", "edit", "write", "rg", "fd", "ls"];
 const PLAN_MANAGED_TOOLS = new Set<string>([...PLAN_MODE_TOOLS, ...NORMAL_MODE_TOOLS]);
+// Loads deferred tools, such as MCP ones. Plan mode keeps only the read-only matches.
+const TOOL_SEARCH = "tool_search";
 
 const DONE_TAG_INSTRUCTIONS = `Mark each step as soon as it is finished: write [DONE:n] (n = step number) in your
 visible response text, never only in reasoning, right after completing step n, before starting the next step.
@@ -92,14 +94,13 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		return [...new Set(toolNames)];
 	}
 
+	function isPlanModeTool(name: string): boolean {
+		if (name === TOOL_SEARCH || PLAN_MODE_TOOLS.includes(name)) return true;
+		return pi.getAllTools().find((t) => t.name === name)?.annotations?.readOnlyHint === true;
+	}
+
 	function getPlanModeTools(activeToolNames: string[]): string[] {
-		const readOnly = new Set(
-			pi
-				.getAllTools()
-				.filter((t) => t.annotations?.readOnlyHint)
-				.map((t) => t.name),
-		);
-		return uniqueToolNames([...activeToolNames.filter((name) => readOnly.has(name)), ...PLAN_MODE_TOOLS]);
+		return uniqueToolNames([...activeToolNames.filter(isPlanModeTool), ...PLAN_MODE_TOOLS]);
 	}
 
 	function getNormalModeTools(activeToolNames: string[]): string[] {
@@ -117,7 +118,11 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	}
 
 	function restoreNormalModeTools(): void {
-		pi.setActiveTools(toolsBeforePlanMode ?? getNormalModeTools(pi.getActiveTools()));
+		const active = pi.getActiveTools();
+		// Keeps the tools loaded with tool_search during plan mode.
+		pi.setActiveTools(
+			toolsBeforePlanMode ? uniqueToolNames([...toolsBeforePlanMode, ...active]) : getNormalModeTools(active),
+		);
 		toolsBeforePlanMode = undefined;
 	}
 
@@ -168,6 +173,17 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		handler: async (ctx) => togglePlanMode(ctx),
 	});
 
+	pi.on("tool_execution_end", async (event) => {
+		if (planModeEnabled && event.toolName === TOOL_SEARCH) {
+			pi.setActiveTools(getPlanModeTools(pi.getActiveTools()));
+		}
+	});
+
+	pi.on("tool_call", async (event) => {
+		if (!planModeEnabled || isPlanModeTool(event.toolName)) return;
+		return { block: true, reason: `Plan mode allows read-only tools only; ${event.toolName} is not read-only` };
+	});
+
 	pi.on("context", async (event) => {
 		if (planModeEnabled) return;
 
@@ -201,6 +217,7 @@ You are in plan mode - a read-only exploration mode for safe code analysis.
 
 Restrictions:
 - Only read-only tools are available
+- \`tool_search\` loads only read-only matches, such as Linear read tools
 
 Ask the user clarifying questions when needed.
 
