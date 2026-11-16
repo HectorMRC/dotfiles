@@ -14,6 +14,7 @@ Linear is reached through the `linear` MCP server. Before the first call, use `t
 - A **PR** is a stack of steps that can be reviewed and merged alone. PRs stack when a later one builds on an earlier one.
 - Every PR leaves the codebase working once merged. A step may break a test only if a later step in the same PR fixes it. Never leave a breakage in one PR for a stacked PR to resolve.
 - Isolate concerns: refactors, new interfaces and behavior changes go in separate steps, and in separate PRs when they can be reviewed alone.
+- When other issues are in flight in the same repository, do the work in its own workspace with the `parallel-work` skill.
 
 ## Steps
 

@@ -10,11 +10,34 @@ import show from "./show.ts";
 import split from "./split.ts";
 import squash from "./squash.ts";
 import status from "./status.ts";
+import workspaceAdd from "./workspace-add.ts";
+import workspaceForget from "./workspace-forget.ts";
+import workspaceList from "./workspace-list.ts";
+import registerWorkspaceSwitch from "./workspace-switch.ts";
 
-const promptGuidelines = ["When `.jj` exists, use the `jj-*` tools for version control, even if `.git` also exists."];
+const promptGuidelines = [
+	"When `.jj` exists, use the `jj-*` tools for version control, even if `.git` also exists.",
+	"Use the `parallel-work` skill for concurrent work in one repository; only touch files inside your own jj workspace, and never switch into a workspace another agent is using.",
+];
 
 export default function (pi: ExtensionAPI) {
-	for (const tool of [status, log, show, diff, commit, describe, newChange, squash, split, restore, rebase]) {
+	for (const tool of [
+		status,
+		log,
+		show,
+		diff,
+		commit,
+		describe,
+		newChange,
+		squash,
+		split,
+		restore,
+		rebase,
+		workspaceAdd,
+		workspaceList,
+		workspaceForget,
+	]) {
 		pi.registerTool({ ...tool, promptGuidelines });
 	}
+	registerWorkspaceSwitch(pi, promptGuidelines);
 }

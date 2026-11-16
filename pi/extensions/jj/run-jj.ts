@@ -19,6 +19,12 @@ export async function jj(
 	return text(output ? await limit(output, keep, `jj-${args[0]}`) : `jj ${args[0]}: done`);
 }
 
+export async function jjOutput(args: string[], cwd: string, signal?: AbortSignal): Promise<string> {
+	const result = await run("jj", ["--no-pager", "--color=never", ...args], { cwd, signal });
+	if (result.code !== 0) fail(`jj ${args[0]}`, result);
+	return result.stdout.trim();
+}
+
 // So conflicts are visible.
 export async function jjWithLog(args: string[], ctx: ExtensionToolContext, signal?: AbortSignal) {
 	const result = await jj(args, ctx, signal, "tail");

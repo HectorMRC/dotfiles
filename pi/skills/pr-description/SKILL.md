@@ -17,6 +17,7 @@ Use jj when `.jj` exists, even if `.git` also exists. Otherwise use git.
   jj log -r 'closest_bookmark(@)' --no-graph -T 'self.local_bookmarks()'
   ```
   Ignore an empty working-copy change on top.
+  In a workspace from the `parallel-work` skill, run these from that workspace so `@` is its working copy.
 - git: find the base with `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`, then:
   ```sh
   git log <base>..HEAD
