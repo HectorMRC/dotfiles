@@ -35,23 +35,26 @@ Pick the type and scope that dominate across all the commits.
 
 ## Body
 
-Brief, descriptive, straight to the point.
+Very brief, high level, straight to the point.
 Write for a reviewer who has not seen the work.
-Always cover both what changes and why.
 
 ```markdown
-<1-2 sentences: what changes and why.>
+# What
 
-- <only changes a reviewer would otherwise miss, at most 4 bullets>
+< 1 or 2 sentences about what the PR does >
 
-Closes ENG-123
+# Why
+
+< 1 to 3 sentences about why it is needed >
+
+Closes: DEV-0123
 ```
 
-- Omit the bullets when the summary says it all.
-- Mention breaking changes, migrations or required follow-up explicitly.
-- Add a testing note only when the testing is not obvious.
+- Always include both sections, in this order.
+- Stay high level: no implementation details, no restating the diff, no list of touched files.
+- Mention breaking changes, migrations or required follow-up in What.
+- End with `Closes: <ISSUE_ID>` as the very last line when the issue is known. Omit it otherwise.
 - If the repo has a PR template (`.github/pull_request_template.md` or `.github/PULL_REQUEST_TEMPLATE/`), fill it with the same brevity.
-- No filler, no headings for short bodies, no restating the diff, no list of touched files.
 
 ## Publish
 
