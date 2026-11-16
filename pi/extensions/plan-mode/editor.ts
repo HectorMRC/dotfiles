@@ -6,7 +6,7 @@ export type PlanEditorMode = "plan" | "executing" | "normal";
 
 export interface PlanEditorState {
 	mode(): PlanEditorMode;
-	progress(): { completed: number; total: number };
+	progress(): { current: number; total: number };
 	theme(): Theme;
 	ctx(): ExtensionContext;
 }
@@ -54,8 +54,8 @@ export class PlanModeEditor extends PromptBoxEditor {
 			case "plan":
 				return [theme.fg("warning", theme.bold(" Plan mode")), theme.fg("warning", theme.bold("⏸ PLAN"))];
 			case "executing": {
-				const { completed, total } = this.planState.progress();
-				return [theme.fg("accent", `📋 ${completed}/${total}`)];
+				const { current, total } = this.planState.progress();
+				return [theme.fg("accent", `📋 ${current}/${total}`)];
 			}
 			default:
 				return [];

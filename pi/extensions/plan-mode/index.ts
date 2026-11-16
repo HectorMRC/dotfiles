@@ -54,10 +54,10 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		ctx.ui.setEditorComponent((tui, theme, keybindings) => {
 			editor = new PlanModeEditor(tui, theme, keybindings, {
 				mode: editorMode,
-				progress: () => ({
-					completed: todoItems.filter((t) => t.completed).length,
-					total: todoItems.length,
-				}),
+				progress: () => {
+					const current = todoItems.findIndex((t) => !t.completed);
+					return { current: current === -1 ? todoItems.length : current + 1, total: todoItems.length };
+				},
 				theme: () => ctx.ui.theme,
 				ctx: () => ctx,
 			});
