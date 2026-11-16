@@ -1,7 +1,7 @@
 import type { AgentMessage } from "@earendil-works/pi-agent-core";
 import type { AssistantMessage, TextContent } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import { Key } from "@earendil-works/pi-tui";
+import { Key, truncateToWidth } from "@earendil-works/pi-tui";
 import { type PlanEditorMode, PlanModeEditor } from "./editor.ts";
 import { extractTodoItems, markCompletedSteps, type TodoItem } from "./todo-items.ts";
 
@@ -79,11 +79,14 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			const theme = ctx.ui.theme;
 			const lines: string[] = [];
 			const previous = todoItems.slice(0, current).findLast((t) => t.completed);
-			if (previous) lines.push(theme.fg("dim", theme.strikethrough(previous.text)));
-			lines.push(theme.bold(todoItems[current]?.text ?? ""));
+			if (previous) lines.push(theme.fg("dim", `☑ ${theme.strikethrough(previous.text)}`));
+			lines.push(theme.bold(`☐ ${todoItems[current]?.text ?? ""}`));
 			const next = todoItems.slice(current + 1).find((t) => !t.completed);
-			if (next) lines.push(theme.fg("muted", next.text));
-			ctx.ui.setWidget("plan-todos", lines);
+			if (next) lines.push(theme.fg("muted", `☐ ${next.text}`));
+			ctx.ui.setWidget("plan-todos", () => ({
+				render: (width: number) => lines.map((line) => truncateToWidth(line, width, "…")),
+				invalidate: () => {},
+			}));
 		} else {
 			ctx.ui.setWidget("plan-todos", undefined);
 		}

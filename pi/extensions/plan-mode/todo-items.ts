@@ -14,9 +14,6 @@ function cleanStepText(text: string): string {
 	if (cleaned.length > 0) {
 		cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 	}
-	if (cleaned.length > 50) {
-		cleaned = `${cleaned.slice(0, 47)}...`;
-	}
 	return cleaned;
 }
 
@@ -27,7 +24,7 @@ export function extractTodoItems(message: string): TodoItem[] {
 
 	const planSection = message.slice(message.indexOf(headerMatch[0]) + headerMatch[0].length);
 	// Unindented only: indented numbers are sub-steps of the previous step.
-	const numberedPattern = /^(\d+)[.)]\s+\*{0,2}([^*\n]+)/;
+	const numberedPattern = /^(\d+)[.)]\s+(.+)/;
 
 	// Only the first numbered list after the header counts. Any unindented,
 	// non-blank, non-numbered line ends it.
@@ -39,11 +36,9 @@ export function extractTodoItems(message: string): TodoItem[] {
 			continue;
 		}
 		listStarted = true;
-		const text = match[2]
-			.trim()
-			.replace(/\*{1,2}$/, "")
-			.trim();
-		if (text.length > 5 && !text.startsWith("`") && !text.startsWith("/") && !text.startsWith("-")) {
+		const text = match[2].trim();
+		const start = text.replace(/^\*+/, "");
+		if (start.length > 5 && !start.startsWith("`") && !start.startsWith("/") && !start.startsWith("-")) {
 			const cleaned = cleanStepText(text);
 			if (cleaned.length > 3) {
 				items.push({ step: items.length + 1, text: cleaned, completed: false });
