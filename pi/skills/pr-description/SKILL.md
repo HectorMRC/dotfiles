@@ -1,6 +1,6 @@
 ---
 name: pr-description
-description: Write a Conventional Commits PR title and a brief, descriptive body for the current work, and open or update the PR with the gh CLI. Use when asked to write a PR description, or to open or update a PR.
+description: Write a Conventional Commits PR title and a brief What and Why body for the current work, and open or update the PR with the gh CLI. Use when asked to write a PR description, or to open or update a PR.
 ---
 
 # Write a PR description
@@ -30,16 +30,14 @@ Find a Linear issue ID (e.g. `ENG-123`) in the bookmark or branch name and commi
 
 ## Title
 
-Conventional Commits: `type(scope)!: summary`.
-
-- `type`: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore` or `revert`. Pick the one describing the main user-facing effect.
-- `scope`: only when one area clearly dominates. Reuse scopes from the repo history (`git log` / `jj log` titles).
-- `!`: only for breaking changes.
-- Summary: lowercase, imperative, no trailing period. The whole title fits in 72 characters.
+Follow the commit title rules from the Version control context.
+Pick the type and scope that dominate across all the commits.
 
 ## Body
 
-Brief, descriptive, straight to the point. Write for a reviewer who has not seen the work.
+Brief, descriptive, straight to the point.
+Write for a reviewer who has not seen the work.
+Always cover both what changes and why.
 
 ```markdown
 <1-2 sentences: what changes and why.>
