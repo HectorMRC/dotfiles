@@ -19,6 +19,7 @@ let
       [ "work" ]
       [
         (skills + "/backend-architecture")
+        (skills + "/code-review")
         (skills + "/linear-plan-to-issues")
         (skills + "/pr-description")
         (skills + "/pr-explain")
