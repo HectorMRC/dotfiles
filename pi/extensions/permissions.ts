@@ -16,6 +16,9 @@ const READ_ONLY_TOOLS: Record<string, { arg: string; fallback?: string }> = {
 // A URL can leak data.
 const ALWAYS_CONFIRM = new Set(["web-fetch"]);
 
+// Only loads tool declarations; the loaded tools are checked when called.
+const ALWAYS_ALLOW = new Set(["tool_search"]);
+
 const READABLE_ROOTS = [
 	CACHE_DIR,
 	join(homedir(), ".cargo", "registry"),
@@ -84,6 +87,7 @@ export default function (pi: ExtensionAPI) {
 		const input = event.input as Record<string, unknown>;
 		const readOnly = READ_ONLY_TOOLS[event.toolName];
 
+		if (ALWAYS_ALLOW.has(event.toolName)) return undefined;
 		if (!readOnly) {
 			const confirm = ALWAYS_CONFIRM.has(event.toolName);
 			if (!confirm && isDeclaredReadOnly(event.toolName)) return undefined;
