@@ -44,4 +44,4 @@ Linear is reached through the `linear` MCP server. Before the first call, use `t
    After the PRs, list:
    - How each acceptance criterion is verified.
    - Risks and assumptions.
-   - Out-of-scope follow-ups, ready for `linear-plan-to-issues`.
+   - Out-of-scope follow-ups, ready for `plan-to-linear-issues`.

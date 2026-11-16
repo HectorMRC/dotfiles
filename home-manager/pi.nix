@@ -20,8 +20,8 @@ let
       [
         (skills + "/backend-architecture")
         (skills + "/code-review")
-        (skills + "/linear-plan-to-issues")
         (skills + "/plan-linear-issue")
+        (skills + "/plan-to-linear-issues")
         (skills + "/pr-description")
         (skills + "/pr-explain")
       ];

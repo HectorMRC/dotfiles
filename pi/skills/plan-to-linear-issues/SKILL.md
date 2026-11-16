@@ -1,5 +1,5 @@
 ---
-name: linear-plan-to-issues
+name: plan-to-linear-issues
 description: Create Linear issues from a plan agreed in the conversation, under the requested project, with estimates and blocked-by relations. Use after planning, when asked to file, create or push the plan to Linear.
 ---
 
