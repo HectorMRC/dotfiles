@@ -386,25 +386,13 @@ in
         padding-bottom: 12px;
       }
 
-      .modules-left {
-        background-color: ${config.palette.colors.surface};
-        border: 1px solid ${colors.border};
-        border-radius: 8px;
-        padding: 12px 0;
-      }
-
-      .modules-center {
-        background-color: ${config.palette.colors.surface};
-        border: 1px solid ${colors.border};
-        border-radius: 8px;
-        padding: 12px 0;
-      }
-
+      .modules-left,
+      .modules-center,
       .modules-right {
         background-color: ${config.palette.colors.surface};
         border: 1px solid ${colors.border};
         border-radius: 8px;
-        padding: 12px 0;
+        padding: 12px 5px;
       }
 
       #pulseaudio.output.muted {
