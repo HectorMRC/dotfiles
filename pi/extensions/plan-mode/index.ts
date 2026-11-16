@@ -144,6 +144,18 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		});
 	}
 
+	function completePlan(ctx: ExtensionContext): void {
+		const completedList = todoItems.map((t) => `~~${t.text}~~`).join("\n");
+		pi.sendMessage(
+			{ customType: "plan-complete", content: `**Plan Complete!** ✓\n\n${completedList}`, display: true },
+			{ triggerTurn: false },
+		);
+		executionMode = false;
+		todoItems = [];
+		updateStatus(ctx);
+		persistState();
+	}
+
 	function togglePlanMode(ctx: ExtensionContext): void {
 		planModeEnabled = !planModeEnabled;
 		executionMode = false;
@@ -174,6 +186,28 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			}
 			const list = todoItems.map((item, i) => `${i + 1}. ${item.completed ? "✓" : "○"} ${item.text}`).join("\n");
 			ctx.ui.notify(`Plan Progress:\n${list}`, "info");
+		},
+	});
+
+	pi.registerCommand("done", {
+		description: "Mark plan steps as done up to the given step (default: the current step)",
+		handler: async (args, ctx) => {
+			if (!executionMode || todoItems.length === 0) {
+				ctx.ui.notify("No plan is being executed", "info");
+				return;
+			}
+			const requested = args.match(/\d+/)?.[0];
+			const last = requested ? Number(requested) : todoItems.find((t) => !t.completed)?.step;
+			for (const item of todoItems) {
+				if (last !== undefined && item.step <= last) item.completed = true;
+			}
+
+			if (todoItems.every((t) => t.completed)) {
+				completePlan(ctx);
+			} else {
+				updateStatus(ctx);
+				persistState();
+			}
 		},
 	});
 
@@ -243,8 +277,6 @@ Do not execute the plan until the execute message arrives.`,
 	}
 
 	let unsavedProgress = false;
-	// So each set of unmarked steps is reminded once.
-	let remindedSteps: string | undefined;
 	pi.on("message_update", async (event, ctx) => {
 		if (syncDoneTags(event.message, ctx)) unsavedProgress = true;
 	});
@@ -257,19 +289,7 @@ Do not execute the plan until the execute message arrives.`,
 
 	pi.on("agent_end", async (event, ctx) => {
 		if (executionMode && todoItems.length > 0) {
-			// Unmarked steps are handled in agent_before_settle.
-			if (todoItems.some((t) => !t.completed)) return;
-
-			remindedSteps = undefined;
-			const completedList = todoItems.map((t) => `~~${t.text}~~`).join("\n");
-			pi.sendMessage(
-				{ customType: "plan-complete", content: `**Plan Complete!** ✓\n\n${completedList}`, display: true },
-				{ triggerTurn: false },
-			);
-			executionMode = false;
-			todoItems = [];
-			updateStatus(ctx);
-			persistState();
+			if (todoItems.every((t) => t.completed)) completePlan(ctx);
 			return;
 		}
 
@@ -295,7 +315,6 @@ Do not execute the plan until the execute message arrives.`,
 
 			planModeEnabled = false;
 			executionMode = true;
-			remindedSteps = undefined;
 			restoreNormalModeTools();
 			updateStatus(ctx);
 			persistState();
@@ -320,32 +339,6 @@ ${DONE_TAG_INSTRUCTIONS}`;
 		}
 	});
 
-	// Fires only when pi is about to go idle, so queued user messages run first.
-	pi.on("agent_before_settle", async (event) => {
-		if (!executionMode || event.outcome !== "completed") return;
-		const remaining = todoItems.filter((t) => !t.completed);
-		const key = remaining.map((t) => t.step).join(",");
-		if (remaining.length === 0 || key === remindedSteps) return;
-
-		remindedSteps = key;
-		const list = remaining.map((t) => `${t.step}. ${t.text}`).join("\n");
-		return {
-			entries: [
-				{
-					type: "custom_message",
-					customType: "plan-untagged-steps",
-					content: `These plan steps are not marked as done:
-
-${list}
-
-For each one: if it is finished, verify it and write [DONE:n] in your response text now. Otherwise, state in one line why it is not finished. Do not start new work.`,
-					display: true,
-				},
-			],
-			continue: true,
-		};
-	});
-
 	pi.on("session_start", async (_event, ctx) => {
 		// Also fires for /new, /resume and /fork.
 		const wasPlanMode = planModeEnabled;
@@ -355,7 +348,6 @@ For each one: if it is finished, verify it and write [DONE:n] in your response t
 		todoItems = [];
 		toolsBeforePlanMode = undefined;
 		unsavedProgress = false;
-		remindedSteps = undefined;
 
 		if (pi.getFlag("plan") === true) {
 			planModeEnabled = true;
