@@ -74,16 +74,15 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 	function updateStatus(ctx: ExtensionContext): void {
 		editor?.refresh();
 
-		if (executionMode && todoItems.length > 0) {
-			const lines = todoItems.map((item) => {
-				if (item.completed) {
-					return (
-						ctx.ui.theme.fg("success", "☑ ") +
-						ctx.ui.theme.fg("muted", ctx.ui.theme.strikethrough(item.text))
-					);
-				}
-				return `${ctx.ui.theme.fg("muted", "☐ ")}${item.text}`;
-			});
+		const current = todoItems.findIndex((t) => !t.completed);
+		if (executionMode && current !== -1) {
+			const theme = ctx.ui.theme;
+			const lines: string[] = [];
+			const previous = todoItems.slice(0, current).findLast((t) => t.completed);
+			if (previous) lines.push(theme.fg("dim", theme.strikethrough(previous.text)));
+			lines.push(theme.bold(`[${current + 1}/${todoItems.length}] ${todoItems[current]?.text}`));
+			const next = todoItems.slice(current + 1).find((t) => !t.completed);
+			if (next) lines.push(theme.fg("muted", next.text));
 			ctx.ui.setWidget("plan-todos", lines);
 		} else {
 			ctx.ui.setWidget("plan-todos", undefined);
@@ -190,7 +189,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 		return {
 			messages: event.messages.filter((m) => {
 				const msg = m as AgentMessage & { customType?: string };
-				if (msg.customType === "plan-mode-context") return false;
+				if (msg.customType === "plan-mode-context" || msg.customType === "plan-execution-context") return false;
 				if (msg.role !== "user") return true;
 
 				const content = msg.content;
@@ -230,24 +229,6 @@ Plan:
 
 Do NOT attempt to make changes - just describe what you would do.
 Do not execute the plan until the execute message arrives.`,
-					display: false,
-				},
-			};
-		}
-
-		if (executionMode && todoItems.length > 0) {
-			const remaining = todoItems.filter((t) => !t.completed);
-			const todoList = remaining.map((t) => `${t.step}. ${t.text}`).join("\n");
-			return {
-				message: {
-					customType: "plan-execution-context",
-					content: `[EXECUTING PLAN - Full tool access enabled]
-
-Remaining steps:
-${todoList}
-
-Execute each step in order.
-${DONE_TAG_INSTRUCTIONS}`,
 					display: false,
 				},
 			};
