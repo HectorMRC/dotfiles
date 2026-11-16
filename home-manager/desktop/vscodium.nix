@@ -9,11 +9,11 @@
         james-yu.latex-workshop
         # jeanp413.open-remote-ssh
         jnoortheen.nix-ide
+        ltex-plus.vscode-ltex-plus
         rust-lang.rust-analyzer
         tamasfe.even-better-toml
         tauri-apps.tauri-vscode
         vadimcn.vscode-lldb
-        valentjn.vscode-ltex
         vue.volar
       ];
 
