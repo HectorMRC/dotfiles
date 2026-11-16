@@ -14,17 +14,16 @@ let
   );
 
   skills = ../pi/skills;
-  enabledSkills =
-    whenTags
-      [ "work" ]
-      [
-        (skills + "/backend-architecture")
-        (skills + "/code-review")
-        (skills + "/plan-linear-issue")
-        (skills + "/plan-to-linear-issues")
-        (skills + "/pr-description")
-        (skills + "/pr-explain")
-      ];
+  commonSkills = [ (skills + "/nix-flake") ];
+  workSkills = [
+    (skills + "/backend-architecture")
+    (skills + "/code-review")
+    (skills + "/plan-linear-issue")
+    (skills + "/plan-to-linear-issues")
+    (skills + "/pr-description")
+    (skills + "/pr-explain")
+  ];
+  enabledSkills = commonSkills ++ whenTags [ "work" ] workSkills;
 
   mcpServers = {
     exa = {
