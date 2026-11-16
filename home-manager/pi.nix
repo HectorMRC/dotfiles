@@ -18,6 +18,7 @@ let
     whenTags
       [ "work" ]
       [
+        (skills + "/backend-architecture")
         (skills + "/linear-plan-to-issues")
         (skills + "/pr-description")
         (skills + "/pr-explain")
