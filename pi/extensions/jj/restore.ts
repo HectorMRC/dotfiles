@@ -1,8 +1,8 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { jjWithLog } from "../lib/jj/run.ts";
 import { exactlyOne } from "../lib/tool-params.ts";
 import { paths } from "./revision-params.ts";
-import { jjWithLog } from "./run-jj.ts";
 
 export default defineTool({
 	name: "jj-restore",
@@ -21,6 +21,6 @@ export default defineTool({
 		const args = ["restore"];
 		if (p.from) args.push("--from", p.from);
 		if (p.into) args.push("--into", p.into);
-		return jjWithLog([...args, ...(p.paths ?? [])], ctx, signal);
+		return jjWithLog([...args, ...(p.paths ?? [])], ctx.cwd, signal);
 	},
 });

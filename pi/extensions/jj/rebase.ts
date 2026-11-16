@@ -1,8 +1,8 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { jjWithLog } from "../lib/jj/run.ts";
 import { exactlyOne, list } from "../lib/tool-params.ts";
 import { revisions } from "./revision-params.ts";
-import { jjWithLog } from "./run-jj.ts";
 
 export default defineTool({
 	name: "jj-rebase",
@@ -26,6 +26,6 @@ export default defineTool({
 		for (const r of list(p.onto)) args.push("-o", r);
 		for (const r of list(p.insertAfter)) args.push("-A", r);
 		for (const r of list(p.insertBefore)) args.push("-B", r);
-		return jjWithLog(args, ctx, signal);
+		return jjWithLog(args, ctx.cwd, signal);
 	},
 });

@@ -1,7 +1,7 @@
 import { type ExtensionAPI, type ExtensionCommandContext, SessionManager } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { otherWorkspace } from "../lib/jj/paths.ts";
 import { text } from "../lib/tool-result.ts";
-import { otherWorkspace } from "./workspace-paths.ts";
 
 interface Request {
 	name: string;

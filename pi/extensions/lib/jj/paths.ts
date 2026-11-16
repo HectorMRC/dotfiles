@@ -1,6 +1,6 @@
 import { readFile, realpath, stat } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
-import { jjOutput } from "./run-jj.ts";
+import { jjOutput } from "./run.ts";
 
 export const DEFAULT_WORKSPACE = "default";
 

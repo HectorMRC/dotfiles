@@ -1,7 +1,7 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { jj } from "../lib/jj/run.ts";
 import { READ_ONLY } from "../lib/tool-result.ts";
-import { jj } from "./run-jj.ts";
 
 export default defineTool({
 	name: "jj-log",
@@ -13,5 +13,5 @@ export default defineTool({
 		limit: Type.Optional(Type.Integer({ minimum: 1, description: "Max entries (default 20)" })),
 	}),
 	execute: (_id, p, signal, _u, ctx) =>
-		jj(["log", "-r", p.revisions ?? "trunk()..@", "-n", String(p.limit ?? 20)], ctx, signal),
+		jj(["log", "-r", p.revisions ?? "trunk()..@", "-n", String(p.limit ?? 20)], ctx.cwd, signal),
 });

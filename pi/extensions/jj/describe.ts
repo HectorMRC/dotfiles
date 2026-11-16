@@ -1,6 +1,6 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { jjWithLog } from "./run-jj.ts";
+import { jjWithLog } from "../lib/jj/run.ts";
 
 export default defineTool({
 	name: "jj-describe",
@@ -11,5 +11,5 @@ export default defineTool({
 		message: Type.String(),
 		revision: Type.Optional(Type.String({ description: "Default: @" })),
 	}),
-	execute: (_id, p, signal, _u, ctx) => jjWithLog(["describe", "-m", p.message, p.revision ?? "@"], ctx, signal),
+	execute: (_id, p, signal, _u, ctx) => jjWithLog(["describe", "-m", p.message, p.revision ?? "@"], ctx.cwd, signal),
 });

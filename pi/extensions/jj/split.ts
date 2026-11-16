@@ -1,6 +1,6 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { jjWithLog } from "./run-jj.ts";
+import { jjWithLog } from "../lib/jj/run.ts";
 
 export default defineTool({
 	name: "jj-split",
@@ -18,6 +18,6 @@ export default defineTool({
 		if (p.revision) args.push("-r", p.revision);
 		if (p.parallel) args.push("--parallel");
 		args.push(...p.paths);
-		return jjWithLog(args, ctx, signal);
+		return jjWithLog(args, ctx.cwd, signal);
 	},
 });

@@ -1,8 +1,8 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { jjWithLog } from "../lib/jj/run.ts";
 import { exactlyOne } from "../lib/tool-params.ts";
 import { paths } from "./revision-params.ts";
-import { jjWithLog } from "./run-jj.ts";
 
 export default defineTool({
 	name: "jj-squash",
@@ -22,6 +22,6 @@ export default defineTool({
 		if (p.from) args.push("--from", p.from);
 		if (p.into) args.push("--into", p.into);
 		args.push(...(p.message !== undefined ? ["-m", p.message] : ["-u"]), ...(p.paths ?? []));
-		return jjWithLog(args, ctx, signal);
+		return jjWithLog(args, ctx.cwd, signal);
 	},
 });

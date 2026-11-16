@@ -1,8 +1,8 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
+import { jj } from "../lib/jj/run.ts";
 import { list, stringOrList } from "../lib/tool-params.ts";
 import { READ_ONLY } from "../lib/tool-result.ts";
-import { jj } from "./run-jj.ts";
 
 export default defineTool({
 	name: "jj-diff",
@@ -23,6 +23,6 @@ export default defineTool({
 		if (p.revision) args.push("-r", p.revision);
 		if (p.from) args.push("--from", p.from);
 		if (p.to) args.push("--to", p.to);
-		return jj([...args, ...list(p.path)], ctx, signal);
+		return jj([...args, ...list(p.path)], ctx.cwd, signal);
 	},
 });
