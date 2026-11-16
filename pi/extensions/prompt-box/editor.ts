@@ -17,7 +17,7 @@ import type { EditorTheme, TUI, TuiMouseEvent, TuiMouseEventResult } from "@eare
 import { buildStatusLine } from "./status.ts";
 
 /** Nerd Font glyph. */
-export const PROMPT_SYMBOL = "\u{f4b5}";
+const PROMPT_SYMBOL = "\u{f4b5}";
 /** Space + symbol + space. */
 const PROMPT_PADDING = 3;
 /** Status line + blank line, inserted below the top border. */

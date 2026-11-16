@@ -1,10 +1,7 @@
 import type { Message } from "@earendil-works/pi-ai";
 import type { ExtensionToolContext } from "@earendil-works/pi-coding-agent";
 
-const MODELS: [string, string][] = [
-	["anthropic", "claude-haiku-4-5"],
-	["anthropic", "claude-3-5-haiku-latest"],
-];
+const MODEL = { provider: "anthropic", id: "claude-haiku-4-5" };
 const MAX_PAGE_CHARS = 400_000;
 
 const SYSTEM_PROMPT =
@@ -17,7 +14,7 @@ export async function askAboutPage(
 	question: string,
 	signal?: AbortSignal,
 ) {
-	const model = MODELS.map(([provider, id]) => ctx.modelRegistry.find(provider, id)).find(Boolean) ?? ctx.model;
+	const model = ctx.modelRegistry.find(MODEL.provider, MODEL.id) ?? ctx.model;
 	if (!model) throw new Error("No model available to answer the prompt.");
 	const message: Message = {
 		role: "user",

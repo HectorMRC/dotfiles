@@ -1,8 +1,7 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { list } from "../lib/tool-params.ts";
+import { list, stringOrList } from "../lib/tool-params.ts";
 import { READ_ONLY } from "../lib/tool-result.ts";
-import { revisions } from "./revision-params.ts";
 import { jj } from "./run-jj.ts";
 
 export default defineTool({
@@ -15,7 +14,7 @@ export default defineTool({
 		revision: Type.Optional(Type.String({ description: "Show this revision's changes" })),
 		from: Type.Optional(Type.String()),
 		to: Type.Optional(Type.String()),
-		path: revisions("Limit to these paths"),
+		path: stringOrList("Limit to these paths"),
 		stat: Type.Optional(Type.Boolean({ description: "Only a per-file summary" })),
 	}),
 	execute: (_id, p, signal, _u, ctx) => {

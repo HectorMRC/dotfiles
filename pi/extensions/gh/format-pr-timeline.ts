@@ -75,7 +75,7 @@ export function formatPrTimeline(pr: any): string {
 	const events = [...timelineEvents(pr), ...reviewThreadEvents(pr)].sort((a, b) => a.at.localeCompare(b.at));
 	const header = [
 		`#${pr.number} ${pr.title}`,
-		`${pr.url}`,
+		pr.url,
 		`${pr.state}${pr.isDraft ? " (draft)" : ""} by ${who(pr.author)}, ${pr.headRefName} -> ${pr.baseRefName}, opened ${pr.createdAt}`,
 		pr.body ? `\n${pr.body.trim()}` : "",
 	].join("\n");

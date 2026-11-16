@@ -1,4 +1,4 @@
-import { relative, resolve, sep, isAbsolute } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 
@@ -7,7 +7,7 @@ interface UsageLike {
 	cost?: { total?: number };
 }
 
-export function formatCwd(cwd: string, home = process.env.HOME): string {
+function formatCwd(cwd: string, home = process.env.HOME): string {
 	if (!home) return cwd;
 	const rel = relative(resolve(home), resolve(cwd));
 	if (rel === "") return "~";
@@ -16,7 +16,7 @@ export function formatCwd(cwd: string, home = process.env.HOME): string {
 }
 
 // Keeps the end of the path visible.
-export function truncateStart(text: string, maxWidth: number, ellipsis = "…"): string {
+function truncateStart(text: string, maxWidth: number, ellipsis = "…"): string {
 	if (visibleWidth(text) <= maxWidth) return text;
 	const room = maxWidth - visibleWidth(ellipsis);
 	if (room <= 0) return "";
@@ -30,7 +30,7 @@ export function truncateStart(text: string, maxWidth: number, ellipsis = "…"):
 	return ellipsis + kept;
 }
 
-export function formatTokens(count: number): string {
+function formatTokens(count: number): string {
 	if (count < 1000) return `${count}`;
 	if (count < 10_000) return `${(count / 1000).toFixed(1)}k`;
 	if (count < 1_000_000) return `${Math.round(count / 1000)}k`;

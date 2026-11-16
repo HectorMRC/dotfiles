@@ -80,7 +80,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 			const lines: string[] = [];
 			const previous = todoItems.slice(0, current).findLast((t) => t.completed);
 			if (previous) lines.push(theme.fg("dim", theme.strikethrough(previous.text)));
-			lines.push(theme.bold(`[${current + 1}/${todoItems.length}] ${todoItems[current]?.text}`));
+			lines.push(theme.bold(todoItems[current]?.text ?? ""));
 			const next = todoItems.slice(current + 1).find((t) => !t.completed);
 			if (next) lines.push(theme.fg("muted", next.text));
 			ctx.ui.setWidget("plan-todos", lines);
@@ -188,20 +188,8 @@ export default function planModeExtension(pi: ExtensionAPI): void {
 
 		return {
 			messages: event.messages.filter((m) => {
-				const msg = m as AgentMessage & { customType?: string };
-				if (msg.customType === "plan-mode-context" || msg.customType === "plan-execution-context") return false;
-				if (msg.role !== "user") return true;
-
-				const content = msg.content;
-				if (typeof content === "string") {
-					return !content.includes("[PLAN MODE ACTIVE]");
-				}
-				if (Array.isArray(content)) {
-					return !content.some(
-						(c) => c.type === "text" && (c as TextContent).text?.includes("[PLAN MODE ACTIVE]"),
-					);
-				}
-				return true;
+				const { customType } = m as { customType?: string };
+				return customType !== "plan-mode-context" && customType !== "plan-execution-context";
 			}),
 		};
 	});

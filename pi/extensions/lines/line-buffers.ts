@@ -1,7 +1,7 @@
 import type { ExtensionToolContext } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 
-export interface BufferDetails {
+interface BufferDetails {
 	buffer: string;
 	lines: string[];
 }

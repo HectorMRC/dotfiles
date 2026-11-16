@@ -7,8 +7,6 @@ import { CACHE_DIR } from "./lib/cache-dir.ts";
 
 const READ_ONLY_TOOLS: Record<string, { arg: string; fallback?: string }> = {
 	read: { arg: "path" },
-	grep: { arg: "path", fallback: "." },
-	find: { arg: "path", fallback: "." },
 	ls: { arg: "path", fallback: "." },
 	rg: { arg: "path", fallback: "." },
 	fd: { arg: "path", fallback: "." },

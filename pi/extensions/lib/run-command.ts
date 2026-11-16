@@ -7,7 +7,7 @@ export interface RunResult {
 	code: number;
 }
 
-export interface RunOptions {
+interface RunOptions {
 	cwd: string;
 	signal?: AbortSignal;
 	timeoutMs?: number;
