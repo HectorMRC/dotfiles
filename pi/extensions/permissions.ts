@@ -5,12 +5,23 @@ import { fileURLToPath } from "node:url";
 import type { ExtensionAPI, ExtensionContext, ThemeColor } from "@earendil-works/pi-coding-agent";
 import { CACHE_DIR } from "./lib/cache-dir.ts";
 
-const READ_ONLY_TOOLS: Record<string, { arg: string; fallback?: string }> = {
-	read: { arg: "path" },
-	ls: { arg: "path", fallback: "." },
-	rg: { arg: "path", fallback: "." },
-	fd: { arg: "path", fallback: "." },
-	"copy-lines": { arg: "path" },
+interface PathTool {
+	arg: string;
+	fallback?: string;
+	// Inside the working directory; outside always asks.
+	inside: "allow" | "confirm";
+	// Writers only count the working directory as inside, not READABLE_ROOTS.
+	writes?: true;
+}
+
+const PATH_TOOLS: Record<string, PathTool> = {
+	read: { arg: "path", inside: "allow" },
+	ls: { arg: "path", fallback: ".", inside: "allow" },
+	rg: { arg: "path", fallback: ".", inside: "allow" },
+	fd: { arg: "path", fallback: ".", inside: "allow" },
+	"copy-lines": { arg: "path", inside: "allow" },
+	edit: { arg: "path", inside: "confirm", writes: true },
+	write: { arg: "path", inside: "confirm", writes: true },
 };
 
 // A URL can leak data.
@@ -85,10 +96,10 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("tool_call", async (event, ctx) => {
 		const input = event.input as Record<string, unknown>;
-		const readOnly = READ_ONLY_TOOLS[event.toolName];
+		const pathTool = PATH_TOOLS[event.toolName];
 
 		if (ALWAYS_ALLOW.has(event.toolName)) return undefined;
-		if (!readOnly) {
+		if (!pathTool) {
 			const confirm = ALWAYS_CONFIRM.has(event.toolName);
 			if (!confirm && isDeclaredReadOnly(event.toolName)) return undefined;
 			return ask(
@@ -100,12 +111,13 @@ export default function (pi: ExtensionAPI) {
 			);
 		}
 
-		const raw = input[readOnly.arg];
+		const raw = input[pathTool.arg];
 		const given = (Array.isArray(raw) ? raw : [raw]).filter((a): a is string => typeof a === "string" && a !== "");
-		const args = given.length > 0 ? given : readOnly.fallback !== undefined ? [readOnly.fallback] : [];
+		const args = given.length > 0 ? given : pathTool.fallback !== undefined ? [pathTool.fallback] : [];
 
 		const root = canonicalize(resolve(ctx.cwd));
-		const roots = [root, ...READABLE_ROOTS.map(canonicalize)];
+		const roots = pathTool.writes ? [root] : [root, ...READABLE_ROOTS.map(canonicalize)];
+		let confirmed = false;
 		for (const arg of args) {
 			const target = canonicalize(resolve(ctx.cwd, normalize(arg)));
 			if (roots.some((r) => isInside(r, target))) continue;
@@ -117,7 +129,15 @@ export default function (pi: ExtensionAPI) {
 				`${event.toolName} of ${target} is outside ${root}`,
 			);
 			if (answer) return answer;
+			confirmed = true;
 		}
-		return undefined;
+		if (confirmed || pathTool.inside === "allow") return undefined;
+		return ask(
+			ctx,
+			"accent",
+			`Allow ${event.toolName}?`,
+			describe(event.toolName, input),
+			`${event.toolName} requires confirmation`,
+		);
 	});
 }
