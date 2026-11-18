@@ -39,6 +39,11 @@ let
       description = "Linear issues, projects, teams and workflow statuses";
       exposure = "deferred";
     };
+    sentry = {
+      url = "https://mcp.sentry.dev/mcp";
+      description = "Sentry issues, events, traces and releases";
+      exposure = "deferred";
+    };
   };
 
   colors = config.palette.colors;
